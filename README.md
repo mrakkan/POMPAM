@@ -1,0 +1,1 @@
+This repository is created for the Axtra Mile Hackathon as part of the Makro Smart Truck project. Contains all source code, documentation, and resources related to the development of an innovative logistics solution designed to optimize Makro's delivery operations using smart technologies.
