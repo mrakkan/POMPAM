@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POMPAM</title>
@@ -75,9 +76,12 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: center;
+     min-height: 80px;
+     min-width: 200px;
   text-align: center;
   font-size: 50px;
   color: rgb(0, 0, 0);
+  z-index: 5;
 }
 .hero-text h1 {
   font-size: 1.4rem;
@@ -102,7 +106,7 @@ header {
 .filter-tags {
   margin-bottom: 1rem;
 }
-.filter-tags span {
+.filter-tags a {
   display: inline-block;
   margin: 0.2rem 0.3rem;
   padding: 0.3rem 0.7rem;
@@ -126,15 +130,15 @@ header {
 }
 .product-card {
   background: white;
-  padding: 0.8rem;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   text-align: center;
   position: relative;
   width: 300px;
-  height: 300px;
+  height: 400px;
    flex: 0 0 300px;
   scroll-snap-align: start;
+  overflow: hidden;
 }
 .favorite-btn {
   position: absolute;
@@ -236,7 +240,49 @@ header {
   stroke: #e60000;
   stroke-width: 2;
 }
-
+.add-to-cart {
+  background-color: #e60000;
+  color: #fff; /* white text for visibility */
+  border: none;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 270px;
+  height: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.product-image{
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+}
+.product-image img {
+    height: 80%;
+}
+.star-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+.product-details {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  text-align: start;
+  padding: 10px;
+}
 
 </style>
 
@@ -246,7 +292,8 @@ header {
 
   <section class="hero" style="background-image: url('/static/images/รูปรวม.png');">
     <div class="hero-text">
-      <h1 id="typing" style="font-size: 50px;"></h1>
+      <h1 id="typing" style="font-size: 50px;  display: block;
+  min-height: 80px; min-width: 250px;"></h1>
       <p>ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
     </div>
       <img src="/static/images/truck.png" alt="POMPAM" class="truck-img">
@@ -259,32 +306,18 @@ header {
       <h2 style="padding-left: 0.75rem;
   border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน</h2>
       <div class="filter-tags">
-        <span class="active">สินค้าแนะนำ</span>
-        <span>เนื้อสัตว์</span>
-        <span>ผักผลไม้</span>
-        <span>เครื่องเทศ</span>
-        <span>สินค้าตามฤดูกาล</span>
+        <a href="/?filter=สินค้าแนะนำ" class="{% if active_filter == 'สินค้าแนะนำ' %}active{% endif %}">สินค้าแนะนำ</a>
+        <a href="/?filter=เนื้อสัตว์" class="{% if active_filter == 'เนื้อสัตว์' %}active{% endif %}">เนื้อสัตว์</a>
+        <a href="/?filter=ผักผลไม้" class="{% if active_filter == 'ผักผลไม้' %}active{% endif %}">ผักผลไม้</a>
+        <a href="/?filter=เครื่องเทศ" class="{% if active_filter == 'เครื่องเทศ' %}active{% endif %}">เครื่องเทศ</a>
+        <a href="/?filter=สินค้าตามฤดูกาล" class="{% if active_filter == 'สินค้าตามฤดูกาล' %}active{% endif %}">สินค้าตามฤดูกาล</a>
       </div>
 
 
     </div>
 
-    <div class="product-list">
-      {% for item in bestseller %}
-      <div class="product-card">
-        <button class="favorite-btn" title="Add to favorites">
-          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42
-             4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 
-             5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#e60000" stroke-width="2"/></svg>
-        </button>
-        <span class="badge red">BESTSELLER</span>
-        <img src="{{ item.img }}" alt="{{ item.name }}">
-        <p class="name">{{ item.name }}</p>
-        <p class="desc">{{ item.desc }}</p>
-        <p class="price">฿{{ item.price }}</p>
-        <button>Add to cart</button>
-      </div>
-      {% endfor %}
+    <div class="product-list" id="product-list">
+      {% include 'product-category.html' %}
     </div>
   </section>
 
@@ -297,15 +330,19 @@ header {
     <div class="product-list">
       {% for item in promotion %}
       <div class="product-card">
+        <div class="product-image">
         <button class="favorite-btn" title="Add to favorites">
           <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#e60000" stroke-width="2"/></svg>
         </button>
         <span class="badge green">โปรโมชั่น</span>
-        <img src="{{ item.img }}" alt="{{ item.name }}">
+        <img src="{{ item.img }}">
+        <a href="" class="add-to-cart">Add to cart</a>
+        </div>
+        <div class="product-details">
         <p class="name">{{ item.name }}</p>
-        <p class="desc">{{ item.desc }}</p>
         <p class="price">฿{{ item.price }}</p>
-        <button>Add to cart</button>
+        
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -349,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener("DOMContentLoaded", function () {
             var typed = new Typed("#typing", {
-                strings: ["ป๋อมป๋อมมาแว้ว", "พร้อมส่งความสุข", "ถึงไว ถึงใจ ถึงมือคุณ"],
+                strings: ["ป๋อมแป๋มมาแว้ว", "พร้อมส่งความสุข", "ถึงไว ถึงใจ ถึงมือ"],
                 typeSpeed: 100,
                 backSpeed: 50,
                 backDelay: 1000,
@@ -358,5 +395,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 showCursor: false
             });
         });
+document.addEventListener('DOMContentLoaded', function() {
+  const filterTags = document.querySelectorAll('.filter-tags a');
+  const productList = document.getElementById('product-list');
+
+  filterTags.forEach(tag => {
+    tag.addEventListener('click', function(e) {
+      e.preventDefault();
+      productList.classList.remove('animate__animated', 'animate__fadeInUp', 'animate__fadeOutDown');
+      productList.style.setProperty('--animate-duration', '0.18s');
+      productList.classList.add('animate__animated', 'animate__fadeOut');
+      setTimeout(() => {
+        fetch(`/products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then(res => res.text())
+          .then(html => {
+            productList.innerHTML = html;
+            productList.classList.remove('animate__fadeOut');
+            productList.classList.add('animate__fadeIn');
+            productList.style.setProperty('--animate-duration', '0.18s');
+            filterTags.forEach(t => t.classList.remove('active'));
+            tag.classList.add('active');
+            setTimeout(() => {
+              productList.classList.remove('animate__animated', 'animate__fadeIn');
+            }, 200);
+          });
+      }, 180);
+    });
+  });
+});
 </script>
 </html>
