@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map | POMPAM</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; width: 100vw; z-index: 1; }
+    body { margin: 0; padding: 0; }
+    .top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: #e60000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 1.2rem;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .bottom-panel {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      background: #fff;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+      padding: 18px 24px 24px 24px;
+      min-height: 120px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel-btn {
+      background: #e60000;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      width: 100%;
+    }
+    .panel-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel-row img {
+      width: 32px; height: 32px;
+    }
+    .panel-label {
+      font-weight: bold;
+      color: #e60000;
+      font-size: 1rem;
+    }
+    .panel-value {
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="bottom-panel">
+    <div class="panel-row">
+      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/person-fill.svg" alt="You">
+      <span class="panel-label">คุณ</span>
+      <span class="panel-value">บ้านซีหลิง</span>
+    </div>
+    <div class="panel-row">
+      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Destination">
+      <span class="panel-label">จุดหมาย</span>
+      <span class="panel-value">เลือกจุดหมายปลายทาง</span>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var centerLat = 13.7563;
+    var centerLng = 100.5018;
+    var map = L.map('map', { zoomControl: false }).setView([centerLat, centerLng], 20);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    // User marker (person)
+    var personIcon = L.icon({
+      iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/person-fill.svg',
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -36]
+    });
+    var userMarker = L.marker([centerLat, centerLng], {icon: personIcon}).addTo(map);
+
+    // Multiple trucks
+    var trucks = [
+      { id: 1, name: 'Truck 1', lat: centerLat + 0.003, lng: centerLng, color: '#e60000' },
+      { id: 2, name: 'Truck 2', lat: centerLat - 0.002, lng: centerLng + 0.002, color: '#007bff' },
+      { id: 3, name: 'Truck 3', lat: centerLat + 0.002, lng: centerLng - 0.002, color: '#28a745' }
+    ];
+    var truckIcon = L.icon({
+      iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/truck.svg',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40]
+    });
+    var truckMarkers = [];
+    var truckRoutes = [];
+    var truckAnims = [];
+    var selectedTruck = null;
+
+    // Add truck markers
+    trucks.forEach(function(truck, idx) {
+      var marker = L.marker([truck.lat, truck.lng], {icon: truckIcon}).addTo(map);
+      marker.bindTooltip(truck.name, {permanent: false, direction: 'top'});
+      marker.on('click', function() { selectTruck(idx); });
+      truckMarkers.push(marker);
+    });
+
+    // Add truck selector UI
+    var selectDiv = document.createElement('div');
+    selectDiv.style.margin = '0 0 10px 0';
+    selectDiv.innerHTML = '<span style="font-weight:bold;">เลือกคันรถ: </span>' +
+      trucks.map((t,i) => `<button class="panel-btn" style="background:${t.color};margin:0 4px 0 0;padding:4px 12px;font-size:1rem;" data-truck="${i}">${t.name}</button>`).join('');
+    document.querySelector('.bottom-panel').insertBefore(selectDiv, document.querySelector('.bottom-panel').firstChild);
+    selectDiv.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        selectTruck(parseInt(this.getAttribute('data-truck')));
+      });
+    });
+
+    // Route and animate for selected truck
+    var routeLine = null;
+    function selectTruck(idx) {
+      // Remove previous route and stop previous animation
+      if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+      if (truckAnims[idx]) clearTimeout(truckAnims[idx]);
+      selectedTruck = idx;
+      var truck = trucks[idx];
+      // Get route
+      var osrmUrl = `https://router.project-osrm.org/route/v1/driving/${truck.lng},${truck.lat};${centerLng},${centerLat}?overview=full&geometries=geojson`;
+      fetch(osrmUrl)
+        .then(res => res.json())
+        .then(data => {
+          var coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+          routeLine = L.polyline(coords, {color: truck.color, weight: 5, opacity: 0.7}).addTo(map);
+          animateTruckOnRoute(idx, coords);
+        });
+    }
+
+    function animateTruckOnRoute(idx, coords) {
+      var i = 0;
+      function move() {
+        if (selectedTruck !== idx) return; // stop if user switched
+        if (i >= coords.length) return;
+        trucks[idx].lat = coords[i][0];
+        trucks[idx].lng = coords[i][1];
+        truckMarkers[idx].setLatLng([trucks[idx].lat, trucks[idx].lng]);
+        updateDistance();
+        i++;
+        truckAnims[idx] = setTimeout(move, 100);
+      }
+      move();
+    }
+
+    // Default: select first truck
+    selectTruck(0);
+
+    // Distance calculation (Haversine)
+    function calcDistance(lat1, lng1, lat2, lng2) {
+      function toRad(x) { return x * Math.PI / 180; }
+      var R = 6371; // km
+      var dLat = toRad(lat2 - lat1);
+      var dLng = toRad(lng2 - lng1);
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    // Show distance in bottom panel (for selected truck)
+    function updateDistance() {
+      if (selectedTruck === null) return;
+      var t = trucks[selectedTruck];
+      var dist = calcDistance(centerLat, centerLng, t.lat, t.lng);
+      var distText = dist < 1 ? (dist*1000).toFixed(0) + ' m' : dist.toFixed(2) + ' km';
+      document.getElementById('truck-distance').textContent = distText;
+    }
+
+    // Add distance display to bottom panel
+    var truckRow = document.createElement('div');
+    truckRow.className = 'panel-row';
+    truckRow.innerHTML = '<span class="panel-label">ระยะห่างรถป๋อมแป๋ม</span> <span class="panel-value" id="truck-distance"></span>';
+    document.querySelector('.bottom-panel').insertBefore(truckRow, document.querySelector('.bottom-panel').children[1]);
+    updateDistance();
+
+    // Animate truck movement along the route
+    var routeIndex = 0;
+    function moveTruckOnRoute() {
+      if (routeIndex >= routeCoords.length - 1) return;
+      var start = routeCoords[routeIndex];
+      var end = routeCoords[routeIndex + 1];
+      var steps = 30; // smoothness
+      var step = 0;
+      function stepMove() {
+        if (step > steps) {
+          routeIndex++;
+          moveTruckOnRoute();
+          return;
+        }
+        var lat = start[0] + (end[0] - start[0]) * (step / steps);
+        var lng = start[1] + (end[1] - start[1]) * (step / steps);
+        truckLat = lat;
+        truckLng = lng;
+        truckMarker.setLatLng([lat, lng]);
+        updateDistance();
+        step++;
+        setTimeout(stepMove, 120);
+      }
+      stepMove();
+    }
+    moveTruckOnRoute();
+    var latOffset = 0.5;
+    var lngOffset = 0.5 / (111 * Math.cos(centerLat * Math.PI / 180));
+    var southWest = [centerLat - latOffset, centerLng - lngOffset];
+    var northEast = [centerLat + latOffset, centerLng + lngOffset];
+    var bounds = L.latLngBounds(southWest, northEast);
+    map.setMaxBounds(bounds);
+  </script>
+</body>
+</html>
