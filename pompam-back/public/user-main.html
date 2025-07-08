@@ -1,262 +1,283 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POMPAM</title>
   <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 </head>
+
 <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', 'Segoe UI', sans-serif;
+  }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Prompt', 'Segoe UI', sans-serif;
-}
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fff;
-  color: #333;
-  line-height: 1.6;
-  height: 100vh;
-  font-size: 14px;
-}
-a {
-  text-decoration: none;
-  color: inherit;
-}
-main {
-  width: 100%;
-  margin: 0 auto;
-  padding-bottom: 80px;
-}
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.6;
+    height: 100vh;
+    font-size: 14px;
+  }
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
-header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1rem;
-}
-.login-btn a {
-  background-color: #e60000;
-  color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
+  main {
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
 
+  header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+  }
 
-.hero {
+  .login-btn a {
+    background-color: #e60000;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  .hero {
     display: flex;
     flex-direction: row;
-  justify-content: center;
-  height: 200px;
-  background-position: center;
-  background-size: cover;
-  overflow: hidden;
-}
-@media (max-width: 600px) {
-  .hero {
-    height: 500px;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
   }
-}
-.hero-bg {
-  width: 100%;
-  height: 100%;
-  
-  filter: brightness(0.75);
-}
-.hero-text {
+
+  .hero-bg {
+    width: 100%;
+    height: 100%;
+    filter: brightness(0.75);
+  }
+
+  .hero-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
-     min-height: 80px;
-     min-width: 200px;
-  text-align: center;
-  font-size: 50px;
-  color: rgb(0, 0, 0);
-  z-index: 5;
-}
-.hero-text h1 {
-  font-size: 1.4rem;
-  margin-bottom: 0.3rem;
-}
-.hero-text p {
-  font-size: 0.9rem;
-}
-.truck-img {
-  max-width: 500px;
-  margin-top: 0.5rem;
-}
+    min-height: 80px;
+    min-width: 200px;
+    text-align: center;
+    font-size: 50px;
+    color: rgb(0, 0, 0);
+    z-index: 5;
+  }
 
+  .hero-text h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+  }
 
-.product-section {
-  padding: 1rem;
-}
-.section-header h2 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-.filter-tags {
-  margin-bottom: 1rem;
-}
-.filter-tags a {
-  display: inline-block;
-  margin: 0.2rem 0.3rem;
-  padding: 0.3rem 0.7rem;
-  background: #eee;
-  border-radius: 15px;
-  font-size: 0.8rem;
-}
-.filter-tags .active {
-  background: #e60000;
-  color: white;
-}
+  .hero-text p {
+    font-size: 0.9rem;
+  }
 
+  .truck-img {
+    max-width: 500px;
+    margin-top: 0.5rem;
+  }
 
-.product-list {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  scroll-snap-type: x mandatory;
-}
-.product-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  text-align: center;
-  position: relative;
-  width: 300px;
-  height: 400px;
-   flex: 0 0 300px;
-  scroll-snap-align: start;
-  overflow: hidden;
-}
-.favorite-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255,255,255,0.9);
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  z-index: 2;
-  transition: background 0.2s;
-}
-.favorite-btn:hover {
-  background: #ffeaea;
-}
+  .product-section {
+    padding: 1rem;
+  }
 
-.product-card img {
-  width: 100%;
-  height: 100px;
-  object-fit: contain;
-  margin-bottom: 0.5rem;
-}
-.product-card .name {
-  font-weight: bold;
-  font-size: 0.95rem;
-}
-.product-card .desc {
-  font-size: 0.75rem;
-  color: #666;
-}
-.product-card .price {
-  color: #2e7d32;
-  font-weight: bold;
-  margin: 0.4rem 0;
-}
-.product-card button {
-  background-color: #ffffff;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-.badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  font-size: 0.6rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 10px;
-  color: white;
-}
-.badge.red { 
-    background-color: #e60000; 
-}
-.badge.green { 
-    background-color: #2e7d32; 
-}
+  .section-header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
 
+  .filter-tags {
+    margin-bottom: 1rem;
+  }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 65px;
-  background-color: #e60000;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-  z-index: 999;
-}
-.bottom-nav .nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  font-size: 0.7rem;
-}
-.bottom-nav .nav-item img {
-  width: 20px;
-  height: 20px;
-  margin-bottom: 2px;
-}
-.favorite-btn svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: #e60000;
-  stroke-width: 2;
-}
-.add-to-cart {
-  background-color: #e60000;
-  color: #fff; /* white text for visibility */
-  border: none;
-  border-radius: 5px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-  width: 270px;
-  height: 50px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-.product-image{
+  .filter-tags a {
+    display: inline-block;
+    margin: 0.2rem 0.3rem;
+    padding: 0.3rem 0.7rem;
+    background: #eee;
+    border-radius: 15px;
+    font-size: 0.8rem;
+  }
+
+  .filter-tags .active {
+    background: #e60000;
+    color: white;
+  }
+
+  .product-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    position: relative;
+    width: 300px;
+    height: 400px;
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    overflow: hidden;
+  }
+
+  .favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+    transition: background 0.2s;
+  }
+
+  .favorite-btn:hover {
+    background: #ffeaea;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card .name {
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+
+  .product-card .desc {
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .product-card .price {
+    color: #2e7d32;
+    font-weight: bold;
+    margin: 0.4rem 0;
+  }
+
+  .product-card button {
+    background-color: #ffffff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+
+  .badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    color: white;
+  }
+
+  .badge.red {
+    background-color: #e60000;
+  }
+
+  .badge.green {
+    background-color: #2e7d32;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background-color: #e60000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+
+  .bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-size: 0.7rem;
+  }
+
+  .bottom-nav .nav-item img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 2px;
+  }
+
+  .favorite-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #e60000;
+    stroke-width: 2;
+  }
+
+  .add-to-cart {
+    background-color: #e60000;
+    color: #fff;
+    /* white text for visibility */
+    border: none;
+    border-radius: 5px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    width: 270px;
+    height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .product-image {
     position: relative;
     width: 100%;
     height: 300px;
@@ -267,161 +288,162 @@ header {
     flex-direction: column;
     align-items: center;
     padding: 0.5rem;
-}
-.product-image img {
-    height: 80%;
-}
-.star-rating {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.3rem;
-}
-.product-details {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  text-align: start;
-  padding: 10px;
-}
+  }
 
+  .product-image img {
+    height: 80%;
+  }
+
+  .star-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .product-details {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      height: 500px;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+  }
 </style>
 
 <body>
-
-<main>
-
-  <section class="hero" style="background-image: url('/static/images/รูปรวม.png');">
-    <div class="hero-text">
-      <h1 id="typing" style="font-size: 50px;  display: block;
-  min-height: 80px; min-width: 250px;"></h1>
-      <p>ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
-    </div>
+  <main>
+    <section class="hero" style="background-image: url('/static/images/รูปรวม.png');">
+      <div class="hero-text">
+        <h1 id="typing" style="font-size: 50px; display: block; min-height: 80px; min-width: 250px;"></h1>
+        <p>ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
+      </div>
       <img src="/static/images/truck.png" alt="POMPAM" class="truck-img">
-    
-  </section>
-
-
-  <section class="product-section">
-    <div class="section-header">
-      <h2 style="padding-left: 0.75rem;
-  border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน</h2>
-      <div class="filter-tags">
-        <a href="/?filter=สินค้าแนะนำ" class="{% if active_filter == 'สินค้าแนะนำ' %}active{% endif %}">สินค้าแนะนำ</a>
-        <a href="/?filter=เนื้อสัตว์" class="{% if active_filter == 'เนื้อสัตว์' %}active{% endif %}">เนื้อสัตว์</a>
-        <a href="/?filter=ผักผลไม้" class="{% if active_filter == 'ผักผลไม้' %}active{% endif %}">ผักผลไม้</a>
-        <a href="/?filter=เครื่องเทศ" class="{% if active_filter == 'เครื่องเทศ' %}active{% endif %}">เครื่องเทศ</a>
-        <a href="/?filter=สินค้าตามฤดูกาล" class="{% if active_filter == 'สินค้าตามฤดูกาล' %}active{% endif %}">สินค้าตามฤดูกาล</a>
-      </div>
-
-
-    </div>
-
-    <div class="product-list" id="product-list">
-      {% include 'product-category.html' %}
-    </div>
-  </section>
-
-
-  <section class="product-section">
-    <div class="section-header">
-      <h2 style="padding-left: 0.75rem;
-  border-left: 4px solid #e60000;">โปรโมชั่น</h2>
-    </div>
-    <div class="product-list">
-      {% for item in promotion %}
-      <div class="product-card">
-        <div class="product-image">
-        <button class="favorite-btn" title="Add to favorites">
-          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#e60000" stroke-width="2"/></svg>
-        </button>
-        <span class="badge green">โปรโมชั่น</span>
-        <img src="{{ item.img }}">
-        <a href="" class="add-to-cart">Add to cart</a>
-        </div>
-        <div class="product-details">
-        <p class="name">{{ item.name }}</p>
-        <p class="price">฿{{ item.price }}</p>
-        
+    </section>
+    <section class="product-section">
+      <div class="section-header">
+        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
+        </h2>
+        <div class="filter-tags">
+          <a href="/?filter=สินค้าแนะนำ"
+            class="{% if active_filter == 'สินค้าแนะนำ' %}active{% endif %}">สินค้าแนะนำ</a>
+          <a href="/?filter=เนื้อสัตว์" class="{% if active_filter == 'เนื้อสัตว์' %}active{% endif %}">เนื้อสัตว์</a>
+          <a href="/?filter=ผักผลไม้" class="{% if active_filter == 'ผักผลไม้' %}active{% endif %}">ผักผลไม้</a>
+          <a href="/?filter=เครื่องเทศ" class="{% if active_filter == 'เครื่องเทศ' %}active{% endif %}">เครื่องเทศ</a>
+          <a href="/?filter=สินค้าตามฤดูกาล"
+            class="{% if active_filter == 'สินค้าตามฤดูกาล' %}active{% endif %}">สินค้าตามฤดูกาล</a>
         </div>
       </div>
-      {% endfor %}
-    </div>
-  </section>
-
-
+      <div class="product-list" id="product-list">
+        {% include 'product-category.html' %}
+      </div>
+    </section>
+    <section class="product-section">
+      <div class="section-header">
+        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">โปรโมชั่น</h2>
+      </div>
+      <div class="product-list">
+        {% for item in promotion %}
+        <div class="product-card">
+          <div class="product-image">
+            <button class="favorite-btn" title="Add to favorites">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  fill="none" stroke="#e60000" stroke-width="2" />
+              </svg>
+            </button>
+            <span class="badge green">โปรโมชั่น</span>
+            <img src="{{ item.img }}">
+            <a href="" class="add-to-cart">Add to cart</a>
+          </div>
+          <div class="product-details">
+            <p class="name">{{ item.name }}</p>
+            <p class="price">฿{{ item.price }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
     <nav class="bottom-nav">
-    <a href="#" class="nav-item">
+      <a href="#" class="nav-item">
         <img src="/static/images/Vector.png" alt="Home">
         <span>Home</span>
-    </a>
-    <a href="#" class="nav-item">
+      </a>
+      <a href="#" class="nav-item">
         <img src="/static/images/Group.png" alt="Map">
         <span>Map</span>
-    </a>
-    <a href="#" class="nav-item">
+      </a>
+      <a href="#" class="nav-item">
         <img src="/static/icons/cart.svg" alt="Inventory">
         <span>Inventory</span>
-    </a>
-    <a href="#" class="nav-item">
+      </a>
+      <a href="#" class="nav-item">
         <img src="/static/icons/preorder.svg" alt="Pre-order">
         <span>Pre-order</span>
-    </a>
+      </a>
     </nav>
-</main>
-
-
+  </main>
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 <script>
-
-document.addEventListener('DOMContentLoaded', function() {
-  const filter = document.querySelectorAll('.filter-tags span');
-  filter.forEach(tag => {
-    tag.addEventListener('click', function() {
-      filter.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
+  document.addEventListener('DOMContentLoaded', function () {
+    const filter = document.querySelectorAll('.filter-tags span');
+    filter.forEach(tag => {
+      tag.addEventListener('click', function () {
+        filter.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
     });
   });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-            var typed = new Typed("#typing", {
-                strings: ["ป๋อมแป๋มมาแว้ว", "พร้อมส่งความสุข", "ถึงไว ถึงใจ ถึงมือ"],
-                typeSpeed: 100,
-                backSpeed: 50,
-                backDelay: 1000,
-                startDelay: 500,
-                loop: true,
-                showCursor: false
+  document.addEventListener("DOMContentLoaded", function () {
+    var typed = new Typed("#typing", {
+      strings: ["ป๋อมแป๋มมาแว้ว", "พร้อมส่งความสุข", "ถึงไว ถึงใจ ถึงมือ"],
+      typeSpeed: 100,
+      backSpeed: 50,
+      backDelay: 1000,
+      startDelay: 500,
+      loop: true,
+      showCursor: false
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const filterTags = document.querySelectorAll('.filter-tags a');
+    const productList = document.getElementById('product-list');
+    filterTags.forEach(tag => {
+      tag.addEventListener('click', function (e) {
+        e.preventDefault();
+        productList.classList.remove('animate__animated', 'animate__fadeInUp', 'animate__fadeOutDown');
+        productList.style.setProperty('--animate-duration', '0.18s');
+        productList.classList.add('animate__animated', 'animate__fadeOut');
+        setTimeout(() => {
+          fetch(`/products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(res => res.text())
+            .then(html => {
+              productList.innerHTML = html;
+              productList.classList.remove('animate__fadeOut');
+              productList.classList.add('animate__fadeIn');
+              productList.style.setProperty('--animate-duration', '0.18s');
+              filterTags.forEach(t => t.classList.remove('active'));
+              tag.classList.add('active');
+              setTimeout(() => {
+                productList.classList.remove('animate__animated', 'animate__fadeIn');
+              }, 200);
             });
-        });
-document.addEventListener('DOMContentLoaded', function() {
-  const filterTags = document.querySelectorAll('.filter-tags a');
-  const productList = document.getElementById('product-list');
-
-  filterTags.forEach(tag => {
-    tag.addEventListener('click', function(e) {
-      e.preventDefault();
-      productList.classList.remove('animate__animated', 'animate__fadeInUp', 'animate__fadeOutDown');
-      productList.style.setProperty('--animate-duration', '0.18s');
-      productList.classList.add('animate__animated', 'animate__fadeOut');
-      setTimeout(() => {
-        fetch(`/products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-          .then(res => res.text())
-          .then(html => {
-            productList.innerHTML = html;
-            productList.classList.remove('animate__fadeOut');
-            productList.classList.add('animate__fadeIn');
-            productList.style.setProperty('--animate-duration', '0.18s');
-            filterTags.forEach(t => t.classList.remove('active'));
-            tag.classList.add('active');
-            setTimeout(() => {
-              productList.classList.remove('animate__animated', 'animate__fadeIn');
-            }, 200);
-          });
-      }, 180);
+        }, 180);
+      });
     });
   });
-});
 </script>
+
 </html>
