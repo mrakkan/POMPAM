@@ -4,10 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Map | POMPAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    #map { height: 100vh; width: 100vw; z-index: 1; }
-    body { margin: 0; padding: 0; }
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', 'Segoe UI', sans-serif;
+  }
+    #map { 
+      height: 100vh; 
+      width: 100vw; 
+      z-index: 1; }
+    
+    body { 
+      margin: 0; 
+      padding: 0; }
     .top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -22,15 +36,19 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .bottom-panel {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
+      position: fixed;
+      left: 50%;
+      bottom: 75px;
+      width: 90vw;
+      max-width: 90vw;
+      transform: translateX(-50%);
+      box-sizing: border-box;
       background: #fff;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
+      border-radius: 20px;
       box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
-      padding: 18px 24px 24px 24px;
+      padding: 18px 16px 24px 16px;
       min-height: 120px;
-      z-index: 10;
+      z-index: 1001;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -63,6 +81,18 @@
     .panel-value {
       font-size: 1rem;
       color: #333;
+      background: #f2f2f2;
+      border-radius: 8px;
+      padding: 4px 12px;
+      min-width: 300px;
+      max-width: 300px;
+      width: 300px;
+      display: inline-block;
+      box-sizing: border-box;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
       .bottom-nav {
     position: fixed;
@@ -100,14 +130,14 @@
   <div id="map"></div>
   <div class="bottom-panel">
     <div class="panel-row">
-      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/person-fill.svg" alt="You">
-      <span class="panel-label">คุณ</span>
-      <span class="panel-value">บ้านซีหลิง</span>
+      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Next Stop">
+      <span class="panel-label">จุดจอดถัดไปของรถ</span>
+      <span class="panel-value" id="next-truck-stop">-</span>
     </div>
     <div class="panel-row">
-      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Destination">
-      <span class="panel-label">จุดหมาย</span>
-      <span class="panel-value">เลือกจุดหมายปลายทาง</span>
+      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Nearest Stop">
+      <span class="panel-label">จุดจอดใกล้ฉัน</span>
+      <span class="panel-value" id="nearest-stop">-</span>
     </div>
   </div>
     <nav class="bottom-nav">
@@ -175,9 +205,58 @@
         var offset = 0.03; // wider range
         var trucks = [
           { id: 1, name: 'Truck 1', color: '#e60000', start: [centerLat + offset, centerLng + offset], end: [centerLat - offset, centerLng - offset] },
-          { id: 2, name: 'Truck 2', color: '#007bff', start: [centerLat - offset, centerLng + offset], end: [centerLat + offset, centerLng - offset] },
-          { id: 3, name: 'Truck 3', color: '#28a745', start: [centerLat + offset, centerLng - offset], end: [centerLat - offset, centerLng + offset] }
+          { id: 2, name: 'Truck 2', color: '#e60000', start: [centerLat - offset, centerLng + offset], end: [centerLat + offset, centerLng - offset] },
+          { id: 3, name: 'Truck 3', color: '#e60000', start: [centerLat + offset, centerLng - offset], end: [centerLat - offset, centerLng + offset] }
         ];
+
+        // Add 4 stops along Truck 1's route (as example, can be adapted for other trucks)
+        var stopMarkers = [];
+        var stopCoords = [];
+
+        // Add event for truck select dropdown
+        function setupTruckSelect() {
+          var sel = document.getElementById('truck-select');
+          if (sel) {
+            sel.value = selectedTruck;
+            sel.addEventListener('change', function(e) {
+              selectedTruck = parseInt(this.value);
+              updateDistance();
+              updateTruckStopPanels();
+            });
+          }
+        }
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          setupTruckSelect();
+        } else {
+          document.addEventListener('DOMContentLoaded', setupTruckSelect);
+        }
+        function addTruckStopsMarkers() {
+          // Clear previous stop markers
+          if (stopMarkers && stopMarkers.length) {
+            stopMarkers.forEach(m => map.removeLayer(m));
+          }
+          stopMarkers = [];
+          stopCoords = [];
+          // Add 4 evenly spaced stops along each truck's route
+          trucks.forEach((truck, idx) => {
+            var coords = truckRoutes[idx];
+            if (!coords || coords.length < 2) return;
+            var nStops = 4;
+            for (let i = 0; i < nStops; i++) {
+              var pos = Math.floor((coords.length-1) * (i/(nStops-1)));
+              var coord = coords[pos];
+              var marker = L.marker(coord, {icon: L.icon({
+                iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+              })}).addTo(map).bindPopup('จุดจอดรถ #' + (idx+1) + ' (' + (i+1) + '/' + nStops + ')');
+              stopMarkers.push(marker);
+              // Store extra info: {coord, truckIdx, stopIdx}
+              stopCoords.push({coord: coord, truckIdx: idx, stopIdx: i});
+            }
+          });
+        }
         // Clear any previous trucks/routes/animations
         truckMarkers.forEach(m => { if (m) map.removeLayer(m); });
         truckRouteLines.forEach(l => { if (l) map.removeLayer(l); });
@@ -205,20 +284,97 @@
                 truckMarkers[idx].on('click', function() {
                   selectedTruck = idx;
                   updateDistance();
+                  updateTruckStopPanels();
                 });
                 animateTruckLoop(idx, coords);
+                // หลังจากโหลด route ของ truck สุดท้ายแล้ว ให้แสดง marker จุดจอดทั้งหมด
+                if(idx === trucks.length-1) {
+                  addTruckStopsMarkers();
+                  updateTruckStopPanels();
+                  // Ensure dropdown is in sync after all routes loaded
+                  setupTruckSelect();
+                }
               }
             });
+        }
+        // Utility: Find nearest stop to a given lat/lng
+        function findNearestStop(lat, lng) {
+          if (!stopCoords.length) return {idx: -1, dist: Infinity};
+          var minIdx = 0, minDist = calcDistance(lat, lng, stopCoords[0].coord[0], stopCoords[0].coord[1]);
+          for (let i = 1; i < stopCoords.length; i++) {
+            var d = calcDistance(lat, lng, stopCoords[i].coord[0], stopCoords[i].coord[1]);
+            if (d < minDist) { minDist = d; minIdx = i; }
+          }
+          return {idx: minIdx, dist: minDist};
+        }
+
+        // Update bottom-panel info
+        function updateTruckStopPanels() {
+          // Next stop for selected truck
+          if (
+            typeof selectedTruck === 'number' &&
+            truckRoutes[selectedTruck] &&
+            truckRoutes[selectedTruck].length > 1
+          ) {
+            var t = trucks[selectedTruck];
+            // หา stop ที่ใกล้ truck ที่ถูกเลือกที่สุด (เฉพาะจุดจอดบน route ของ truck นั้น)
+            var truckStops = [];
+            var coords = truckRoutes[selectedTruck];
+            var nStops = 4;
+            for (let i = 0; i < nStops; i++) {
+              var pos = Math.floor((coords.length-1) * (i/(nStops-1)));
+              truckStops.push(coords[pos]);
+            }
+            // หา index จุดจอดที่ใกล้ truck ที่สุด
+            var minIdx = 0, minDist = calcDistance(t.lat, t.lng, truckStops[0][0], truckStops[0][1]);
+            for (let i = 1; i < truckStops.length; i++) {
+              var d = calcDistance(t.lat, t.lng, truckStops[i][0], truckStops[i][1]);
+              if (d < minDist) { minDist = d; minIdx = i; }
+            }
+            document.getElementById('next-truck-stop').textContent = 'จุด #' + (minIdx+1) + ' (Truck #' + (selectedTruck+1) + ')';
+          } else {
+            document.getElementById('next-truck-stop').textContent = '-';
+          }
+          // Nearest stop to user (จากทุก stop)
+          if (stopCoords.length) {
+            var nearest = findNearestStop(centerLat, centerLng);
+            var stop = stopCoords[nearest.idx];
+            document.getElementById('nearest-stop').textContent =
+              'จุด #' + (stop.stopIdx+1) + ' (Truck #' + (stop.truckIdx+1) + ')' +
+              ' (' + stop.coord[0].toFixed(5) + ', ' + stop.coord[1].toFixed(5) + ')';
+          } else {
+            document.getElementById('nearest-stop').textContent = '-';
+          }
         }
         function animateTruckLoop(idx, coords) {
           var i = 0;
           var forward = true;
+          // Calculate stop positions for this truck
+          var nStops = 4;
+          var stopPositions = [];
+          for (let s = 0; s < nStops; s++) {
+            var pos = Math.floor((coords.length-1) * (s/(nStops-1)));
+            stopPositions.push(pos);
+          }
           function move() {
             if (!truckMarkers[idx]) return;
             trucks[idx].lat = coords[i][0];
             trucks[idx].lng = coords[i][1];
             truckMarkers[idx].setLatLng([trucks[idx].lat, trucks[idx].lng]);
             if (selectedTruck === idx) updateDistance();
+            // Check if at a stop position
+            if (stopPositions.includes(i)) {
+              // Pause for 10 seconds at stop
+              truckAnims[idx] = setTimeout(function() {
+                nextStep();
+              }, 10000); // 10,000 ms = 10 sec
+            } else {
+              truckAnims[idx] = setTimeout(function() {
+                nextStep();
+              }, 900); // normal step
+            }
+          }
+          function nextStep() {
             if (forward) {
               i++;
               if (i >= coords.length - 1) {
@@ -230,7 +386,7 @@
                 forward = true;
               }
             }
-            truckAnims[idx] = setTimeout(move, 900); // 900ms per step
+            move();
           }
           move();
         }
@@ -238,13 +394,14 @@
           fetchAndAnimateTruck(idx);
         }
         updateDistance();
+        updateTruckStopPanels();
         navigator.geolocation.watchPosition(function(pos) {
           centerLat = pos.coords.latitude;
           centerLng = pos.coords.longitude;
           userMarker.setLatLng([centerLat, centerLng]);
           map.setView([centerLat, centerLng], 20);
-          // Optionally, you can re-calculate truck routes here if you want them to follow the user
           updateDistance();
+          updateTruckStopPanels();
         });
       }, function() {
         fallbackMapSetup();
@@ -279,23 +436,23 @@
     }
 
 
-    function updateDistance() {
-      // Only update if selectedTruck is valid and truck has a position
-      if (typeof selectedTruck !== 'number' || !trucks[selectedTruck] || typeof trucks[selectedTruck].lat !== 'number' || typeof trucks[selectedTruck].lng !== 'number') {
-        document.getElementById('truck-distance').textContent = '-';
-        return;
-      }
-      var t = trucks[selectedTruck];
-      var dist = calcDistance(centerLat, centerLng, t.lat, t.lng);
-      var distText = dist < 1 ? (dist*1000).toFixed(0) + ' m' : dist.toFixed(2) + ' km';
-      document.getElementById('truck-distance').textContent = distText;
-    }
+    // function updateDistance() {
+    //   // Only update if selectedTruck is valid and truck has a position
+    //   if (typeof selectedTruck !== 'number' || !trucks[selectedTruck] || typeof trucks[selectedTruck].lat !== 'number' || typeof trucks[selectedTruck].lng !== 'number') {
+    //     document.getElementById('truck-distance').textContent = '-';
+    //     return;
+    //   }
+    //   var t = trucks[selectedTruck];
+    //   var dist = calcDistance(centerLat, centerLng, t.lat, t.lng);
+    //   var distText = dist < 1 ? (dist*1000).toFixed(0) + ' m' : dist.toFixed(2) + ' km';
+    //   document.getElementById('truck-distance').textContent = distText;
+    // }
 
-    var truckRow = document.createElement('div');
-    truckRow.className = 'panel-row';
-    truckRow.innerHTML = '<span class="panel-label">ระยะห่างรถป๋อมแป๋ม</span> <span class="panel-value" id="truck-distance"></span>';
-    document.querySelector('.bottom-panel').insertBefore(truckRow, document.querySelector('.bottom-panel').children[1]);
-    updateDistance();
+    // var truckRow = document.createElement('div');
+    // truckRow.className = 'panel-row';
+    // truckRow.innerHTML = '<span class="panel-label">ระยะห่างรถป๋อมแป๋ม</span> <span class="panel-value" id="truck-distance"></span>';
+    // document.querySelector('.bottom-panel').insertBefore(truckRow, document.querySelector('.bottom-panel').children[1]);
+    // updateDistance();
 
 
     // ...removed legacy moveTruckOnRoute logic...
