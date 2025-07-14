@@ -115,7 +115,7 @@
     var truckAnims = [];
     var selectedTruck = null;
 
-    // Add truck markers
+
     trucks.forEach(function(truck, idx) {
       var marker = L.marker([truck.lat, truck.lng], {icon: truckIcon}).addTo(map);
       marker.bindTooltip(truck.name, {permanent: false, direction: 'top'});
@@ -123,7 +123,7 @@
       truckMarkers.push(marker);
     });
 
-    // Add truck selector UI
+
     var selectDiv = document.createElement('div');
     selectDiv.style.margin = '0 0 10px 0';
     selectDiv.innerHTML = '<span style="font-weight:bold;">เลือกคันรถ: </span>' +
@@ -135,15 +135,15 @@
       });
     });
 
-    // Route and animate for selected truck
+
     var routeLine = null;
     function selectTruck(idx) {
-      // Remove previous route and stop previous animation
+
       if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
       if (truckAnims[idx]) clearTimeout(truckAnims[idx]);
       selectedTruck = idx;
       var truck = trucks[idx];
-      // Get route
+
       var osrmUrl = `https://router.project-osrm.org/route/v1/driving/${truck.lng},${truck.lat};${centerLng},${centerLat}?overview=full&geometries=geojson`;
       fetch(osrmUrl)
         .then(res => res.json())
@@ -157,7 +157,7 @@
     function animateTruckOnRoute(idx, coords) {
       var i = 0;
       function move() {
-        if (selectedTruck !== idx) return; // stop if user switched
+        if (selectedTruck !== idx) return; 
         if (i >= coords.length) return;
         trucks[idx].lat = coords[i][0];
         trucks[idx].lng = coords[i][1];
@@ -169,10 +169,9 @@
       move();
     }
 
-    // Default: select first truck
     selectTruck(0);
 
-    // Distance calculation (Haversine)
+
     function calcDistance(lat1, lng1, lat2, lng2) {
       function toRad(x) { return x * Math.PI / 180; }
       var R = 6371; // km
@@ -185,7 +184,7 @@
       return R * c;
     }
 
-    // Show distance in bottom panel (for selected truck)
+
     function updateDistance() {
       if (selectedTruck === null) return;
       var t = trucks[selectedTruck];
@@ -194,20 +193,20 @@
       document.getElementById('truck-distance').textContent = distText;
     }
 
-    // Add distance display to bottom panel
+
     var truckRow = document.createElement('div');
     truckRow.className = 'panel-row';
     truckRow.innerHTML = '<span class="panel-label">ระยะห่างรถป๋อมแป๋ม</span> <span class="panel-value" id="truck-distance"></span>';
     document.querySelector('.bottom-panel').insertBefore(truckRow, document.querySelector('.bottom-panel').children[1]);
     updateDistance();
 
-    // Animate truck movement along the route
+
     var routeIndex = 0;
     function moveTruckOnRoute() {
       if (routeIndex >= routeCoords.length - 1) return;
       var start = routeCoords[routeIndex];
       var end = routeCoords[routeIndex + 1];
-      var steps = 30; // smoothness
+      var steps = 30; 
       var step = 0;
       function stepMove() {
         if (step > steps) {
