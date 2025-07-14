@@ -40,7 +40,8 @@
       left: 50%;
       bottom: 75px;
       width: 90vw;
-      max-width: 90vw;
+      max-width: 500px;
+      min-width: 220px;
       transform: translateX(-50%);
       box-sizing: border-box;
       background: #fff;
@@ -84,15 +85,42 @@
       background: #f2f2f2;
       border-radius: 8px;
       padding: 4px 12px;
-      min-width: 300px;
-      max-width: 300px;
-      width: 300px;
+      min-width: 120px;
+      max-width: 100%;
+      width: 100%;
       display: inline-block;
       box-sizing: border-box;
       text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    @media (max-width: 600px) {
+      .bottom-panel {
+        flex-direction: column;
+        width: 98vw;
+        max-width: 98vw;
+        min-width: 0;
+        left: 50%;
+        padding: 12px 4vw 18px 4vw;
+        border-radius: 14px;
+      }
+      .panel-value {
+        font-size: 0.95rem;
+        min-width: 0;
+        width: 100%;
+        padding: 4px 4px;
+      }
+      .panel-row img {
+        width: 26px;
+        height: 26px;
+      }
+      .panel-row{
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
     }
       .bottom-nav {
     position: fixed;
@@ -116,6 +144,7 @@
     align-items: center;
     color: white;
     font-size: 0.7rem;
+    text-decoration: none !important;
   }
 
   .bottom-nav .nav-item img {
@@ -141,11 +170,11 @@
     </div>
   </div>
     <nav class="bottom-nav">
-      <a href="#" class="nav-item">
+      <a href="/" class="nav-item">
         <img src="/static/images/Vector.png" alt="Home">
         <span>Home</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="/map" class="nav-item">
         <img src="/static/images/Group.png" alt="Map">
         <span>Map</span>
       </a>
