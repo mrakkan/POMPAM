@@ -69,11 +69,11 @@
     overflow: hidden;
   }
 
-  .hero-bg {
+  /* .hero-bg {
     width: 100%;
     height: 100%;
     filter: brightness(0.75);
-  }
+  } */
 
   .hero-text {
     display: flex;
@@ -322,12 +322,13 @@
 
 <body>
   <main>
-    <section class="hero" style="background-image: url('/static/images/รูปรวม.png');">
+    <section class="hero" style="background:
+            linear-gradient(to bottom, #d31c25, #c02129, #500608);">
       <div class="hero-text">
-        <h1 id="typing" style="font-size: 50px; display: block; min-height: 80px; min-width: 250px;"></h1>
-        <p>ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
+        <h1 id="typing" style="font-size: 50px; display: block; min-height: 80px; min-width: 250px; color: #fff;"></h1>
+        <p style="color: #fff;">ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
       </div>
-      <img src="/static/images/truck.png" alt="POMPAM" class="truck-img">
+      <img src="/static/images/pompam.png" alt="POMPAM" class="truck-img">
     </section>
     <section class="product-section">
       <div class="section-header">
@@ -384,11 +385,11 @@
         <span>Map</span>
       </a>
       <a href="#" class="nav-item">
-        <img src="/static/images/pre-order.png" alt="Inventory">
+        <img src="/static/icons/cart.svg" alt="Inventory">
         <span>Inventory</span>
       </a>
       <a href="#" class="nav-item">
-        <img src="/static/images/profile.png" alt="Pre-order">
+        <img src="/static/icons/preorder.svg" alt="Pre-order">
         <span>Pre-order</span>
       </a>
     </nav>
