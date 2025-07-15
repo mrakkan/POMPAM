@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POMPAM</title>
+    <link rel="stylesheet" href="../static/css/default-deco.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .inventory-section {
+            padding: 1.5rem 1rem;
+        }
+        .inventory-header {
+            display: flex;
+            margin-right: 0;
+        }
+        .add-item {
+            margin-left: auto;
+            padding: 0.5rem 1rem 0 0;
+        }
+        .add-item a{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section inventory-section">
+        <div class="section-header inventory-header">
+            <h2>คลังสินค้าของท่าน</h2>
+            <div class="add-item">
+                <a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    <p>เพิ่มสินค้าใหม่</p>
+                </a>
+            </div>
+        </div>
+        <div class="filter-tags">
+            <a>เนื้อสัตว์</a>
+            <a>ผักผลไม้</a>
+            <a>เครื่องเทศ</a>
+            <a>สินค้าตามฤดูกาล</a>
+        </div>
+        <div class="product-list">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="">
+                </div>
+                <div class="product-details">
+                    <p class="name">ชื่อ</p>
+                    <p class="desc">จำนวน</p>
+                    <p class="price">ราคา</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

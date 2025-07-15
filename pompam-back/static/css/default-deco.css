@@ -1,0 +1,175 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', 'Segoe UI', sans-serif;
+}
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.6;
+    height: 100vh;
+    font-size: 14px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+main {
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 80px;
+}
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+.section {
+    padding: 1rem;
+}
+.section-header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    padding-left: 0.75rem;
+    border-left: 4px solid #e60000;
+}
+.filter-tags {
+    margin-bottom: 1rem;
+}
+.filter-tags a {
+    display: inline-block;
+    margin: 0.2rem 0.3rem;
+    padding: 0.3rem 0.7rem;
+    background: #eee;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+.filter-tags .active {
+    background: #e60000;
+    color: white;
+}
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+    transition: background 0.2s;
+}
+.favorite-btn:hover {
+    background: #ffeaea;
+}
+.favorite-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #e60000;
+    stroke-width: 2;
+}
+.product-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+}
+.product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    position: relative;
+    width: 300px;
+    height: 400px;
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+.product-details {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+}
+.product-details .name {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+.product-detail .desc {
+    font-size: 0.75rem;
+    color: #666;
+}
+.product-detail .price {
+    color: #2e7d32;
+    font-weight: bold;
+    margin: 0.4rem 0;
+}
+.product-card button {
+    background-color: #ffffff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.product-image {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+}
+.product-image img {
+    height: 80%;
+    width: 100%;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background:
+    linear-gradient(to right, #d31c25, #c02129, #791115);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-size: 0.7rem;
+}
+.bottom-nav .nav-item img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 2px;
+}

@@ -8,7 +8,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POMPAM</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="../static/css/default-deco.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -17,48 +17,6 @@
 </head>
 
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Prompt', 'Segoe UI', sans-serif;
-  }
-
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #fff;
-    color: #333;
-    line-height: 1.6;
-    height: 100vh;
-    font-size: 14px;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  main {
-    width: 100%;
-    margin: 0 auto;
-    padding-bottom: 80px;
-  }
-
-  header {
-    display: flex;
-    justify-content: flex-end;
-    padding: 1rem;
-  }
-
-  .login-btn a {
-    background-color: #e60000;
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-
   .hero {
     display: flex;
     flex-direction: row;
@@ -68,13 +26,11 @@
     background-size: cover;
     overflow: hidden;
   }
-
   .hero-bg {
     width: 100%;
     height: 100%;
     filter: brightness(0.75);
   }
-
   .hero-text {
     display: flex;
     flex-direction: column;
@@ -86,125 +42,17 @@
     color: rgb(0, 0, 0);
     z-index: 5;
   }
-
   .hero-text h1 {
     font-size: 1.4rem;
     margin-bottom: 0.3rem;
   }
-
   .hero-text p {
     font-size: 0.9rem;
   }
-
   .truck-img {
     max-width: 500px;
     margin-top: 0.5rem;
   }
-
-  .product-section {
-    padding: 1rem;
-  }
-
-  .section-header h2 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
-  .filter-tags {
-    margin-bottom: 1rem;
-  }
-
-  .filter-tags a {
-    display: inline-block;
-    margin: 0.2rem 0.3rem;
-    padding: 0.3rem 0.7rem;
-    background: #eee;
-    border-radius: 15px;
-    font-size: 0.8rem;
-  }
-
-  .filter-tags .active {
-    background: #e60000;
-    color: white;
-  }
-
-  .product-list {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    scroll-snap-type: x mandatory;
-  }
-
-  .product-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    text-align: center;
-    position: relative;
-    width: 300px;
-    height: 400px;
-    flex: 0 0 300px;
-    scroll-snap-align: start;
-    overflow: hidden;
-  }
-
-  .favorite-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    z-index: 2;
-    transition: background 0.2s;
-  }
-
-  .favorite-btn:hover {
-    background: #ffeaea;
-  }
-
-  .product-card img {
-    width: 100%;
-    height: 100px;
-    object-fit: contain;
-    margin-bottom: 0.5rem;
-  }
-
-  .product-card .name {
-    font-weight: bold;
-    font-size: 0.95rem;
-  }
-
-  .product-card .desc {
-    font-size: 0.75rem;
-    color: #666;
-  }
-
-  .product-card .price {
-    color: #2e7d32;
-    font-weight: bold;
-    margin: 0.4rem 0;
-  }
-
-  .product-card button {
-    background-color: #ffffff;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-  }
-
   .badge {
     position: absolute;
     top: 8px;
@@ -214,54 +62,12 @@
     border-radius: 10px;
     color: white;
   }
-
   .badge.red {
     background-color: #e60000;
   }
-
   .badge.green {
     background-color: #2e7d32;
   }
-
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 65px;
-    background:
-            linear-gradient(to right, #d31c25, #c02129, #791115);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-  }
-
-  .bottom-nav .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    font-size: 0.7rem;
-  }
-
-  .bottom-nav .nav-item img {
-    width: 20px;
-    height: 20px;
-    margin-bottom: 2px;
-  }
-
-  .favorite-btn svg {
-    width: 20px;
-    height: 20px;
-    fill: none;
-    stroke: #e60000;
-    stroke-width: 2;
-  }
-
   .add-to-cart {
     background-color: #e60000;
     color: #fff;
@@ -278,38 +84,11 @@
     justify-content: center;
     font-size: 20px;
   }
-
-  .product-image {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    background-color: #f3f3f3;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem;
-  }
-
-  .product-image img {
-    height: 80%;
-  }
-
   .star-rating {
     display: flex;
     align-items: center;
     margin-bottom: 0.3rem;
   }
-
-  .product-details {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    text-align: start;
-    padding: 10px;
-  }
-
   @media (max-width: 600px) {
     .hero {
       height: 500px;
@@ -329,9 +108,9 @@
       </div>
       <img src="/static/images/truck.png" alt="POMPAM" class="truck-img">
     </section>
-    <section class="product-section">
+    <section class="section">
       <div class="section-header">
-        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
+        <h2>สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
         </h2>
         <div class="filter-tags">
           <a href="/?filter=สินค้าแนะนำ"
@@ -347,7 +126,7 @@
         {% include 'product-category.html' %}
       </div>
     </section>
-    <section class="product-section">
+    <section class="section">
       <div class="section-header">
         <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">โปรโมชั่น</h2>
       </div>
