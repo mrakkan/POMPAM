@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>โปรไฟล์user</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #fff6f6, #fdfdfd);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .profile-container {
+      max-width: 500px;
+      margin: 60px auto 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    }
+
+    .profile-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #d31c25;
+      padding-left: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d31c25;
+    }
+
+    .profile-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #ffe5e5;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 4px solid #d31c25;
+    }
+
+    .profile-icon img {
+      width: 60px;
+      height: 60px;
+    }
+
+    .profile-info {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .profile-label {
+      font-weight: 600;
+      color: #444;
+    }
+
+    .profile-value {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: linear-gradient(to right, #d31c25, #c02129, #791115);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 0.75rem;
+    }
+
+    .nav-item img {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      font-weight: bold;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 500px) {
+      .profile-container {
+        margin: 40px 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="profile-container">
+    <div class="profile-header">โปรไฟล์</div>
+    <div class="profile-icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="avatar" />
+    </div>
+     <div class="profile-info">
+      <div class="profile-row">
+        <span class="profile-label">ชื่อผู้ใช้</span>
+        <span class="profile-value">คุณ มะเดี่ยว</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">หมายเลขสมาชิก</span>
+        <span class="profile-value">123456741</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">ที่อยู่</span>
+        <span class="profile-value">จุดส่งของที่1 หมู่บ้านลลิล</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">เบอร์โทร</span>
+        <span class="profile-value">0645523145</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item">
+      <img src="/static/images/Vector.png" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="/map" class="nav-item">
+      <img src="/static/images/Group.png" alt="Map">
+      <span>Map</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="/static/images/pre-order.png" alt="Inventory">
+      <span>Inventory</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <img src="/static/images/profile.png" alt="Profile">
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>
