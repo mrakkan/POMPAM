@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>โปรไฟล์คนขับ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .profile-container {
+      max-width: 400px;
+      margin: 50px auto 20px;
+      text-align: center;
+    }
+
+    .profile-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 4px solid #000;
+    }
+
+    .profile-icon img {
+      width: 60px;
+      height: 60px;
+    }
+
+    .profile-info {
+      text-align: left;
+      padding: 0 2rem;
+      margin-top: 30px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .profile-label {
+      font-weight: 600;
+    }
+
+    .profile-value {
+      font-weight: 500;
+      color: #777;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: linear-gradient(to right, #d31c25, #c02129, #791115);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 0.7rem;
+    }
+
+    .nav-item img {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      font-weight: bold;
+      text-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="profile-container">
+    <h2 style="text-align: left; padding-left: 2rem; border-left: 4px solid #d31c25; margin-bottom: 2rem;">โปรไฟล์</h2>
+    <div class="profile-icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="avatar" />
+    </div>
+    <div class="profile-info">
+      <div class="profile-row">
+        <span class="profile-label">หมายเลขสมาชิก</span>
+        <span class="profile-value">SMT0001</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">หมายเลขทะเบียนรถ</span>
+        <span class="profile-value">กข 4607</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">ชื่อผู้ขับขี่</span>
+        <span class="profile-value">สมปอง ปองกูล</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/" class="nav-item">
+      <img src="/static/images/Vector.png" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="/map" class="nav-item">
+      <img src="/static/images/Group.png" alt="Map">
+      <span>Map</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="/static/images/pre-order.png" alt="Inventory">
+      <span>Inventory</span>
+    </a>
+    <a href="/profile" class="nav-item active">
+      <img src="/static/images/profile.png" alt="Profile">
+      <span>Profile</span>
+    </a>
+  </nav>
+</body>
+</html>
