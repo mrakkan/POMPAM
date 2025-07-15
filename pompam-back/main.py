@@ -14,13 +14,13 @@ temp = Jinja2Templates(directory="public")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def tunnel_home(request: Request):
     return temp.TemplateResponse("main.html" , {
         "request": request})
 
 
 @app.get("/merchant-main", response_class=HTMLResponse)
-def home(request: Request):
+def merchant_home(request: Request):
     products = [
         {"name": "กล้วยหอมทอง", "desc": "หวาน นุ่ม", "price": 25, "img": "/static/images/banana.jpg", "rating": 5, "category": "ผักผลไม้"},
         {"name": "บรอกโคลี", "desc": "สด กรอบ", "price": 30, "img": "/static/images/broccoli.jpg", "rating": 4, "category": "ผักผลไม้"},
@@ -48,6 +48,10 @@ def home(request: Request):
         "promotion": promotion,
         "active_filter": filter_category
     })
+
+@app.get("/map_merchant", response_class=HTMLResponse)
+def merchant_map(request: Request):
+    return temp.TemplateResponse("merchant_map.html", {"request": request})
     
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
