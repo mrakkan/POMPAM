@@ -14,7 +14,7 @@
     }
 
     body {
-      background-color: #fff;
+      background: linear-gradient(to bottom, #fff6f6, #fdfdfd);
       color: #333;
       font-size: 14px;
       min-height: 100vh;
@@ -22,21 +22,34 @@
     }
 
     .profile-container {
-      max-width: 400px;
-      margin: 50px auto 20px;
-      text-align: center;
+      max-width: 500px;
+      margin: 60px auto 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    }
+
+    .profile-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #d31c25;
+      padding-left: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d31c25;
     }
 
     .profile-icon {
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background-color: #f0f0f0;
+      background-color: #ffe5e5;
       margin: 0 auto 20px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 4px solid #000;
+      border: 4px solid #d31c25;
     }
 
     .profile-icon img {
@@ -46,23 +59,25 @@
 
     .profile-info {
       text-align: left;
-      padding: 0 2rem;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     .profile-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
     }
 
     .profile-label {
       font-weight: 600;
+      color: #444;
     }
 
     .profile-value {
       font-weight: 500;
-      color: #777;
+      color: #666;
     }
 
     .bottom-nav {
@@ -86,25 +101,31 @@
       flex-direction: column;
       align-items: center;
       color: white;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
     }
 
     .nav-item img {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       margin-bottom: 2px;
     }
 
     .nav-item.active {
       font-weight: bold;
-      text-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 500px) {
+      .profile-container {
+        margin: 40px 1rem;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="profile-container">
-    <h2 style="text-align: left; padding-left: 2rem; border-left: 4px solid #d31c25; margin-bottom: 2rem;">โปรไฟล์</h2>
+    <div class="profile-header">โปรไฟล์</div>
     <div class="profile-icon">
       <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="avatar" />
     </div>
@@ -121,7 +142,44 @@
         <span class="profile-label">ชื่อผู้ขับขี่</span>
         <span class="profile-value">สมปอง ปองกูล</span>
       </div>
+      <div class="profile-row">
+        <span class="profile-label">ระดับสมาชิก</span>
+        <span class="profile-value">Platinum</span>
+      </div>
     </div>
+        <!-- เพิ่มส่วนนี้ไว้ต่อจาก .profile-info -->
+<div class="profile-header" style="margin-top: 2rem;">สรุปรายได้</div>
+<div class="profile-info">
+  <div class="profile-row">
+    <span class="profile-label">รายได้รวม</span>
+    <span class="profile-value">฿7,500</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">ต้นทุนรวม</span>
+    <span class="profile-value">฿4,200</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">ค่าใช้จ่ายอื่น ๆ</span>
+    <span class="profile-value">฿500</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">กำไรสุทธิ</span>
+    <span class="profile-value" style="color: green;">฿2,800 (37%)</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">สถานะวันนี้</span>
+    <span class="profile-value" style="color: green;">🔼 กำไร</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">ยอดขายเฉลี่ย/ออเดอร์</span>
+    <span class="profile-value">฿250</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">จำนวนออเดอร์ทั้งหมด</span>
+    <span class="profile-value">30 ออเดอร์</span>
+  </div>
+</div>
+
   </div>
 
   <nav class="bottom-nav">
