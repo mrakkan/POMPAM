@@ -21,7 +21,8 @@
     
     body { 
       margin: 0; 
-      padding: 0; }
+      padding: 0;
+     }
     .top-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -38,21 +39,21 @@
     .bottom-panel {
       position: fixed;
       left: 50%;
-      bottom: 75px;
+      top: 25px;
       width: 90vw;
       max-width: 500px;
       min-width: 220px;
       transform: translateX(-50%);
       box-sizing: border-box;
       background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
-      padding: 18px 16px 24px 16px;
-      min-height: 120px;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      padding: 12px 14px 16px 14px;
+      min-height: 100px;
       z-index: 1001;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .panel-btn {
       background: #e60000;
@@ -69,22 +70,22 @@
     .panel-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .panel-row img {
-      width: 32px; height: 32px;
+      width: 24px; height: 24px;
     }
     .panel-label {
       font-weight: bold;
       color: #e60000;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     .panel-value {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #333;
       background: #f2f2f2;
-      border-radius: 8px;
-      padding: 4px 12px;
+      border-radius: 6px;
+      padding: 3px 10px;
       min-width: 120px;
       max-width: 100%;
       width: 100%;
@@ -99,27 +100,33 @@
     @media (max-width: 600px) {
       .bottom-panel {
         flex-direction: column;
-        width: 98vw;
-        max-width: 98vw;
+        width: 92vw;
+        max-width: 92vw;
         min-width: 0;
         left: 50%;
-        padding: 12px 4vw 18px 4vw;
-        border-radius: 14px;
+        padding: 6px 2vw 8px 2vw;
+        border-radius: 10px;
+        min-height: 80px;
       }
       .panel-value {
-        font-size: 0.95rem;
+        font-size: 0.75rem;
         min-width: 0;
         width: 100%;
-        padding: 4px 4px;
+        padding: 2px 2px;
       }
       .panel-row img {
-        width: 26px;
-        height: 26px;
+        width: 18px;
+        height: 18px;
       }
-      .panel-row{
+      .panel-row {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        gap: 2px;
+        margin-bottom: 2px;
+      }
+      .panel-label {
+        font-size: 0.7rem;
       }
     }
       .bottom-nav {
@@ -449,8 +456,6 @@
       updateDistance();
     }
 
-
-    // ...existing code...
 
     function calcDistance(lat1, lng1, lat2, lng2) {
       function toRad(x) { return x * Math.PI / 180; }

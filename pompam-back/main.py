@@ -19,7 +19,7 @@ with open("products.json", "r", encoding="utf-8") as f:
 promotion = [item for item in products if item["promotion"]]
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def tunnel_home(request: Request):
     return temp.TemplateResponse("main.html" , {
         "request": request})
 
@@ -36,6 +36,10 @@ def home(request: Request):
         "promotion": promotion,
         "active_filter": filter_category
     })
+
+@app.get("/map_merchant", response_class=HTMLResponse)
+def merchant_map(request: Request):
+    return temp.TemplateResponse("merchant_map.html", {"request": request})
     
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
