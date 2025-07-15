@@ -1,0 +1,51 @@
+[
+    {
+        "name": "POMPAM-01",
+        "plate": "1กข 1234 กทม",
+        "desc": "รถป๋อมแป๋มสายหลัก วิ่งทั่วเมือง",
+        "img": "/static/images/truck.png",
+        "rating": 5
+    },
+    {
+        "name": "POMPAM-02",
+        "plate": "2ขค 5678 เชียงใหม่",
+        "desc": "รถป๋อมแป๋มสายเหนือ ส่งไวใจกลางเมือง",
+        "img": "/static/images/truck.png",
+        "rating": 4
+    },
+    {
+        "name": "POMPAM-03",
+        "plate": "3งง 9012 ขอนแก่น",
+        "desc": "รถป๋อมแป๋มสายอีสาน สดใหม่ทุกวัน",
+        "img": "/static/images/truck.png",
+        "rating": 3
+    },
+    {
+        "name": "POMPAM-04",
+        "plate": "4จจ 3456 ภูเก็ต",
+        "desc": "รถป๋อมแป๋มสายใต้ บริการทั่วภาคใต้",
+        "img": "/static/images/truck.png",
+        "rating": 5
+    },
+    {
+        "name": "POMPAM-05",
+        "plate": "5ฉฉ 7890 นครสวรรค์",
+        "desc": "รถป๋อมแป๋มสายเหนือบน เสิร์ฟถึงบ้าน",
+        "img": "/static/images/truck.png",
+        "rating": 4
+    },
+    {
+        "name": "POMPAM-06",
+        "plate": "6ชช 1122 ระยอง",
+        "desc": "รถป๋อมแป๋มสายตะวันออก สดใหม่ทุกวัน",
+        "img": "/static/images/truck.png",
+        "rating": 5
+    },
+    {
+        "name": "POMPAM-07",
+        "plate": "7ซซ 3344 อุดรธานี",
+        "desc": "รถป๋อมแป๋มสายอีสานล่าง ส่งไวทั่วภาค",
+        "img": "/static/images/truck.png",
+        "rating": 4
+    }
+]

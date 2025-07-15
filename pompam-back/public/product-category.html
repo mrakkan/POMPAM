@@ -6,15 +6,15 @@
     </button>
     <span class="badge red">BESTSELLER</span>
     <img src="{{ item.img }}">
-    <a href="" class="add-to-cart">Add to cart</a>
   </div>
   <div class="product-details">
-    <div>
+    <div class="star-rating">
+      {% set rating = item.rating|default(0) %}
       {% for i in range(1, 6) %}
-        {% if i <= item.rating|default(0) %}
-          <span class="star filled">★</span>
+        {% if i <= rating %}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFD600" stroke="#FFD600" stroke-width="1" style="margin-right:2px;"><polygon points="12,2 15,9 22,9.3 17,14.1 18.5,21 12,17.5 5.5,21 7,14.1 2,9.3 9,9"/></svg>
         {% else %}
-          <span class="star">☆</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.2" style="margin-right:2px;"><polygon points="12,2 15,9 22,9.3 17,14.1 18.5,21 12,17.5 5.5,21 7,14.1 2,9.3 9,9"/></svg>
         {% endif %}
       {% endfor %}
     </div>

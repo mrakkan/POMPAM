@@ -14,9 +14,14 @@ app = FastAPI()
 temp = Jinja2Templates(directory="public")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+with open("trucks.json", "r", encoding="utf-8") as f:
+    trucks = json.load(f)
+
 with open("products.json", "r", encoding="utf-8") as f:
     products = json.load(f)
 promotion = [item for item in products if item["promotion"]]
+
+
 
 @app.get("/", response_class=HTMLResponse)
 def tunnel_home(request: Request):
@@ -40,7 +45,11 @@ def home(request: Request):
 @app.get("/map_merchant", response_class=HTMLResponse)
 def merchant_map(request: Request):
     return temp.TemplateResponse("merchant_map.html", {"request": request})
-    
+
+@app.get("/merchant-profile", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("truck-profile.html", {"request": request})
+
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
     filter_category = request.query_params.get("filter", "สินค้าแนะนำ")
@@ -52,7 +61,8 @@ def home(request: Request):
         "request": request,
         "bestseller": filtered,
         "promotion": promotion,
-        "active_filter": filter_category
+        "active_filter": filter_category,
+        "trucks": trucks
     })
 
 @app.get("/map", response_class=HTMLResponse)
@@ -72,6 +82,12 @@ def get_products(request: Request, filter: str = "สินค้าแนะน
         "request": request,
         "bestseller": filtered
     })
+
+@app.get("/profile", response_class=HTMLResponse)
+def profile(request: Request):
+    return temp.TemplateResponse("user-profile.html", {"request": request})
+
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

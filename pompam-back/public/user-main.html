@@ -109,8 +109,37 @@
       <img src="../static/images/truck.png" alt="POMPAM" class="truck-img">
     </section>
     <section class="section">
+    <section class="section" style="margin: 0; padding: 0;">
       <div class="section-header">
-        <h2>สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
+        <h2>รถป๋อมแป๋ม</h2>
+      </div>
+      <div class="product-list" id="truck-list">
+        {% for truck in trucks %}
+        <div class="product-card">
+          <div class="product-image">
+            <img src="{{ truck.img }}" alt="{{ truck.name }}">
+          </div>
+          <div class="product-details">
+            <p class="name">{{ truck.name }}</p>
+            <div class="star-rating">
+              {% set rating = truck.rating if truck.rating is defined else 5 %}
+              {% for i in range(1, 6) %}
+                {% if i <= rating %}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFD600" stroke="#FFD600" stroke-width="1" style="margin-right:2px;"><polygon points="12,2 15,9 22,9.3 17,14.1 18.5,21 12,17.5 5.5,21 7,14.1 2,9.3 9,9"/></svg>
+                {% else %}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.2" style="margin-right:2px;"><polygon points="12,2 15,9 22,9.3 17,14.1 18.5,21 12,17.5 5.5,21 7,14.1 2,9.3 9,9"/></svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <p class="price">ทะเบียน: {{ truck.plate }}</p>
+            <p class="desc">{{ truck.desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+      <div class="section-header">
+        <h2>สินค้าบนรถพร้อมส่ง</h2>
         </h2>
         <div class="filter-tags">
           <a href="/?filter=สินค้าแนะนำ"
@@ -143,7 +172,6 @@
             </button>
             <span class="badge green">โปรโมชั่น</span>
             <img src="{{ item.img }}">
-            <a href="" class="add-to-cart">Add to cart</a>
           </div>
           <div class="product-details">
             <p class="name">{{ item.name }}</p>
@@ -154,7 +182,7 @@
       </div>
     </section>
     <nav class="bottom-nav">
-      <a href="/" class="nav-item">
+      <a href="/user-main" class="nav-item">
         <img src="../static/images/Vector.png" alt="Home">
         <span>Home</span>
       </a>
@@ -166,9 +194,9 @@
         <img src="../static/images/pre-order.png" alt="Inventory">
         <span>Inventory</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="/profile" class="nav-item">
         <img src="../static/images/profile.png" alt="Pre-order">
-        <span>Pre-order</span>
+        <span>Profile</span>
       </a>
     </nav>
   </main>
