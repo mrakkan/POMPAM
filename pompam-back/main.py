@@ -23,6 +23,7 @@ promotion = [item for item in products if item["promotion"]]
 
 with open("orders.json", "r", encoding="utf-8") as f:
     orders = json.load(f)
+selected = [products[0]['name'], products[3]['name'], products[4]['name']]
 
 @app.get("/", response_class=HTMLResponse)
 def tunnel_home(request: Request):
@@ -96,7 +97,8 @@ def profile(request: Request):
 def merchant_profile(request: Request):
     return temp.TemplateResponse("user-preorder.html", {
         "request": request,
-        "products": products
+        "products": products,
+        "selected": selected
     })
 
 @app.get("/preorder-products", response_class=HTMLResponse)
