@@ -4,6 +4,7 @@
     "quantity": 1,
     "date": "2025-07-16",
     "address": "เลขที่ 99/12 หมู่บ้านบางพลีวิลเลจ ถนนเทพารักษ์ ตำบลบางพลีใหญ่ อำเภอบางพลี จังหวัดสมุทรปราการ 10540",
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/800px-Banana-Single.jpg",
     "delivery_date": "2025-07-18",
     "delivered": false
   },
@@ -12,6 +13,7 @@
     "quantity": 8,
     "date": "2025-07-16",
     "address": "เลขที่ 45/3 หมู่ 5 ซอยบางนา-ตราด 25 ตำบลบางพลีใหญ่ อำเภอบางพลี จังหวัดสมุทรปราการ 10540",
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Schweinebauch-2.jpg/800px-Schweinebauch-2.jpg",
     "delivery_date": "2025-07-19",
     "delivered": false
   },
@@ -20,6 +22,7 @@
     "quantity": 4,
     "date": "2025-07-15",
     "address": "บ้านเลขที่ 110/4 หมู่บ้านพฤกษา ตำบลบางปลา อำเภอบางพลี จังหวัดสมุทรปราการ 10540",
+    "img": "https://www.panmai.com/wp-content/uploads/2021/06/%E0%B8%82%E0%B8%B4%E0%B8%87.jpg",
     "delivery_date": "2025-07-17",
     "delivered": true
   },
@@ -28,6 +31,7 @@
     "quantity": 3,
     "date": "2025-07-15",
     "address": "เลขที่ 76/8 ถนนกิ่งแก้ว ตำบลราชาเทวะ อำเภอบางพลี จังหวัดสมุทรปราการ 10540",
+    "img": "https://medthai.com/wp-content/uploads/2013/07/Lychee-1.jpg",
     "delivery_date": "2025-07-17",
     "delivered": false
   }

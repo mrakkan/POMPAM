@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POMPAM</title>
   <link rel="stylesheet" href="/static/style.css">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -335,12 +336,12 @@
         <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
         </h2>
         <div class="filter-tags">
-          <a href="/?filter=สินค้าแนะนำ"
+          <a href="/merchant-main?filter=สินค้าแนะนำ"
             class="{% if active_filter == 'สินค้าแนะนำ' %}active{% endif %}">สินค้าแนะนำ</a>
-          <a href="/?filter=เนื้อสัตว์" class="{% if active_filter == 'เนื้อสัตว์' %}active{% endif %}">เนื้อสัตว์</a>
-          <a href="/?filter=ผักผลไม้" class="{% if active_filter == 'ผักผลไม้' %}active{% endif %}">ผักผลไม้</a>
-          <a href="/?filter=เครื่องเทศ" class="{% if active_filter == 'เครื่องเทศ' %}active{% endif %}">เครื่องเทศ</a>
-          <a href="/?filter=สินค้าตามฤดูกาล"
+          <a href="/merchant-main?filter=เนื้อสัตว์" class="{% if active_filter == 'เนื้อสัตว์' %}active{% endif %}">เนื้อสัตว์</a>
+          <a href="/merchant-main?filter=ผักผลไม้" class="{% if active_filter == 'ผักผลไม้' %}active{% endif %}">ผักผลไม้</a>
+          <a href="/merchant-main?filter=เครื่องเทศ" class="{% if active_filter == 'เครื่องเทศ' %}active{% endif %}">เครื่องเทศ</a>
+          <a href="/merchant-main?filter=สินค้าตามฤดูกาล"
             class="{% if active_filter == 'สินค้าตามฤดูกาล' %}active{% endif %}">สินค้าตามฤดูกาล</a>
         </div>
       </div>
@@ -433,7 +434,7 @@
         productList.style.setProperty('--animate-duration', '0.18s');
         productList.classList.add('animate__animated', 'animate__fadeOut');
         setTimeout(() => {
-          fetch(`/products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          fetch(`/merchant-main/products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(res => res.text())
             .then(html => {
               productList.innerHTML = html;
@@ -451,5 +452,6 @@
     });
   });
 </script>
+
 
 </html>

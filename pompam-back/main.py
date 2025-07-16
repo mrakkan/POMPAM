@@ -90,6 +90,20 @@ def get_products(request: Request, filter: str = "สินค้าแนะน
         "bestseller": filtered
     })
 
+@app.get("/merchant-main/products", response_class=HTMLResponse)
+def get_merchant_products(request: Request, filter: str = "สินค้าแนะนำ"):
+    if filter == "สินค้าแนะนำ":
+        filtered = products[:6]
+    else:
+        filtered = []
+        for item in products:
+            if item["category"] == filter:
+                filtered.append(item)
+    return temp.TemplateResponse("product-category.html", {
+        "request": request,
+        "bestseller": filtered
+    })
+
 @app.get("/profile", response_class=HTMLResponse)
 def profile(request: Request):
     return temp.TemplateResponse("user-profile.html", {"request": request})
