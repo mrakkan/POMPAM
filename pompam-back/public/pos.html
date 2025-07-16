@@ -51,6 +51,7 @@
             flex-direction: column;
             gap: 20px;
             position: relative;
+            border-radius: 12px;
         }
         .item-image {
             width: 120px;
@@ -74,9 +75,11 @@
         }
         .see-item-btn {
             background-color: green;
+            border-radius: 12px;
         }
         .confirm-btn {
             background-color: #e60000;
+            border-radius: 12px;
         }
         .price {
             color: #e60000;
@@ -130,7 +133,7 @@
 <body>
     <div class="section">
         <div class="section-header">
-            <h2>ระบบพรีออเดอร์</h2>
+            <h2>ระบบจัดการการเงิน</h2>
         </div>
         <div class="search-box">
             <div style="background-color: #e60000; padding: 8px; border-radius: 16px; box-shadow: 0 6px 24px 0 rgba(0,0,0,0.18), 0 1.5px 4px 0 rgba(0,0,0,0.18);">
@@ -164,8 +167,8 @@
             {% endfor %}
         </div>
         <div class="confirm-section">
-            <a class="see-item-btn" href="/pre-order/see-order">ดูรายการ</a>
-            <a class="confirm-btn" href="/pre-order/confirm">สั่งจองล่วงหน้า</a>
+            <a class="see-item-btn" href="/pos/order">ดูรายการ</a>
+            <a class="confirm-btn" href="/pos/pay">สั่งจองล่วงหน้า</a>
         </div>
     </div>
     <nav class="bottom-nav">

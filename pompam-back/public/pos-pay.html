@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../static/css/default-deco.css">
-    
     <style>
         .section-header {
             display: flex;
@@ -109,17 +108,29 @@
             border-radius: 50%;
             font-size: 12px;
         }
+        .select-payment {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            gap: 36px;
+        }
+        .select-payment a {
+            padding: 8px;
+            border-radius: 12px;
+            background-color: #e60000;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="section">
         <div class="section-header">
-            <a href="/pre-order">
+            <a href="/pos">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#e60000" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
                 </svg>
             </a>
-            <h2>ระบบพรีออเดอร์</h2>
+            <h2>ระบบจัดการการเงิน</h2>
         </div>
         <div class="item-list">
             <table>
@@ -149,36 +160,40 @@
             </table>
         </div>
     </div>
-    <div class="select-date">
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="red" class="bi bi-calendar-event" viewBox="0 0 16 16">
-            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-        </svg>
-        <p>เลือกวันจัดส่ง</p>
-        <input type="date">
+    <div class="select-payment">
+        <a>เงินสด</a>
+        <a>TrueMoney</a>
+        <a>PromptPay</a>
     </div>
     <div class="total-section" style="padding-bottom: 90px;">
         <p>ราคารวม 55 บาท</p>
         <a class="confirm-btn" href="/pre-order/see-order">สั่งจองล่วงหน้า</a>
     </div>
     <nav class="bottom-nav">
-        <a href="/user-main" class="nav-item">
-        <img src="/static/images/Vector.png" alt="Home">
-        <span>Home</span>
+        <a href="/merchant-main" class="nav-item">
+            <img src="/static/images/Vector.png" alt="Home">
+            <span>Home</span>
         </a>
-        <a href="/map" class="nav-item">
-        <img src="/static/images/Group.png" alt="Map">
-        <span>Map</span>
+        <a href="/merchant-map" class="nav-item">
+            <img src="/static/images/Group.png" alt="Map">
+            <span>Map</span>
         </a>
-        <a href="/pre-order" class="nav-item">
-        <img src="/static/images/pre-order.png" alt="Inventory">
-        <span>Pre-Order</span>
+        <a href="/merchant-inventory" class="nav-item">
+            <img src="/static/images/cart.png" alt="Inventory">
+            <span>Inventory</span>
         </a>
-        <a href="/profile" class="nav-item active">
-        <img src="/static/images/profile.png" alt="Profile">
-        <span>Profile</span>
+        <a href="/merchant-preorder" class="nav-item">
+            <img src="/static/images/pre-order.png" alt="Pre-order">
+            <span>Pre-order</span>
+        </a>
+        <a href="/pos" class="nav-item">
+            <img src="/static/images/pos.png" alt="Inventory">
+            <span>POS</span>
+        </a>
+        <a href="/merchant-profile" class="nav-item">
+            <img src="/static/images/profile.png" alt="Home">
+            <span>Profile</span>
         </a>
     </nav>
-    
 </body>
 </html>
