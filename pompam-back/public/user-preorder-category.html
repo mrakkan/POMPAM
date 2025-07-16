@@ -1,0 +1,14 @@
+{% for item in products %}
+    <div class="item-card {% if item.name in selected %} selected {% endif %}">
+        <div class="quantity-selector">
+            <button class="quantity-btn">-</button>
+            <div class="quantity-display">1</div>
+            <button class="quantity-btn">+</button>
+        </div>
+        <div class="item-image">
+            <img src="{{ item.img }}">
+        </div>
+        <p class="name">{{ item.name }}</p>
+        <p class="price">฿{{ item.price }}</p>
+    </div>
+{% endfor %}

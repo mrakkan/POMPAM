@@ -94,9 +94,12 @@ def profile(request: Request):
 
 @app.get("/pre-order", response_class=HTMLResponse)
 def merchant_profile(request: Request):
+    selected = [products[0]['name'], products[3]['name'], products[4]['name']]
+    print(selected)
     return temp.TemplateResponse("user-preorder.html", {
         "request": request,
-        "products": products
+        "products": products,
+        "selected": selected
     })
 
 @app.get("/preorder-products", response_class=HTMLResponse)

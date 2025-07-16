@@ -50,6 +50,7 @@
             align-items: center;
             flex-direction: column;
             gap: 20px;
+            position: relative;
         }
         .item-image {
             width: 120px;
@@ -77,6 +78,59 @@
         .confirm-btn {
             background-color: #e60000;
         }
+        .price {
+            color: #e60000;
+        }
+        .item-card.selected {
+            border: 3px solid #e60000;
+        }
+        .quantity-selector {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 50%;
+            background-color: #e60000;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .quantity-btn:hover {
+            background-color: #cc0000;
+            transform: scale(1.1);
+        }
+        .quantity-btn:active {
+            transform: scale(0.9);
+        }
+        .quantity-display {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -94,54 +148,14 @@
             <input placeholder="ค้นหาสินค้า" type="text" name="text" class="input">
         </div>
         <div class="filter-tags">
-            <a class="active">เนื้อสัตว์</a>
+            <a class="active">ทั้งหมด</a>
+            <a>เนื้อสัตว์</a>
             <a>ผักผลไม้</a>
             <a>เครื่องเทศ</a>
             <a>สินค้าตามฤดูกาล</a>
         </div>
-        <div class="product-item">
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
-            <div class="item-card">
-                <div class="item-image">
-                    <img src="">
-                </div>
-                <p class="name">ไก่</p>
-                <p class="price">฿15</p>
-            </div>
+        <div class="product-item" id="product-list">
+            {% include 'user-preorder-category.html' %}
         </div>
         <div class="confirm-section">
             <a class="see-item-btn" href="/pre-order/see-order">ดูรายการที่เลือก</a>
@@ -166,6 +180,37 @@
         <span>Profile</span>
         </a>
     </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const productFilter = document.querySelectorAll('.section .filter-tags a');
+            const productList = document.getElementById('product-list');
+            productFilter.forEach(tag => {
+                tag.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    productList.classList.remove('animate__animated', 'animate__fadeInUp', 'animate__fadeOutDown');
+                    productList.style.setProperty('--animate-duration', '0.18s');
+                    productList.classList.add('animate__animated', 'animate__fadeOut');
+                    setTimeout(() => {
+                        fetch(`/preorder-products?filter=${encodeURIComponent(this.textContent)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+                        .then(res => res.text())
+                        .then(html => {
+                            productList.innerHTML = html;
+                            productList.classList.remove('animate__fadeOut');
+                            productList.classList.add('animate__fadeIn');
+                            productList.style.setProperty('--animate-duration', '0.18s');
+
+                            productFilter.forEach(t => t.classList.remove('active'));
+                            tag.classList.add('active');
+
+                            setTimeout(() => {
+                                productList.classList.remove('animate__animated', 'animate__fadeIn');
+                            }, 200);
+                        })
+                    }, 180);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
