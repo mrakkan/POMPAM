@@ -70,13 +70,50 @@
             padding: 8px;
             color: white;
         }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 50%;
+            background-color: #e60000;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .quantity-display {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="section">
         <div class="section-header">
             <a href="/pre-order">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="#e60000" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
                 </svg>
             </a>
@@ -87,96 +124,26 @@
                 <colgroup>
                     <col style="width: 180px;">
                 </colgroup>
-                <tr>
-                    <td>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            <img>
-                        </div>
-                    </td>
-                    <td>
-                        <p>ชื่อ</p>
-                        <p>ราคา</p>
-                    </td>
-                    <td class="quantity-col">
-                        <div class="quantity">
-                            <button>-</button>
-                            <p>num</p>
-                            <button>+</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            <img>
-                        </div>
-                    </td>
-                    <td>
-                        <p>ชื่อ</p>
-                        <p>ราคา</p>
-                    </td>
-                    <td class="quantity-col">
-                        <div class="quantity">
-                            <button>-</button>
-                            <p>num</p>
-                            <button>+</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            <img>
-                        </div>
-                    </td>
-                    <td>
-                        <p>ชื่อ</p>
-                        <p>ราคา</p>
-                    </td>
-                    <td class="quantity-col">
-                        <div class="quantity">
-                            <button>-</button>
-                            <p>num</p>
-                            <button>+</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            <img>
-                        </div>
-                    </td>
-                    <td>
-                        <p>ชื่อ</p>
-                        <p>ราคา</p>
-                    </td>
-                    <td class="quantity-col">
-                        <div class="quantity">
-                            <button>-</button>
-                            <p>num</p>
-                            <button>+</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            <img>
-                        </div>
-                    </td>
-                    <td>
-                        <p>ชื่อ</p>
-                        <p>ราคา</p>
-                    </td>
-                    <td class="quantity-col">
-                        <div class="quantity">
-                            <button>-</button>
-                            <p>num</p>
-                            <button>+</button>
-                        </div>
-                    </td>
-                </tr>
+                {% for item in selected %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="{{ item.img }}">
+                            </div>
+                        </td>
+                        <td>
+                            <p>{{ item.name }}</p>
+                            <p>ราคา {{ item.price }} บาท</p>
+                        </td>
+                        <td class="quantity-col">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn">-</button>
+                                <div class="quantity-display">1</div>
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
@@ -189,7 +156,7 @@
         <input type="date">
     </div>
     <div class="total-section" style="padding-bottom: 90px;">
-        <p>ราคารวม</p>
+        <p>ราคารวม 55 บาท</p>
         <a class="confirm-btn" href="/pre-order/see-order">สั่งจองล่วงหน้า</a>
     </div>
     <nav class="bottom-nav">

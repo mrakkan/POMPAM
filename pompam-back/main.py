@@ -23,7 +23,8 @@ promotion = [item for item in products if item["promotion"]]
 
 with open("orders.json", "r", encoding="utf-8") as f:
     orders = json.load(f)
-selected = [products[0]['name'], products[3]['name'], products[4]['name']]
+selected = [products[0], products[3], products[4]]
+selected_name = [products[0]['name'], products[3]['name'], products[4]['name']]
 
 @app.get("/", response_class=HTMLResponse)
 def tunnel_home(request: Request):
@@ -98,7 +99,7 @@ def merchant_profile(request: Request):
     return temp.TemplateResponse("user-preorder.html", {
         "request": request,
         "products": products,
-        "selected": selected
+        "selected": selected_name
     })
 
 @app.get("/preorder-products", response_class=HTMLResponse)
@@ -114,11 +115,17 @@ def get_inventory_products(request: Request, filter: str = "เนื้อส�
 
 @app.get("/pre-order/confirm", response_class=HTMLResponse)
 def merchant_profile(request: Request):
-    return temp.TemplateResponse("confirm-preorder.html", {"request": request})
+    return temp.TemplateResponse("confirm-preorder.html", {
+        "request": request,
+        "selected": selected
+    })
 
 @app.get("/pre-order/see-order", response_class=HTMLResponse)
 def merchant_profile(request: Request):
-    return temp.TemplateResponse("see-order.html", {"request": request})
+    return temp.TemplateResponse("see-order.html", {
+        "request": request,
+        "selected": selected
+    })
 
 @app.get("/merchant-inventory", response_class=HTMLResponse)
 def merchant_profile(request: Request):
