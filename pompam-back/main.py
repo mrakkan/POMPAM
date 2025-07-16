@@ -92,6 +92,14 @@ def profile(request: Request):
 def merchant_profile(request: Request):
     return temp.TemplateResponse("user-preorder.html", {"request": request})
 
+@app.get("/pre-order/confirm", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("confirm-preorder.html", {"request": request})
+
+@app.get("/pre-order/see-order", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("see-order.html", {"request": request})
+
 @app.get("/merchant-inventory", response_class=HTMLResponse)
 def merchant_profile(request: Request):
     return temp.TemplateResponse("inventory.html", {"request": request})
