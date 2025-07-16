@@ -117,7 +117,11 @@
         .select-payment a {
             padding: 8px;
             border-radius: 12px;
-            background-color: #e60000;
+            background: #eee;
+            border-radius: 15px;
+        }
+        .select-payment .active {
+            background: #e60000;
             color: white;
         }
     </style>
@@ -163,7 +167,10 @@
     <div class="select-payment">
         <a>เงินสด</a>
         <a>TrueMoney</a>
-        <a>PromptPay</a>
+        <a class="active">PromptPay</a>
+    </div>
+    <div style="display: flex; justify-content: center; padding-top: 24px;">
+        <img src="/static/images/qr.png">
     </div>
     <div class="total-section" style="padding-bottom: 90px;">
         <p>ราคารวม 55 บาท</p>
