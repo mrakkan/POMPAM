@@ -48,6 +48,9 @@ def merchant_map(request: Request):
 def merchant_profile(request: Request):
     return temp.TemplateResponse("truck-profile.html", {"request": request})
 
+@app.get("/merchant-credit", response_class=HTMLResponse)
+def merchant_credit(request: Request):
+    return temp.TemplateResponse("credit-topup.html", {"request": request})
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
     filter_category = request.query_params.get("filter", "สินค้าแนะนำ")
@@ -96,6 +99,7 @@ def merchant_profile(request: Request):
 @app.get("/merchant-preorder", response_class=HTMLResponse)
 def merchant_profile(request: Request):
     return temp.TemplateResponse("pre-order.html", {"request": request})
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>โปรไฟล์คนขับ</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="../static/css/default-deco.css"> -->
   <style>
     * {
       box-sizing: border-box;
@@ -115,9 +116,12 @@
       text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 700px) {
+      body{
+        padding-bottom: 100px;
+      }
       .profile-container {
-        margin: 40px 1rem;
+        margin: 40px 1rem 100px;
       }
     }
   </style>
@@ -177,6 +181,19 @@
   <div class="profile-row">
     <span class="profile-label">จำนวนออเดอร์ทั้งหมด</span>
     <span class="profile-value">30 ออเดอร์</span>
+  </div>
+</div>
+
+<div class="profile-header" style="margin-top: 2rem;">เครดิต</div>
+<div class="profile-info">
+  <div class="profile-row">
+    <span class="profile-label">เครดิตปัจจุบัน</span>
+    <span class="profile-value">2500 บาท</span>
+  </div>
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="/merchant-credit" style="display: inline-block; padding: 10px 20px; background: linear-gradient(to right, #d31c25, #c02129); color: white; border-radius: 10px; text-decoration: none; font-weight: 600;">
+      เติมเครดิต
+    </a>
   </div>
 </div>
 

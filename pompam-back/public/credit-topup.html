@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เติมเครดิต</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- <!-- <link rel="stylesheet" href="../static/css/default-deco.css"> -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #fff6f6, #fdfdfd);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      margin-bottom: 100px;
+    }
+
+    .credit-container {
+      max-width: 500px;
+      margin: 60px auto 20px;
+      margin-bottom: 80px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    }
+
+    .credit-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #d31c25;
+      padding-left: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d31c25;
+    }
+
+    .credit-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #ffe5e5;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 4px solid #d31c25;
+    }
+
+    .credit-icon img {
+      width: 60px;
+      height: 60px;
+    }
+
+    .credit-info {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .credit-row {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      margin-bottom: 18px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .credit-label {
+      font-weight: 600;
+      color: #444;
+      text-align: center;
+    }
+
+    .credit-value {
+      font-size: 3rem;
+      font-weight: 1000;
+      color: #d31c25;
+      text-align: center;
+    }
+
+    .credit-amount-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .amount-option {
+      flex: 1 0 calc(33.333% - 10px);
+      min-width: 100px;
+      padding: 15px 10px;
+      text-align: center;
+      background-color: #f8f8f8;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .amount-option:hover {
+      border-color: #d31c25;
+      background-color: #fff0f0;
+    }
+
+    .amount-option.selected {
+      border-color: #d31c25;
+      background-color: #fff0f0;
+      font-weight: bold;
+    }
+
+    .amount-option .amount {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d31c25;
+    }
+
+    .custom-amount {
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .custom-amount input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .custom-amount input:focus {
+      outline: none;
+      border-color: #d31c25;
+    }
+
+    .payment-methods {
+      margin-top: 30px;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .payment-method:hover {
+      border-color: #d31c25;
+      background-color: #fff0f0;
+    }
+
+    .payment-method.selected {
+      border-color: #d31c25;
+      background-color: #fff0f0;
+    }
+
+    .payment-method img {
+      width: 30px;
+      height: 30px;
+      margin-right: 15px;
+      object-fit: contain;
+    }
+
+    .payment-method-name {
+      font-weight: 500;
+    }
+
+    .topup-button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 30px;
+      background: linear-gradient(to right, #d31c25, #c02129);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .topup-button:hover {
+      background: linear-gradient(to right, #c02129, #a01820);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: linear-gradient(to right, #d31c25, #c02129, #791115);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 0.75rem;
+    }
+
+    .nav-item img {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      font-weight: bold;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 700px) {
+      body{
+        margin-bottom: 100px;
+      }
+      .credit-container {
+        margin: 40px 1rem 60px;
+      }
+      .amount-option {
+        flex: 1 0 calc(50% - 10px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="credit-container">
+    <div class="credit-header">เติมเครดิต</div>
+    <div class="credit-icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" alt="credit" />
+    </div>
+    <div class="credit-info">
+      <div class="credit-row">
+        <span class="credit-label">เครดิตปัจจุบัน</span>
+        <span class="credit-value">฿2,500</span>
+      </div>
+    </div>
+
+    <div class="credit-header" style="margin-top: 2rem;">เลือกจำนวนเงิน</div>
+    <div class="credit-amount-options">
+      <div class="amount-option" onclick="selectAmount(this, 100)">
+        <div class="amount">฿100</div>
+      </div>
+      <div class="amount-option" onclick="selectAmount(this, 300)">
+        <div class="amount">฿300</div>
+      </div>
+      <div class="amount-option" onclick="selectAmount(this, 500)">
+        <div class="amount">฿500</div>
+      </div>
+      <div class="amount-option" onclick="selectAmount(this, 1000)">
+        <div class="amount">฿1,000</div>
+      </div>
+      <div class="amount-option" onclick="selectAmount(this, 3000)">
+        <div class="amount">฿3,000</div>
+      </div>
+      <div class="amount-option" onclick="selectAmount(this, 5000)">
+        <div class="amount">฿5,000</div>
+      </div>
+    </div>
+
+    <div class="custom-amount">
+      <input type="number" placeholder="ระบุจำนวนเงิน" min="20" max="50000" oninput="customAmount(this)">
+    </div>
+
+    <div class="credit-header" style="margin-top: 2rem;">วิธีการชำระเงิน</div>
+    <div class="payment-methods">
+      <div class="payment-method" onclick="selectPayment(this, 'promptpay')">
+        <img src="https://www.bot.or.th/content/dam/bot/icons/icon-thaiqr.png" alt="PromptPay">
+        <span class="payment-method-name">พร้อมเพย์</span>
+      </div>
+      <div class="payment-method" onclick="selectPayment(this, 'credit_card')">
+        <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card">
+        <span class="payment-method-name">บัตรเครดิต/เดบิต</span>
+      </div>
+      <div class="payment-method" onclick="selectPayment(this, 'bank_transfer')">
+        <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Bank Transfer">
+        <span class="payment-method-name">โอนเงินผ่านธนาคาร</span>
+      </div>
+    </div>
+
+    <button class="topup-button" onclick="processTopup()">ยืนยันการเติมเงิน</button>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/merchant-main" class="nav-item">
+      <img src="/static/images/Vector.png" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="/merchant-map" class="nav-item">
+      <img src="/static/images/Group.png" alt="Map">
+      <span>Map</span>
+    </a>
+    <a href="/merchant-inventory" class="nav-item">
+      <img src="/static/images/cart.png" alt="Inventory">
+      <span>Inventory</span>
+    </a>
+    <a href="/merchant-preorder" class="nav-item">
+      <img src="/static/images/pre-order.png" alt="Pre-order">
+      <span>Pre-order</span>
+    </a>
+    <a href="/merchant-profile" class="nav-item">
+      <img src="/static/images/profile.png" alt="Profile">
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    let selectedAmount = 0;
+    let selectedPaymentMethod = '';
+
+    function selectAmount(element, amount) {
+      // Remove selected class from all options
+      document.querySelectorAll('.amount-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      selectedAmount = amount;
+      
+      // Set custom amount input to selected amount
+      document.querySelector('.custom-amount input').value = amount;
+    }
+
+    function customAmount(input) {
+      // Remove selected class from all preset options
+      document.querySelectorAll('.amount-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Set selected amount to input value
+      selectedAmount = parseInt(input.value) || 0;
+    }
+
+    function selectPayment(element, method) {
+      // Remove selected class from all payment methods
+      document.querySelectorAll('.payment-method').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked payment method
+      element.classList.add('selected');
+      selectedPaymentMethod = method;
+    }
+
+    function processTopup() {
+      if (selectedAmount <= 0) {
+        alert('กรุณาเลือกจำนวนเงินที่ต้องการเติม');
+        return;
+      }
+      
+      if (!selectedPaymentMethod) {
+        alert('กรุณาเลือกวิธีการชำระเงิน');
+        return;
+      }
+      
+      Swal.fire({
+        title: 'กำลังดำเนินการ',
+        text: `กำลังดำเนินการเติมเงิน ฿${selectedAmount.toLocaleString()} ผ่าน ${getPaymentMethodName(selectedPaymentMethod)}`,
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        Swal.fire({
+          title: 'เติมเงินสำเร็จ!',
+          text: 'เครดิตของคุณได้รับการปรับปรุงแล้ว',
+          icon: 'success',
+          confirmButtonText: 'ตกลง'
+        }).then(() => {
+          window.location.href = '/merchant-profile';
+        });
+      });
+    }
+
+    function getPaymentMethodName(method) {
+      switch(method) {
+        case 'promptpay':
+          return 'พร้อมเพย์';
+        case 'credit_card':
+          return 'บัตรเครดิต/เดบิต';
+        case 'bank_transfer':
+          return 'โอนเงินผ่านธนาคาร';
+        default:
+          return method;
+      }
+    }
+  </script>
+</body>
+</html>
