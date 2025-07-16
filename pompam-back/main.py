@@ -21,8 +21,6 @@ with open("products.json", "r", encoding="utf-8") as f:
     products = json.load(f)
 promotion = [item for item in products if item["promotion"]]
 
-
-
 @app.get("/", response_class=HTMLResponse)
 def tunnel_home(request: Request):
     return temp.TemplateResponse("main.html" , {
@@ -42,7 +40,7 @@ def home(request: Request):
         "active_filter": filter_category
     })
 
-@app.get("/map_merchant", response_class=HTMLResponse)
+@app.get("/merchant-map", response_class=HTMLResponse)
 def merchant_map(request: Request):
     return temp.TemplateResponse("merchant_map.html", {"request": request})
 
@@ -87,7 +85,17 @@ def get_products(request: Request, filter: str = "สินค้าแนะน
 def profile(request: Request):
     return temp.TemplateResponse("user-profile.html", {"request": request})
 
+@app.get("/pre-order", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("user-preorder.html", {"request": request})
 
+@app.get("/merchant-inventory", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("inventory.html", {"request": request})
+
+@app.get("/merchant-preorder", response_class=HTMLResponse)
+def merchant_profile(request: Request):
+    return temp.TemplateResponse("pre-order.html", {"request": request})
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
