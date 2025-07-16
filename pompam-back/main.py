@@ -21,6 +21,9 @@ with open("products.json", "r", encoding="utf-8") as f:
     products = json.load(f)
 promotion = [item for item in products if item["promotion"]]
 
+with open("orders.json", "r", encoding="utf-8") as f:
+    orders = json.load(f)
+
 @app.get("/", response_class=HTMLResponse)
 def tunnel_home(request: Request):
     return temp.TemplateResponse("main.html" , {
@@ -96,6 +99,17 @@ def merchant_profile(request: Request):
         "products": products
     })
 
+@app.get("/preorder-products", response_class=HTMLResponse)
+def get_inventory_products(request: Request, filter: str = "เนื้อสัตว์"):
+    if filter == "ทั้งหมด":
+        filtered = products
+    else:
+        filtered = [item for item in products if item["category"] == filter]
+    return temp.TemplateResponse("user-preorder-category.html", {
+        "request": request,
+        "products": filtered
+    })
+
 @app.get("/pre-order/confirm", response_class=HTMLResponse)
 def merchant_profile(request: Request):
     return temp.TemplateResponse("confirm-preorder.html", {"request": request})
@@ -135,7 +149,10 @@ def get_inventory_products(request: Request, filter: str = "เนื้อส�
 
 @app.get("/merchant-preorder", response_class=HTMLResponse)
 def merchant_profile(request: Request):
-    return temp.TemplateResponse("pre-order.html", {"request": request})
+    return temp.TemplateResponse("pre-order.html", {
+        "request": request,
+        "orders": orders
+    })
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
