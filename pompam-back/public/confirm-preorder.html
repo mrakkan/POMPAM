@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/default-deco.css">
+    <style>
+        .section-header {
+            display: flex;
+            gap: 18px;
+        }
+        table {
+            margin-top: 10px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        tr {
+            border: 1px solid black;
+            height: 100px;
+        }
+        td img {
+            height: 80px;
+            width: 80px;
+        }
+        .quantity-col {
+            display: flex;
+            height: 100px;
+            justify-content: end;
+            align-items: center;
+            padding-right: 36px;
+        }
+        .quantity {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 16px;
+            background-color: #e60000;
+            color: white;
+            border-radius: 12px;
+            padding: 8px;
+        }
+        .quantity button {
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 12px;
+        }
+        .select-date {
+            margin-left: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 12px;
+        }
+        .total-section {
+            margin: 16px;
+            text-align: right;
+        }
+        .total-section p {
+            margin: 16px;
+        }
+        .confirm-btn {
+            background-color: #e60000;
+            width: 50px;
+            height: 50px;
+            padding: 8px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="section-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+            </svg>
+            <h2>ระบบพรีออเดอร์</h2>
+        </div>
+        <div class="item-list">
+            <table>
+                <colgroup>
+                    <col style="width: 180px;">
+                </colgroup>
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img>
+                        </div>
+                    </td>
+                    <td>
+                        <p>ชื่อ</p>
+                        <p>ราคา</p>
+                    </td>
+                    <td class="quantity-col">
+                        <div class="quantity">
+                            <button>-</button>
+                            <p>num</p>
+                            <button>+</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img>
+                        </div>
+                    </td>
+                    <td>
+                        <p>ชื่อ</p>
+                        <p>ราคา</p>
+                    </td>
+                    <td class="quantity-col">
+                        <div class="quantity">
+                            <button>-</button>
+                            <p>num</p>
+                            <button>+</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img>
+                        </div>
+                    </td>
+                    <td>
+                        <p>ชื่อ</p>
+                        <p>ราคา</p>
+                    </td>
+                    <td class="quantity-col">
+                        <div class="quantity">
+                            <button>-</button>
+                            <p>num</p>
+                            <button>+</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img>
+                        </div>
+                    </td>
+                    <td>
+                        <p>ชื่อ</p>
+                        <p>ราคา</p>
+                    </td>
+                    <td class="quantity-col">
+                        <div class="quantity">
+                            <button>-</button>
+                            <p>num</p>
+                            <button>+</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img>
+                        </div>
+                    </td>
+                    <td>
+                        <p>ชื่อ</p>
+                        <p>ราคา</p>
+                    </td>
+                    <td class="quantity-col">
+                        <div class="quantity">
+                            <button>-</button>
+                            <p>num</p>
+                            <button>+</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="select-date">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="red" class="bi bi-calendar-event" viewBox="0 0 16 16">
+            <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+        </svg>
+        <p>เลือกวันจัดส่ง</p>
+        <input type="date">
+    </div>
+    <div class="total-section" style="padding-bottom: 90px;">
+        <p>ราคารวม</p>
+        <a class="confirm-btn">สั่งจองล่วงหน้า</a>
+    </div>
+    <nav class="bottom-nav">
+        <a href="/user-main" class="nav-item">
+        <img src="/static/images/Vector.png" alt="Home">
+        <span>Home</span>
+        </a>
+        <a href="/map" class="nav-item">
+        <img src="/static/images/Group.png" alt="Map">
+        <span>Map</span>
+        </a>
+        <a href="/pre-order" class="nav-item">
+        <img src="/static/images/pre-order.png" alt="Inventory">
+        <span>Pre-Order</span>
+        </a>
+        <a href="/profile" class="nav-item active">
+        <img src="/static/images/profile.png" alt="Profile">
+        <span>Profile</span>
+        </a>
+    </nav>
+</body>
+</html>
