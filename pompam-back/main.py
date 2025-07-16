@@ -51,6 +51,7 @@ def merchant_profile(request: Request):
 @app.get("/merchant-credit", response_class=HTMLResponse)
 def merchant_credit(request: Request):
     return temp.TemplateResponse("credit-topup.html", {"request": request})
+
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
     filter_category = request.query_params.get("filter", "สินค้าแนะนำ")
@@ -90,7 +91,10 @@ def profile(request: Request):
 
 @app.get("/pre-order", response_class=HTMLResponse)
 def merchant_profile(request: Request):
-    return temp.TemplateResponse("user-preorder.html", {"request": request})
+    return temp.TemplateResponse("user-preorder.html", {
+        "request": request,
+        "products": products
+    })
 
 @app.get("/pre-order/confirm", response_class=HTMLResponse)
 def merchant_profile(request: Request):
@@ -102,12 +106,36 @@ def merchant_profile(request: Request):
 
 @app.get("/merchant-inventory", response_class=HTMLResponse)
 def merchant_profile(request: Request):
-    return temp.TemplateResponse("inventory.html", {"request": request})
+    return temp.TemplateResponse("inventory.html", {
+        "request": request,
+        "products": products
+    })
+
+@app.get("/inventory-products", response_class=HTMLResponse)
+def get_inventory_products(request: Request, filter: str = "เนื้อสัตว์"):
+    if filter == "ทั้งหมด":
+        filtered = products
+    else:
+        filtered = [item for item in products if item["category"] == filter]
+    return temp.TemplateResponse("inventory-category.html", {
+        "request": request,
+        "products": filtered
+    })
+
+@app.get("/recommend-products", response_class=HTMLResponse)
+def get_inventory_products(request: Request, filter: str = "เนื้อสัตว์"):
+    if filter == "ทั้งหมด":
+        filtered = products
+    else:
+        filtered = [item for item in products if item["category"] == filter]
+    return temp.TemplateResponse("recommend-category.html", {
+        "request": request,
+        "products": filtered
+    })
 
 @app.get("/merchant-preorder", response_class=HTMLResponse)
 def merchant_profile(request: Request):
     return temp.TemplateResponse("pre-order.html", {"request": request})
-
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

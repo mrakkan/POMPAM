@@ -1,0 +1,14 @@
+{% for item in products %}
+                {% if item.status == 'Out of Stock' %}
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ item.img }}">
+                    </div>
+                    <div class="product-details">
+                        <p class="name">{{ item.name }}</p>
+                        <p class="desc">ควรซื้อจำนวน 5 กก.</p>
+                        <p class="price">฿{{ item.price }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}

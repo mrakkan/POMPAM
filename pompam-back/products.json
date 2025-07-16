@@ -6,7 +6,9 @@
         "img": "/static/images/banana.jpg",
         "rating": 5,
         "category": "ผักผลไม้",
-        "promotion": true
+        "promotion": true,
+        "status": "In Stock",
+        "quantity": 10
     },
     {
         "name": "บรอกโคลี",
@@ -15,7 +17,9 @@
         "img": "/static/images/broccoli.jpg",
         "rating": 4,
         "category": "ผักผลไม้",
-        "promotion": false
+        "promotion": false,
+        "status": "Low Stock",
+        "quantity": 3
     },
     {
         "name": "แครอท",
@@ -24,7 +28,9 @@
         "img": "/static/images/carrot.jpg",
         "rating": 3,
         "category": "ผักผลไม้",
-        "promotion": false
+        "promotion": false,
+        "status": "In Stock",
+        "quantity": 8
     },
     {
         "name": "มะเขือเทศ",
@@ -33,7 +39,9 @@
         "img": "/static/images/tomato.jpg",
         "rating": 2,
         "category": "ผักผลไม้",
-        "promotion": false
+        "promotion": false,
+        "status": "Out of Stock",
+        "quantity": 0
     },
     {
         "name": "ผักกาดขาว",
@@ -42,7 +50,9 @@
         "img": "/static/images/cabbage.jpg",
         "rating": 4,
         "category": "ผักผลไม้",
-        "promotion": true
+        "promotion": true,
+        "status": "In Stock",
+        "quantity": 7
     },
     {
         "name": "หมูสามชั้น",
@@ -51,7 +61,9 @@
         "img": "/static/images/pork.jpg",
         "rating": 5,
         "category": "เนื้อสัตว์",
-        "promotion": true
+        "promotion": true,
+        "status": "In Stock",
+        "quantity": 12
     },
     {
         "name": "อกไก่",
@@ -60,7 +72,9 @@
         "img": "/static/images/chicken.jpg",
         "rating": 4,
         "category": "เนื้อสัตว์",
-        "promotion": false
+        "promotion": false,
+        "status": "Low Stock",
+        "quantity": 4
     },
     {
         "name": "พริกไทยดำ",
@@ -69,7 +83,9 @@
         "img": "/static/images/pepper.jpg",
         "rating": 4,
         "category": "เครื่องเทศ",
-        "promotion": false
+        "promotion": false,
+        "status": "Out of Stock",
+        "quantity": 0
     },
     {
         "name": "ขิง",
@@ -78,7 +94,9 @@
         "img": "/static/images/ginger.jpg",
         "rating": 3,
         "category": "เครื่องเทศ",
-        "promotion": true
+        "promotion": true,
+        "status": "In Stock",
+        "quantity": 6
     },
     {
         "name": "ลิ้นจี่",
@@ -87,7 +105,9 @@
         "img": "/static/images/lychee.jpg",
         "rating": 5,
         "category": "สินค้าตามฤดูกาล",
-        "promotion": true
+        "promotion": true,
+        "status": "In Stock",
+        "quantity": 9
     },
     {
         "name": "ทุเรียน",
@@ -96,6 +116,8 @@
         "img": "/static/images/durian.jpg",
         "rating": 5,
         "category": "สินค้าตามฤดูกาล",
-        "promotion": false
+        "promotion": false,
+        "status": "Low Stock",
+        "quantity": 2
     }
 ]
