@@ -221,6 +221,7 @@
       align-items: center;
       color: white;
       font-size: 0.75rem;
+      text-decoration: none;
     }
 
     .nav-item img {
@@ -394,7 +395,8 @@
           title: 'เติมเงินสำเร็จ!',
           text: 'เครดิตของคุณได้รับการปรับปรุงแล้ว',
           icon: 'success',
-          confirmButtonText: 'ตกลง'
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#d31c25'
         }).then(() => {
           window.location.href = '/merchant-profile';
         });
