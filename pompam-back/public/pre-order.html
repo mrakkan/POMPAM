@@ -23,13 +23,28 @@
             margin-left: auto;
             font-size: 1rem;
         }
-        .add-item a{
+        .add-item a {
             display: flex;
+            justify-content: center;
             align-items: center;
+            background:
+                linear-gradient(to bottom, #b8151e, #881117, #500608);
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 1px 0 #b61c24;
+            z-index: 1;
+            font-size: 1.2em;
+            box-shadow: 0 6px 24px 0 rgba(0,0,0,0.18), 0 1.5px 4px 0 rgba(0,0,0,0.18);
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
             gap: 8px;
-            border: 1px solid #e60000;
-            padding: 4px;
-            border-radius: 12px;
+            width: 180px;
+            height: 45px;
+        }
+        .add-item a:hover {
+            transform: scale(1.07);
+            background: linear-gradient(to bottom, #e62a36, #a81a22, #6a0c13);
+            box-shadow: 0 10px 32px 0 rgba(0,0,0,0.22), 0 2px 8px 0 rgba(0,0,0,0.22);
         }
         .product-card.disable {
             opacity: 0.4;
