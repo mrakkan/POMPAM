@@ -1,3 +1,4 @@
+้้
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/default-deco.css">
-    
     <title>Document</title>
     <style>
         .search-box {
@@ -148,7 +148,20 @@
             <a>สินค้าตามฤดูกาล</a>
         </div>
         <div class="product-item" id="product-list">
-            {% include 'user-preorder-category.html' %}
+            {% for item in products %}
+                <div class="item-card {% if item.name in selected %} selected {% endif %}">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn">-</button>
+                        <div class="quantity-display">1</div>
+                        <button class="quantity-btn">+</button>
+                    </div>
+                    <div class="item-image">
+                        <img src="{{ item.img }}">
+                    </div>
+                    <p class="name">{{ item.name }}</p>
+                    <p class="price">฿{{ item.price }}</p>
+                </div>
+            {% endfor %}
         </div>
         <div class="confirm-section">
             <a class="see-item-btn" href="/pre-order/see-order">ดูรายการ</a>
@@ -156,21 +169,29 @@
         </div>
     </div>
     <nav class="bottom-nav">
-        <a href="/user-main" class="nav-item">
-        <img src="/static/images/Vector.png" alt="Home">
-        <span>Home</span>
+        <a href="/merchant-main" class="nav-item">
+            <img src="/static/images/Vector.png" alt="Home">
+            <span>Home</span>
         </a>
-        <a href="/map" class="nav-item">
-        <img src="/static/images/Group.png" alt="Map">
-        <span>Map</span>
+        <a href="/merchant-map" class="nav-item">
+            <img src="/static/images/Group.png" alt="Map">
+            <span>Map</span>
         </a>
-        <a href="/pre-order" class="nav-item">
-        <img src="/static/images/pre-order.png" alt="Inventory">
-        <span>Pre-Order</span>
+        <a href="/merchant-inventory" class="nav-item">
+            <img src="/static/images/cart.png" alt="Inventory">
+            <span>Inventory</span>
         </a>
-        <a href="/profile" class="nav-item active">
-        <img src="/static/images/profile.png" alt="Profile">
-        <span>Profile</span>
+        <a href="/merchant-preorder" class="nav-item">
+            <img src="/static/images/pre-order.png" alt="Pre-order">
+            <span>Pre-order</span>
+        </a>
+        <a href="/pos" class="nav-item">
+            <img src="/static/images/pos.png" alt="Inventory">
+            <span>POS</span>
+        </a>
+        <a href="/merchant-profile" class="nav-item">
+            <img src="/static/images/profile.png" alt="Home">
+            <span>Profile</span>
         </a>
     </nav>
     <script>
@@ -204,7 +225,6 @@
             });
         });
     </script>
-    
 </body>
 
 </html>

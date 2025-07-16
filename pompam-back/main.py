@@ -177,5 +177,9 @@ def merchant_profile(request: Request):
         "orders": orders
     })
 
+@app.get("/pos", response_class=HTMLResponse)
+def mapp(request: Request):
+    return temp.TemplateResponse("pos.html", {"request": request})
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
