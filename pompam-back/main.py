@@ -57,6 +57,10 @@ def merchant_profile(request: Request):
 def merchant_credit(request: Request):
     return temp.TemplateResponse("credit-topup.html", {"request": request})
 
+@app.get("/merchant-analytics", response_class=HTMLResponse)
+def merchant_analytics(request: Request):
+    return temp.TemplateResponse("merchant-analytics.html", {"request": request})
+
 @app.get("/user-main", response_class=HTMLResponse)
 def home(request: Request):
     filter_category = request.query_params.get("filter", "สินค้าแนะนำ")

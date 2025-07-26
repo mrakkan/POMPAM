@@ -64,10 +64,218 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    height: 200px;
+    height: 280px;
     background-position: center;
     background-size: cover;
     overflow: hidden;
+    padding: 1.5rem;
+  }
+
+  .hero-content {
+    display: flex;
+    
+    width: 100%;
+    max-width: 1200px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .hero-left {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .greeting-section {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .greeting-text {
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .merchant-name-hero {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .hero-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .profile-avatar-hero {
+    flex-shrink: 0;
+  }
+
+  .profile-avatar-hero img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  .profile-info-hero {
+    flex: 1;
+  }
+
+  .profile-stats-hero {
+    display: flex;
+    font-size: 3vh;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-item-hero {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .stat-number-hero {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .stat-label-hero {
+    font-size: 0.9rem;
+  }
+
+  .merchant-location-hero {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .member-info {
+    margin-bottom: 0.75rem;
+  }
+
+  .member-info-enhanced {
+    margin-bottom: 0.75rem;
+  }
+
+  .member-level-badge {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .member-level-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
+  }
+
+  .badge-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  }
+
+  .badge-text {
+    display: flex;
+    flex-direction: column;
+    color: #333;
+  }
+
+  .badge-title {
+    font-weight: bold;
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .badge-subtitle {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .member-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .detail-item {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .detail-label {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.2rem;
+  }
+
+  .detail-value {
+    display: block;
+    font-weight: bold;
+    color: white;
+    font-size: 0.85rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .member-level {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 0.3rem;
+  }
+
+  .member-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .member-id, .vehicle-number {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .truck-img-hero {
+    max-width: 300px;
+    height: auto;
+    margin-top: 1rem;
   }
 
   /* .hero-bg {
@@ -311,13 +519,510 @@
     padding: 10px;
   }
 
+  /* Revenue Section Styles */
+  .revenue-section {
+    padding: 1rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .analytics-btn {
+    background: linear-gradient(135deg, #e60000, #c02129);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(230, 0, 0, 0.2);
+  }
+
+  .analytics-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 0, 0, 0.3);
+  }
+
+  .analytics-btn .btn-icon {
+    font-size: 1rem;
+  }
+
+  .revenue-cards {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .revenue-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 150px;
+    flex: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .revenue-icon {
+    font-size: 2rem;
+    background: rgba(230, 0, 0, 0.1);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .revenue-info h3 {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+
+  .revenue-amount {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .revenue-amount.increase {
+    color: #2e7d32;
+  }
+
+  /* Credit Section Styles */
+  .credit-section {
+    padding: 1rem;
+  }
+
+  .credit-container {
+    background: linear-gradient(135deg, #e60000 0%, #c02129 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+  }
+
+  .credit-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .credit-balance {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .credit-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0.25rem;
+  }
+
+  .credit-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .credit-topup-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .credit-topup-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+
+  /* Profile Section Styles */
+  .profile-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .profile-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .profile-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .profile-avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e60000;
+  }
+
+  .profile-info {
+    text-align: center;
+  }
+
+  .merchant-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.3rem;
+  }
+
+  .merchant-type {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .merchant-location {
+    color: #888;
+    font-size: 0.85rem;
+  }
+
+  .profile-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .stat-item {
+    text-align: center;
+    flex: 1;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e60000;
+    margin-bottom: 0.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .profile-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+  }
+
+  .profile-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .profile-btn.primary {
+    background: #e60000;
+    color: white;
+  }
+
+  .profile-btn.primary:hover {
+    background: #cc0000;
+    transform: translateY(-1px);
+  }
+
+  .profile-btn.secondary {
+    background: white;
+    color: #666;
+    border: 1px solid #ddd;
+  }
+
+  .profile-btn.secondary:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+  }
+
   @media (max-width: 600px) {
     .hero {
-      height: 500px;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
+      height: auto;
+      min-height: 400px;
+      padding: 1rem;
     }
+    
+    .hero-content {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .hero-left {
+      order: 1;
+      flex-direction: column;
+    }
+    
+    .hero-right {
+      order: 2;
+    }
+    
+    .greeting-text {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    
+    .merchant-name-hero {
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    
+    .hero-profile {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.75rem;
+    }
+    
+    .profile-stats-hero {
+      justify-content: center;
+    }
+    
+    .truck-img-hero {
+      max-width: 200px;
+    }
+    
+    .revenue-cards {
+      flex-direction: column;
+    }
+    
+    .revenue-card {
+      min-width: auto;
+    }
+    
+    .section-header {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    
+    .analytics-btn {
+      width: 100%;
+      justify-content: center;
+      padding: 0.8rem 1rem;
+    }
+    
+    .credit-info {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .credit-topup-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .profile-actions {
+      flex-direction: column;
+    }
+    
+    .profile-btn {
+      width: 100%;
+    }
+    
+    .member-info-enhanced {
+      margin-bottom: 0.5rem;
+    }
+    
+    .member-level-badge {
+      padding: 0.6rem 0.8rem;
+      gap: 0.6rem;
+    }
+    
+    .badge-icon {
+      font-size: 1.2rem;
+    }
+    
+    .badge-title {
+      font-size: 0.9rem;
+    }
+    
+    .badge-subtitle {
+      font-size: 0.7rem;
+    }
+    
+    .member-details-grid {
+      gap: 0.5rem;
+    }
+    
+    .detail-item {
+      padding: 0.4rem;
+    }
+    
+    .detail-label {
+      font-size: 0.65rem;
+    }
+    
+    .detail-value {
+       font-size: 0.8rem;
+     }
+  }
+  
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+  }
+  
+  .modal-content {
+     background-color: white;
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     border-radius: 16px;
+     width: 90%;
+     max-width: 500px;
+     max-height: 80vh;
+     overflow-y: auto;
+     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+   }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    background: linear-gradient(135deg, #e60000, #c02129);
+    color: white;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .close {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+  }
+  
+  .close:hover {
+    opacity: 0.7;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .membership-tier {
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    border: 2px solid #f0f0f0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .membership-tier.active {
+    border-color: #FFD700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+  }
+  
+  .tier-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: white;
+  }
+  
+  .tier-badge.platinum {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+  }
+  
+  .tier-badge.gold {
+    background: linear-gradient(135deg, #FFD700, #DAA520);
+  }
+  
+  .tier-badge.silver {
+    background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+  }
+  
+  .tier-icon {
+    font-size: 2rem;
+  }
+  
+  .tier-info h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+  
+  .tier-info p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.85rem;
+  }
+  
+  .tier-benefits {
+    padding: 1rem;
+    background: #f9f9f9;
+  }
+  
+  .benefit-item {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #333;
   }
 </style>
 
@@ -325,16 +1030,118 @@
   <main>
     <section class="hero" style="background:
             linear-gradient(to bottom, #d31c25, #c02129, #500608);">
-      <div class="hero-text">
-        <h1 id="typing" style="font-size: 50px; display: block; min-height: 80px; min-width: 250px; color: #fff;"></h1>
-        <p style="color: #fff;">ถึงมือไว อุดหนุนไทย ปันใจชุมชน</p>
+      <div class="hero-content">
+        <div class="hero-left">
+          <div class="greeting-section">
+            <h2 class="greeting-text">สวัสดีคุณ</h2>
+            <h3 class="merchant-name-hero" style="font-size: 5vh;">สมปอง ปองกูล</h3>
+          </div>
+          <div class="hero-profile">
+            <div class="profile-avatar-hero">
+              <img src="/static/images/merchant-avatar.png" alt="Profile" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiNlNjAwMDAiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTAuMjA5MSAxNiA4QzE2IDUuNzkwODYgMTQuMjA5MSA0IDEyIDRDOS43OTA4NiA0IDggNS43OTA4NiA4IDhDOCAxMC4yMDkxIDkuNzkwODYgMTIgMTIgMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTIgMTRDOC4xMzQwMSAxNCA1IDE3LjEzNDAxIDUgMjFIMTlDMTkgMTcuMTM0MDEgMTUuODY2IDE0IDEyIDE0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo8L3N2Zz4K'">
+            </div>
+            <div class="profile-info-hero">
+              <div class="member-info-enhanced">
+                <div class="member-level-badge" onclick="showMembershipModal()">
+                  <div class="badge-icon">🏆</div>
+                  <div class="badge-text">
+                    <span class="badge-title">PLATINUM</span>
+                    <span class="badge-subtitle">Member</span>
+                  </div>
+                </div>
+                <div class="member-details-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">ID</span>
+                    <span class="detail-value">SMT0001</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ทะเบียน</span>
+                    <span class="detail-value">กข 4607</span>
+                  </div>
+                </div>
+              </div>
+              <div class="profile-stats-hero">
+                <div class="stat-item-hero">
+                  <span class="stat-number-hero">4.8</span>
+                  <span class="stat-label-hero">⭐</span>
+                </div>
+                <div class="stat-item-hero">
+                  <span class="stat-number-hero">156</span>
+                  <span class="stat-label-hero">📦</span>
+                </div>
+                <div class="stat-item-hero">
+                  <span class="stat-number-hero">89%</span>
+                  <span class="stat-label-hero">✅</span>
+                </div>
+              </div>
+              <p class="merchant-location-hero">📍 ตลาดนัดวันเสาร์ ซอยลาดพร้าว 15</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <img src="/static/images/pompam.png" alt="POMPAM" class="truck-img">
     </section>
+    
+
+    
+    <!-- สรุปรายได้ -->
+    <section class="revenue-section">
+      <div class="section-header">
+        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สรุปรายได้วันนี้</h2>
+        <a href="/merchant-analytics" class="analytics-btn">
+          <span class="btn-icon">📊</span>
+          <span>ดูสรุปรวม</span>
+        </a>
+      </div>
+      <div class="revenue-cards">
+        <div class="revenue-card">
+          <div class="revenue-icon">💰</div>
+          <div class="revenue-info">
+            <h3>รายได้วันนี้</h3>
+            <p class="revenue-amount">฿2,450</p>
+          </div>
+        </div>
+        <div class="revenue-card">
+          <div class="revenue-icon">📊</div>
+          <div class="revenue-info">
+            <h3>ยอดขายวันนี้</h3>
+            <p class="revenue-amount">32 รายการ</p>
+          </div>
+        </div>
+        <div class="revenue-card">
+          <div class="revenue-icon">📈</div>
+          <div class="revenue-info">
+            <h3>เปรียบเทียบเมื่อวาน</h3>
+            <p class="revenue-amount increase">+15%</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ปุ่มเติมเครดิต -->
+    <section class="credit-section">
+      <div class="section-header">
+        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">จัดการเครดิต</h2>
+      </div>
+      <div class="credit-container">
+        <div class="credit-info">
+          <div class="credit-balance">
+            <span class="credit-label">เครดิตคงเหลือ</span>
+            <span class="credit-amount">฿1,250</span>
+          </div>
+          <a href="/merchant-credit" class="credit-topup-btn">
+            <span class="btn-icon">💳</span>
+            <span>เติมเครดิต</span>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+
+    
+    <!-- สินค้าของฉัน -->
     <section class="product-section">
       <div class="section-header">
-        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สั่งจองออเดอร์ล่วงหน้า ส่งตรงถึงหน้าบ้านท่าน
-        </h2>
+        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">สินค้าของฉัน</h2>
         <div class="filter-tags">
           <a href="/merchant-main?filter=สินค้าแนะนำ"
             class="{% if active_filter == 'สินค้าแนะนำ' %}active{% endif %}">สินค้าแนะนำ</a>
@@ -347,32 +1154,6 @@
       </div>
       <div class="product-list" id="product-list">
         {% include 'product-category.html' %}
-      </div>
-    </section>
-    <section class="product-section">
-      <div class="section-header">
-        <h2 style="padding-left: 0.75rem; border-left: 4px solid #e60000;">โปรโมชั่น</h2>
-      </div>
-      <div class="product-list">
-        {% for item in promotion %}
-        <div class="product-card">
-          <div class="product-image">
-            <button class="favorite-btn" title="Add to favorites">
-              <svg viewBox="0 0 24 24">
-                <path
-                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                  fill="none" stroke="#e60000" stroke-width="2" />
-              </svg>
-            </button>
-            <span class="badge green">โปรโมชั่น</span>
-            <img src="{{ item.img }}">
-          </div>
-          <div class="product-details">
-            <p class="name">{{ item.name }}</p>
-            <p class="price">฿{{ item.price }}</p>
-          </div>
-        </div>
-        {% endfor %}
       </div>
     </section>
     <nav class="bottom-nav">
@@ -402,6 +1183,60 @@
       </a>
     </nav>
   </main>
+  <!-- Membership Modal -->
+  <div id="membershipModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>ระดับสมาชิก POMPAM</h3>
+        <span class="close" onclick="closeMembershipModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="membership-tier active">
+          <div class="tier-badge platinum">
+            <span class="tier-icon">🏆</span>
+            <div class="tier-info">
+              <h4>PLATINUM</h4>
+              <p>สมาชิกระดับสูงสุด</p>
+            </div>
+          </div>
+          <div class="tier-benefits">
+            <div class="benefit-item">✅ ค่าธรรมเนียมลด 50%</div>
+            <div class="benefit-item">✅ สินเชื่อสูงสุด 100,000 บาท</div>
+            <div class="benefit-item">✅ รองรับการชำระแบบเครดิต</div>
+            <div class="benefit-item">✅ ระบบจองล่วงหน้า Premium</div>
+          </div>
+        </div>
+        <div class="membership-tier">
+          <div class="tier-badge gold">
+            <span class="tier-icon">🥇</span>
+            <div class="tier-info">
+              <h4>GOLD</h4>
+              <p>สมาชิกระดับทอง</p>
+            </div>
+          </div>
+          <div class="tier-benefits">
+            <div class="benefit-item">✅ ค่าธรรมเนียมลด 30%</div>
+            <div class="benefit-item">✅ สินเชื่อสูงสุด 50,000 บาท</div>
+            <div class="benefit-item">✅ ระบบจองล่วงหน้า</div>
+          </div>
+        </div>
+        <div class="membership-tier">
+          <div class="tier-badge silver">
+            <span class="tier-icon">🥈</span>
+            <div class="tier-info">
+              <h4>SILVER</h4>
+              <p>สมาชิกระดับเงิน</p>
+            </div>
+          </div>
+          <div class="tier-benefits">
+            <div class="benefit-item">✅ ค่าธรรมเนียมลด 15%</div>
+            <div class="benefit-item">✅ สินเชื่อสูงสุด 20,000 บาท</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
@@ -455,6 +1290,22 @@
       });
     });
   });
+  
+  function showMembershipModal() {
+    document.getElementById('membershipModal').style.display = 'block';
+  }
+  
+  function closeMembershipModal() {
+    document.getElementById('membershipModal').style.display = 'none';
+  }
+  
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('membershipModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  }
 </script>
 
 

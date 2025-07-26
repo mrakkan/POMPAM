@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สรุปรวมสถิติ - POMPAM</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+</head>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Prompt', 'Segoe UI', sans-serif;
+  }
+
+  body {
+    font-family: 'Prompt', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #e60000, #c02129);
+    color: white;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(230, 0, 0, 0.1);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+  }
+
+  .stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #e60000, #c02129);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stat-title {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-change {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .stat-change.positive {
+    color: #2e7d32;
+  }
+
+  .stat-change.negative {
+    color: #d32f2f;
+  }
+
+  .chart-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .chart-period {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .period-btn {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .period-btn.active {
+    background: #e60000;
+    color: white;
+    border-color: #e60000;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 1rem;
+  }
+
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+
+  .summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  .summary-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-title {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      padding: 1.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+    }
+
+    .chart-section {
+      padding: 1.5rem;
+    }
+
+    .chart-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .chart-container {
+      height: 250px;
+    }
+
+    .summary-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<body>
+  <div class="header">
+    <div class="header-content">
+      <h1>📊 สรุปรวมสถิติ</h1>
+      <a href="/merchant-main" class="back-btn">
+        <span>←</span>
+        <span>กลับหน้าหลัก</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- สถิติหลัก -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">💰</div>
+          <div class="stat-title">รายได้รวม</div>
+        </div>
+        <div class="stat-value">฿75,450</div>
+        <div class="stat-change positive">+12.5% จากเดือนที่แล้ว</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">📉</div>
+          <div class="stat-title">ต้นทุนรวม</div>
+        </div>
+        <div class="stat-value">฿42,300</div>
+        <div class="stat-change positive">-3.2% จากเดือนที่แล้ว</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">💸</div>
+          <div class="stat-title">ค่าใช้จ่ายอื่น</div>
+        </div>
+        <div class="stat-value">฿8,950</div>
+        <div class="stat-change negative">+5.8% จากเดือนที่แล้ว</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-title">กำไรสุทธิ</div>
+        </div>
+        <div class="stat-value">฿24,200</div>
+        <div class="stat-change positive">+18.7% จากเดือนที่แล้ว</div>
+      </div>
+    </div>
+
+    <!-- กราฟรายได้ -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h3 class="chart-title">แนวโน้มรายได้</h3>
+        <div class="chart-period">
+          <button class="period-btn active" onclick="updateChart('7d')">7 วัน</button>
+          <button class="period-btn" onclick="updateChart('30d')">30 วัน</button>
+          <button class="period-btn" onclick="updateChart('90d')">90 วัน</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+
+    <!-- สถิติเพิ่มเติม -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="summary-icon">📊</div>
+        <div class="summary-title">สถานะวันนี้</div>
+        <div class="summary-value" style="color: #2e7d32;">🔼 กำไร</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon">💳</div>
+        <div class="summary-title">ยอดขายเฉลี่ย/ออเดอร์</div>
+        <div class="summary-value">฿285</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon">📦</div>
+        <div class="summary-title">จำนวนออเดอร์ทั้งหมด</div>
+        <div class="summary-value">1,247</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon">⭐</div>
+        <div class="summary-title">คะแนนเฉลี่ย</div>
+        <div class="summary-value">4.8/5.0</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon">🎯</div>
+        <div class="summary-title">อัตราความสำเร็จ</div>
+        <div class="summary-value">94.2%</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon">📈</div>
+        <div class="summary-title">การเติบโต</div>
+        <div class="summary-value" style="color: #2e7d32;">+15.3%</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ข้อมูลกราฟ
+    const chartData = {
+      '7d': {
+        labels: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'],
+        revenue: [2450, 3200, 2800, 3500, 4200, 5100, 3800],
+        cost: [1200, 1600, 1400, 1750, 2100, 2550, 1900]
+      },
+      '30d': {
+        labels: ['สัปดาห์ 1', 'สัปดาห์ 2', 'สัปดาห์ 3', 'สัปดาห์ 4'],
+        revenue: [18500, 22300, 19800, 25400],
+        cost: [9200, 11150, 9900, 12700]
+      },
+      '90d': {
+        labels: ['เดือน 1', 'เดือน 2', 'เดือน 3'],
+        revenue: [65200, 71800, 75450],
+        cost: [32600, 35900, 42300]
+      }
+    };
+
+    let currentChart;
+
+    function createChart(period = '7d') {
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      const data = chartData[period];
+      
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      currentChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'รายได้',
+            data: data.revenue,
+            borderColor: '#e60000',
+            backgroundColor: 'rgba(230, 0, 0, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+          }, {
+            label: 'ต้นทุน',
+            data: data.cost,
+            borderColor: '#ff9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: {
+                  family: 'Prompt',
+                  size: 14
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '฿' + value.toLocaleString();
+                },
+                font: {
+                  family: 'Prompt'
+                }
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  family: 'Prompt'
+                }
+              }
+            }
+          },
+          elements: {
+            point: {
+              radius: 6,
+              hoverRadius: 8
+            }
+          }
+        }
+      });
+    }
+
+    function updateChart(period) {
+      // อัปเดตปุ่ม active
+      document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // สร้างกราฟใหม่
+      createChart(period);
+    }
+
+    // เริ่มต้นกราฟ
+    document.addEventListener('DOMContentLoaded', function() {
+      createChart();
+    });
+  </script>
+</body>
+
+</html>
