@@ -134,41 +134,92 @@ class NotificationManager {
     }
 
     showBrowserNotification(notification) {
+        console.log('showBrowserNotification called:', notification);
+        console.log('Notification permission:', Notification.permission);
+        console.log('Service Worker available:', 'serviceWorker' in navigator);
+        
         if ('Notification' in window && Notification.permission === 'granted') {
-            const options = {
-                body: notification.message,
-                icon: '/static/images/truck.png',
-                badge: '/static/images/truck.png',
-                tag: `pompam-${notification.id}-${Date.now()}`, // ใช้ timestamp เพื่อให้แต่ละการแจ้งเตือนมี tag ที่ไม่ซ้ำกัน
-                requireInteraction: false, // เปลี่ยนเป็น false เพื่อให้การแจ้งเตือนหลายๆ อันสามารถแสดงพร้อมกันได้
-                silent: false,
-                vibrate: [200, 100, 200],
-                data: {
-                    notificationId: notification.id,
-                    truckId: notification.truckId,
-                    url: '/map-page'
+            // Try using Service Worker first for better compatibility with Edge
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                console.log('Using Service Worker for notification');
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'SHOW_NOTIFICATION',
+                    payload: {
+                        title: notification.title,
+                        body: notification.message,
+                        icon: '/static/images/truck.png',
+                        data: {
+                            notificationId: notification.id,
+                            truckId: notification.truckId,
+                            url: '/map'
+                        }
+                    }
+                });
+            } else {
+                // Fallback to direct notification
+                console.log('Using direct notification');
+                const options = {
+                    body: notification.message,
+                    icon: '/static/images/truck.png',
+                    badge: '/static/images/truck.png',
+                    tag: `pompam-${notification.id}-${Date.now()}`,
+                    requireInteraction: true, // เปลี่ยนเป็น true เพื่อให้ notification อยู่นานขึ้น
+                    silent: false,
+                    vibrate: [200, 100, 200],
+                    renotify: true, // บังคับให้แสดง notification ใหม่
+                    data: {
+                        notificationId: notification.id,
+                        truckId: notification.truckId,
+                        url: '/map'
+                    },
+                    actions: [
+                        {
+                            action: 'view-map',
+                            title: 'ดูแผนที่'
+                        },
+                        {
+                            action: 'dismiss',
+                            title: 'ปิด'
+                        }
+                    ]
+                };
+
+                try {
+                    const browserNotification = new Notification(notification.title, options);
+                    console.log('Notification created successfully:', browserNotification);
+
+                    browserNotification.onclick = () => {
+                        console.log('Notification clicked');
+                        window.focus();
+                        window.location.href = '/map';
+                        browserNotification.close();
+                        this.markAsRead(notification.id);
+                    };
+
+                    browserNotification.onshow = () => {
+                        console.log('Notification shown');
+                    };
+
+                    browserNotification.onerror = (error) => {
+                        console.error('Notification error:', error);
+                    };
+
+                    browserNotification.onclose = () => {
+                        console.log('Notification closed');
+                    };
+
+                    // Auto close after 30 seconds
+                    setTimeout(() => {
+                        browserNotification.close();
+                    }, 30000);
+                } catch (error) {
+                    console.error('Error creating notification:', error);
                 }
-            };
-
-            const browserNotification = new Notification(notification.title, options);
-
-            browserNotification.onclick = () => {
-                window.focus();
-                window.location.href = '/map-page';
-                browserNotification.close();
-                this.markAsRead(notification.id);
-            };
-
-            browserNotification.onclose = () => {
-                console.log('Notification closed');
-            };
-
-            // Auto close after 15 seconds
-            setTimeout(() => {
-                browserNotification.close();
-            }, 15000);
+            }
         } else if (Notification.permission === 'denied') {
             console.log('การแจ้งเตือนถูกปฏิเสธ กรุณาเปิดใช้งานในการตั้งค่าเบราว์เซอร์');
+        } else {
+            console.log('Notification permission not granted:', Notification.permission);
         }
     }
 
@@ -304,7 +355,7 @@ class NotificationManager {
             this.updateNotificationCount();
             
             // Navigate to map page
-            window.location.href = '/map-page';
+            window.location.href = '/map';
         }
     }
 

@@ -37,7 +37,7 @@ self.addEventListener('notificationclick', event => {
     if (event.action === 'view-map') {
         // Open map page
         event.waitUntil(
-            clients.openWindow('/map-page')
+            clients.openWindow('/map')
         );
     } else if (event.action === 'dismiss') {
         // Just close the notification
@@ -45,7 +45,7 @@ self.addEventListener('notificationclick', event => {
     } else {
         // Default click - open map page
         event.waitUntil(
-            clients.openWindow('/map-page')
+            clients.openWindow('/map')
         );
     }
 });
@@ -65,7 +65,7 @@ self.addEventListener('push', event => {
         badge: '/static/images/truck.png',
         vibrate: [200, 100, 200],
         data: {
-            url: '/map-page'
+            url: '/map'
         },
         actions: [
             {
