@@ -2,6 +2,7 @@
 class NotificationManager {
     constructor() {
         this.notifications = [];
+        this.loadNotificationsFromStorage();
         this.init();
     }
 
@@ -10,7 +11,23 @@ class NotificationManager {
         this.createNotificationContainer();
         this.createNotificationBell();
         this.setupServiceWorker();
-        this.simulateDeliveryNotifications();
+        this.updateNotificationDisplay();
+        this.updateNotificationCount();
+        
+        // Clear old notifications periodically (every 30 minutes)
+        setInterval(() => {
+            this.clearOldNotifications();
+        }, 30 * 60 * 1000);
+        
+        // Only start simulation if this is the first time loading (no existing notifications)
+        if (this.notifications.length === 0) {
+            this.simulateDeliveryNotifications();
+        } else {
+            // If we have existing notifications, still start the periodic simulation but with a delay
+            setTimeout(() => {
+                this.startPeriodicNotifications();
+            }, 10000); // Start after 10 seconds
+        }
     }
 
     async requestNotificationPermission() {
@@ -126,6 +143,7 @@ class NotificationManager {
         };
 
         this.notifications.unshift(notification);
+        this.saveNotificationsToStorage();
         this.updateNotificationDisplay();
         this.showBrowserNotification(notification);
         this.showToast(notification);
@@ -227,6 +245,7 @@ class NotificationManager {
         const notification = this.notifications.find(n => n.id == notificationId);
         if (notification) {
             notification.read = true;
+            this.saveNotificationsToStorage();
             this.updateNotificationDisplay();
             this.updateNotificationCount();
         }
@@ -361,20 +380,20 @@ class NotificationManager {
 
     clearAllNotifications() {
         this.notifications = [];
+        this.saveNotificationsToStorage();
         this.updateNotificationDisplay();
         this.updateNotificationCount();
     }
 
     simulateDeliveryNotifications() {
-        // Simulate truck approaching notifications
-        const trucks = [
-            { id: 'POMPAM-01', name: 'รถป๋อมแป๋ม 01', location: 'ใกล้ตลาดนัดจตุจักร' },
-            { id: 'POMPAM-02', name: 'รถป๋อมแป๋ม 02', location: 'ใกล้มหาวิทยาลัยธรรมศาสตร์' },
-            { id: 'POMPAM-03', name: 'รถป๋อมแป๋ม 03', location: 'ใกล้เซ็นทรัลเวิลด์' }
-        ];
-
         // Add initial notification after 3 seconds
         setTimeout(() => {
+            const trucks = [
+                { id: 'POMPAM-01', name: 'รถป๋อมแป๋ม 01', location: 'ใกล้ตลาดนัดจตุจักร' },
+                { id: 'POMPAM-02', name: 'รถป๋อมแป๋ม 02', location: 'ใกล้มหาวิทยาลัยธรรมศาสตร์' },
+                { id: 'POMPAM-03', name: 'รถป๋อมแป๋ม 03', location: 'ใกล้เซ็นทรัลเวิลด์' }
+            ];
+            
             const truck = trucks[Math.floor(Math.random() * trucks.length)];
             this.addNotification(
                 '🚛 รถใกล้มาถึงแล้ว!',
@@ -382,8 +401,19 @@ class NotificationManager {
                 'delivery',
                 truck.id
             );
+            
+            // Start periodic notifications
+            this.startPeriodicNotifications();
         }, 3000);
-
+    }
+    
+    startPeriodicNotifications() {
+        const trucks = [
+            { id: 'POMPAM-01', name: 'รถป๋อมแป๋ม 01', location: 'ใกล้ตลาดนัดจตุจักร' },
+            { id: 'POMPAM-02', name: 'รถป๋อมแป๋ม 02', location: 'ใกล้มหาวิทยาลัยธรรมศาสตร์' },
+            { id: 'POMPAM-03', name: 'รถป๋อมแป๋ม 03', location: 'ใกล้เซ็นทรัลเวิลด์' }
+        ];
+        
         // Add more notifications periodically
         setInterval(() => {
             if (Math.random() < 0.4) { // 40% chance every interval
@@ -422,6 +452,62 @@ class NotificationManager {
             'delivery',
             'TEST-01'
         );
+    }
+
+    // Save notifications to localStorage
+    saveNotificationsToStorage() {
+        try {
+            const notificationsData = this.notifications.map(notification => ({
+                ...notification,
+                timestamp: notification.timestamp.toISOString() // Convert Date to string
+            }));
+            localStorage.setItem('pompam_notifications', JSON.stringify(notificationsData));
+        } catch (error) {
+            console.error('Error saving notifications to localStorage:', error);
+        }
+    }
+
+    // Load notifications from localStorage
+    loadNotificationsFromStorage() {
+        try {
+            const stored = localStorage.getItem('pompam_notifications');
+            if (stored) {
+                const notificationsData = JSON.parse(stored);
+                this.notifications = notificationsData.map(notification => ({
+                    ...notification,
+                    timestamp: new Date(notification.timestamp) // Convert string back to Date
+                }));
+                
+                // Remove notifications older than 24 hours
+                const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+                this.notifications = this.notifications.filter(notification => 
+                    notification.timestamp > oneDayAgo
+                );
+                
+                // Save cleaned notifications back to storage
+                if (this.notifications.length !== notificationsData.length) {
+                    this.saveNotificationsToStorage();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading notifications from localStorage:', error);
+            this.notifications = [];
+        }
+    }
+
+    // Clear old notifications (called periodically)
+    clearOldNotifications() {
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const originalLength = this.notifications.length;
+        this.notifications = this.notifications.filter(notification => 
+            notification.timestamp > oneDayAgo
+        );
+        
+        if (this.notifications.length !== originalLength) {
+            this.saveNotificationsToStorage();
+            this.updateNotificationDisplay();
+            this.updateNotificationCount();
+        }
     }
 }
 
