@@ -39,7 +39,21 @@ class NotificationManager {
             // Check if Push API is available (required for iOS Safari)
             const hasPushAPI = 'PushManager' in window;
             
-            if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
+            // Debug logging for standalone mode
+            console.log('=== PWA Debug Info ===');
+            console.log('isIOS:', isIOS);
+            console.log('isSafari:', isSafari);
+            console.log('isStandalone:', isStandalone);
+            console.log('hasPushAPI:', hasPushAPI);
+            console.log('window.navigator.standalone:', window.navigator.standalone);
+            console.log('display-mode standalone:', window.matchMedia('(display-mode: standalone)').matches);
+            console.log('Notification permission:', Notification.permission);
+            console.log('======================');
+            
+            // For iOS in standalone mode (PWA), always try to request permission
+            if (isIOS && isStandalone) {
+                console.log('iOS PWA detected - proceeding with notification setup');
+            } else if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
                 // For iOS Safari without Push API, show special instructions
                 this.showIOSInstructions();
                 return;
@@ -141,6 +155,13 @@ class NotificationManager {
             navigator.serviceWorker.register('/static/js/sw.js')
                 .then(registration => {
                     console.log('Service Worker registered successfully');
+                    
+                    // Wait for service worker to be ready
+                    return navigator.serviceWorker.ready;
+                })
+                .then(registration => {
+                    console.log('Service Worker is ready');
+                    this.serviceWorkerReady = true;
                 })
                 .catch(error => {
                     console.log('Service Worker registration failed:', error);
@@ -255,7 +276,20 @@ class NotificationManager {
         const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
         const hasPushAPI = 'PushManager' in window;
         
-        if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
+        // Debug logging for test notification
+        console.log('=== Test Notification Debug ===');
+        console.log('isIOS:', isIOS);
+        console.log('isSafari:', isSafari);
+        console.log('isStandalone:', isStandalone);
+        console.log('hasPushAPI:', hasPushAPI);
+        console.log('Notification permission:', Notification.permission);
+        console.log('Service Worker controller:', navigator.serviceWorker?.controller);
+        console.log('===============================');
+        
+        // For iOS in standalone mode (PWA), always allow testing
+        if (isIOS && isStandalone) {
+            console.log('iOS PWA mode - proceeding with test notification');
+        } else if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
             this.showIOSInstructions();
             return;
         }
@@ -337,14 +371,22 @@ class NotificationManager {
         console.log('showBrowserNotification called:', notification);
         console.log('Notification permission:', Notification.permission);
         console.log('Service Worker available:', 'serviceWorker' in navigator);
+        console.log('Service Worker controller:', navigator.serviceWorker?.controller);
         console.log('User Agent:', navigator.userAgent);
         
-        // Detect iOS Safari
+        // Detect iOS Safari and standalone mode
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        
+        console.log('=== Notification Context ===');
+        console.log('isIOS:', isIOS);
+        console.log('isSafari:', isSafari);
+        console.log('isStandalone:', isStandalone);
+        console.log('============================');
         
         if ('Notification' in window && Notification.permission === 'granted') {
-            // Try using Service Worker first for better compatibility
+            // For iOS PWA, prefer Service Worker if available, otherwise use direct notification
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 console.log('Using Service Worker for notification');
                 navigator.serviceWorker.controller.postMessage({
@@ -355,7 +397,7 @@ class NotificationManager {
                         icon: window.location.origin + '/static/images/truck.png',
                         badge: window.location.origin + '/static/images/truck.png',
                         tag: `pompam-${notification.id}`,
-                        requireInteraction: isIOS, // iOS ต้องการ interaction
+                        requireInteraction: isIOS && isStandalone, // iOS PWA ต้องการ interaction
                         renotify: true,
                         silent: false,
                         data: {
@@ -367,15 +409,15 @@ class NotificationManager {
                 });
             } else {
                 // Fallback to direct notification
-                console.log('Using direct notification for', isIOS ? 'iOS' : 'other platform');
+                console.log('Using direct notification for', isIOS ? (isStandalone ? 'iOS PWA' : 'iOS Safari') : 'other platform');
                 
-                // iOS-specific options
+                // iOS PWA-specific options
                 const options = {
                     body: notification.message,
                     icon: window.location.origin + '/static/images/truck.png',
                     badge: window.location.origin + '/static/images/truck.png',
                     tag: `pompam-${notification.id}`,
-                    requireInteraction: isIOS, // iOS ต้องการ user interaction
+                    requireInteraction: isIOS && isStandalone, // iOS PWA ต้องการ user interaction
                     silent: false,
                     renotify: true,
                     data: {
@@ -402,34 +444,49 @@ class NotificationManager {
 
                 try {
                     const browserNotification = new Notification(notification.title, options);
-                    console.log('Notification created successfully:', browserNotification);
+                    console.log('Direct notification created successfully for', isIOS && isStandalone ? 'iOS PWA' : 'other platform');
 
                     browserNotification.onclick = () => {
                         console.log('Notification clicked');
-                        window.focus();
-                        window.location.href = '/map';
+                        if (isStandalone) {
+                            // For PWA, just focus the window
+                            window.focus();
+                        } else {
+                            // For regular browser, navigate to map
+                            window.location.href = '/map';
+                        }
                         browserNotification.close();
                         this.markAsRead(notification.id);
                     };
 
                     browserNotification.onshow = () => {
-                        console.log('Notification shown');
+                        console.log('Notification shown successfully');
                     };
 
                     browserNotification.onerror = (error) => {
                         console.error('Notification error:', error);
+                        // For iOS PWA, try alternative approach
+                        if (isIOS && isStandalone) {
+                            console.log('Trying alternative notification approach for iOS PWA');
+                            this.showToast(notification);
+                        }
                     };
 
                     browserNotification.onclose = () => {
                         console.log('Notification closed');
                     };
 
-                    // Auto close after 30 seconds
+                    // Auto close after longer time for iOS PWA
                     setTimeout(() => {
                         browserNotification.close();
-                    }, 30000);
+                    }, isIOS && isStandalone ? 60000 : 30000);
                 } catch (error) {
                     console.error('Error creating notification:', error);
+                    // Fallback to toast for iOS PWA
+                    if (isIOS && isStandalone) {
+                        console.log('Fallback to toast notification for iOS PWA');
+                        this.showToast(notification);
+                    }
                 }
             }
         } else if (Notification.permission === 'denied') {
