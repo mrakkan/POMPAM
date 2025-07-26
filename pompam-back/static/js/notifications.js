@@ -427,8 +427,8 @@ class NotificationManager {
                     }
                 };
                 
-                // เพิ่ม vibrate และ actions เฉพาะ non-iOS
-                if (!isIOS) {
+                // เพิ่ม vibrate และ actions เฉพาะ non-iOS และเฉพาะเมื่อใช้ Service Worker
+                if (!isIOS && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
                     options.vibrate = [200, 100, 200];
                     options.actions = [
                         {
@@ -440,6 +440,9 @@ class NotificationManager {
                             title: 'ปิด'
                         }
                     ];
+                } else if (!isIOS) {
+                    // สำหรับ non-iOS แต่ไม่มี Service Worker ให้ใช้แค่ vibrate
+                    options.vibrate = [200, 100, 200];
                 }
 
                 try {
