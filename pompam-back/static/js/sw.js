@@ -97,16 +97,29 @@ self.addEventListener('message', event => {
     console.log('Service Worker received message:', event.data);
     
     if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
-        const { title, body, icon, data } = event.data.payload;
+        const payload = event.data.payload;
+        const { title, body, icon, data, tag, requireInteraction, renotify, silent } = payload;
+        
+        // Detect if this is likely iOS based on available features
+        const isLikelyIOS = !('vibrate' in navigator) || /iPad|iPhone|iPod/.test(navigator.userAgent);
+        
+        console.log('Service Worker showing notification for:', isLikelyIOS ? 'iOS-like platform' : 'other platform');
         
         const options = {
             body: body,
-            icon: icon || '/static/images/truck.png',
-            badge: '/static/images/truck.png',
-            vibrate: [200, 100, 200],
-            data: data,
-            requireInteraction: true,
-            actions: [
+            icon: icon || self.location.origin + '/static/images/truck.png',
+            badge: self.location.origin + '/static/images/truck.png',
+            tag: tag || 'pompam-notification',
+            requireInteraction: requireInteraction !== undefined ? requireInteraction : isLikelyIOS,
+            renotify: renotify !== undefined ? renotify : true,
+            silent: silent !== undefined ? silent : false,
+            data: data || { url: '/map' }
+        };
+        
+        // เพิ่ม vibrate และ actions เฉพาะ non-iOS platforms
+        if (!isLikelyIOS) {
+            options.vibrate = [200, 100, 200];
+            options.actions = [
                 {
                     action: 'view-map',
                     title: 'ดูแผนที่'
@@ -115,9 +128,19 @@ self.addEventListener('message', event => {
                     action: 'dismiss',
                     title: 'ปิด'
                 }
-            ]
-        };
+            ];
+        }
         
-        self.registration.showNotification(title, options);
+        console.log('Service Worker notification options:', options);
+        
+        event.waitUntil(
+            self.registration.showNotification(title, options)
+                .then(() => {
+                    console.log('Service Worker notification shown successfully');
+                })
+                .catch(error => {
+                    console.error('Service Worker notification error:', error);
+                })
+        );
     }
 });

@@ -32,13 +32,28 @@ class NotificationManager {
 
     async requestNotificationPermission() {
         if ('Notification' in window) {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
             if (Notification.permission === 'default') {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    console.log('การแจ้งเตือนได้รับอนุญาตแล้ว');
-                    this.showWelcomeNotification();
+                // สำหรับ iOS ต้องขอ permission ผ่าน user interaction
+                if (isIOS) {
+                    console.log('iOS detected - notification permission requires user interaction');
+                    // สร้างปุ่มสำหรับขอ permission บน iOS
+                    this.createPermissionButton();
                 } else {
-                    console.log('การแจ้งเตือนถูกปฏิเสธ');
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        console.log('การแจ้งเตือนได้รับอนุญาตแล้ว');
+                        this.showWelcomeNotification();
+                    } else {
+                        console.log('การแจ้งเตือนถูกปฏิเสธ');
+                    }
+                }
+            } else if (Notification.permission === 'granted') {
+                console.log('การแจ้งเตือนได้รับอนุญาตแล้ว');
+                if (isIOS) {
+                    // สำหรับ iOS แสดงคำแนะนำเพิ่มเติม
+                    console.log('iOS: กรุณาตรวจสอบการตั้งค่าการแจ้งเตือนใน Settings > Safari > การแจ้งเตือน');
                 }
             }
         } else {
@@ -46,17 +61,66 @@ class NotificationManager {
         }
     }
 
+    createPermissionButton() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        if (isIOS && Notification.permission === 'default') {
+            const permissionButton = document.createElement('button');
+            permissionButton.id = 'ios-notification-permission';
+            permissionButton.textContent = 'เปิดการแจ้งเตือน';
+            permissionButton.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                z-index: 1001;
+                background: #e60000;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            `;
+            
+            permissionButton.addEventListener('click', async () => {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    console.log('iOS: การแจ้งเตือนได้รับอนุญาตแล้ว');
+                    permissionButton.remove();
+                    this.showWelcomeNotification();
+                } else {
+                    console.log('iOS: การแจ้งเตือนถูกปฏิเสธ');
+                    alert('กรุณาเปิดการแจ้งเตือนใน Settings > Safari > การแจ้งเตือน');
+                }
+            });
+            
+            document.body.appendChild(permissionButton);
+        }
+    }
+
     showWelcomeNotification() {
         if ('Notification' in window && Notification.permission === 'granted') {
-            const welcomeNotification = new Notification('ยินดีต้อนรับสู่ POMPAM!', {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            const options = {
                 body: 'คุณจะได้รับการแจ้งเตือนเมื่อรถป๋อมแป๋มใกล้มาถึง',
-                icon: '/static/images/truck.png',
-                tag: 'welcome'
-            });
+                icon: window.location.origin + '/static/images/truck.png',
+                tag: 'welcome',
+                requireInteraction: isIOS,
+                silent: false
+            };
+            
+            // เพิ่ม badge สำหรับ iOS
+            if (isIOS) {
+                options.badge = window.location.origin + '/static/images/truck.png';
+            }
+            
+            const welcomeNotification = new Notification('ยินดีต้อนรับสู่ POMPAM!', options);
 
             setTimeout(() => {
                 welcomeNotification.close();
-            }, 5000);
+            }, isIOS ? 10000 : 5000); // iOS ให้เวลานานขึ้น
         }
     }
 
@@ -83,6 +147,7 @@ class NotificationManager {
                     </svg>
                     <span id="notification-count" class="notification-count">0</span>
                 </div>
+                <button id="test-notification-btn" class="test-notification-btn">ทดสอบ Noti</button>
                 <div id="notification-dropdown" class="notification-dropdown">
                     <div class="notification-header">
                         <h3>การแจ้งเตือน</h3>
@@ -102,11 +167,60 @@ class NotificationManager {
     createNotificationBell() {
         // Add notification bell to header or top of page
         const bellContainer = document.getElementById('notification-container');
+        const testBtn = document.getElementById('test-notification-btn');
+        
         if (bellContainer) {
             bellContainer.style.position = 'fixed';
             bellContainer.style.top = '20px';
             bellContainer.style.right = '20px';
             bellContainer.style.zIndex = '1000';
+        }
+        
+        if (testBtn) {
+            testBtn.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 80px;
+                z-index: 1000;
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 5px;
+                font-size: 12px;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            `;
+        }
+    }
+
+    testNotification() {
+        console.log('Testing notification...');
+        
+        // ตรวจสอบ permission ก่อน
+        if (Notification.permission === 'granted') {
+            this.addNotification(
+                'ทดสอบการแจ้งเตือน',
+                'นี่คือการทดสอบ notification สำหรับ iPhone 13',
+                'test',
+                'test-truck-001'
+            );
+        } else if (Notification.permission === 'default') {
+            // ขอ permission ใหม่
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    this.addNotification(
+                        'ทดสอบการแจ้งเตือน',
+                        'นี่คือการทดสอบ notification สำหรับ iPhone 13',
+                        'test',
+                        'test-truck-001'
+                    );
+                } else {
+                    alert('กรุณาอนุญาตการแจ้งเตือนเพื่อทดสอบ');
+                }
+            });
+        } else {
+            alert('การแจ้งเตือนถูกปฏิเสธ กรุณาเปิดใช้งานในการตั้งค่าเบราว์เซอร์');
         }
     }
 
@@ -114,6 +228,7 @@ class NotificationManager {
         const bell = document.getElementById('notification-bell');
         const dropdown = document.getElementById('notification-dropdown');
         const clearAll = document.getElementById('clear-all');
+        const testBtn = document.getElementById('test-notification-btn');
 
         bell.addEventListener('click', () => {
             dropdown.classList.toggle('show');
@@ -123,9 +238,13 @@ class NotificationManager {
             this.clearAllNotifications();
         });
 
+        testBtn.addEventListener('click', () => {
+            this.testNotification();
+        });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (!bell.contains(e.target) && !dropdown.contains(e.target)) {
+            if (!bell.contains(e.target) && !dropdown.contains(e.target) && !testBtn.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
         });
@@ -155,9 +274,14 @@ class NotificationManager {
         console.log('showBrowserNotification called:', notification);
         console.log('Notification permission:', Notification.permission);
         console.log('Service Worker available:', 'serviceWorker' in navigator);
+        console.log('User Agent:', navigator.userAgent);
+        
+        // Detect iOS Safari
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
         
         if ('Notification' in window && Notification.permission === 'granted') {
-            // Try using Service Worker first for better compatibility with Edge
+            // Try using Service Worker first for better compatibility
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 console.log('Using Service Worker for notification');
                 navigator.serviceWorker.controller.postMessage({
@@ -165,7 +289,12 @@ class NotificationManager {
                     payload: {
                         title: notification.title,
                         body: notification.message,
-                        icon: '/static/images/truck.png',
+                        icon: window.location.origin + '/static/images/truck.png',
+                        badge: window.location.origin + '/static/images/truck.png',
+                        tag: `pompam-${notification.id}`,
+                        requireInteraction: isIOS, // iOS ต้องการ interaction
+                        renotify: true,
+                        silent: false,
                         data: {
                             notificationId: notification.id,
                             truckId: notification.truckId,
@@ -175,22 +304,28 @@ class NotificationManager {
                 });
             } else {
                 // Fallback to direct notification
-                console.log('Using direct notification');
+                console.log('Using direct notification for', isIOS ? 'iOS' : 'other platform');
+                
+                // iOS-specific options
                 const options = {
                     body: notification.message,
-                    icon: '/static/images/truck.png',
-                    badge: '/static/images/truck.png',
-                    tag: `pompam-${notification.id}-${Date.now()}`,
-                    requireInteraction: true, // เปลี่ยนเป็น true เพื่อให้ notification อยู่นานขึ้น
+                    icon: window.location.origin + '/static/images/truck.png',
+                    badge: window.location.origin + '/static/images/truck.png',
+                    tag: `pompam-${notification.id}`,
+                    requireInteraction: isIOS, // iOS ต้องการ user interaction
                     silent: false,
-                    vibrate: [200, 100, 200],
-                    renotify: true, // บังคับให้แสดง notification ใหม่
+                    renotify: true,
                     data: {
                         notificationId: notification.id,
                         truckId: notification.truckId,
                         url: '/map'
-                    },
-                    actions: [
+                    }
+                };
+                
+                // เพิ่ม vibrate และ actions เฉพาะ non-iOS
+                if (!isIOS) {
+                    options.vibrate = [200, 100, 200];
+                    options.actions = [
                         {
                             action: 'view-map',
                             title: 'ดูแผนที่'
@@ -199,8 +334,8 @@ class NotificationManager {
                             action: 'dismiss',
                             title: 'ปิด'
                         }
-                    ]
-                };
+                    ];
+                }
 
                 try {
                     const browserNotification = new Notification(notification.title, options);
