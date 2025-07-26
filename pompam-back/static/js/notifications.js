@@ -33,6 +33,17 @@ class NotificationManager {
     async requestNotificationPermission() {
         if ('Notification' in window) {
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            
+            // Check if Push API is available (required for iOS Safari)
+            const hasPushAPI = 'PushManager' in window;
+            
+            if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
+                // For iOS Safari without Push API, show special instructions
+                this.showIOSInstructions();
+                return;
+            }
             
             if (Notification.permission === 'default') {
                 // สำหรับ iOS ต้องขอ permission ผ่าน user interaction
@@ -138,9 +149,16 @@ class NotificationManager {
     }
 
     createNotificationContainer() {
+        // Check if this is iOS Safari
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        const hasPushAPI = 'PushManager' in window;
+        
         // Create notification dropdown
         const notificationHTML = `
             <div id="notification-container" class="notification-container">
+                ${isIOS && isSafari && !isStandalone && !hasPushAPI ? '<div id="ios-banner" class="ios-banner">📱 สำหรับ iPhone: กดปุ่ม Share แล้วเลือก "Add to Home Screen" เพื่อรับการแจ้งเตือน</div>' : ''}
                 <div id="notification-bell" class="notification-bell">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                         <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
@@ -194,8 +212,53 @@ class NotificationManager {
         }
     }
 
+    showIOSInstructions() {
+        const modal = document.createElement('div');
+        modal.className = 'ios-instructions-modal';
+        modal.innerHTML = `
+            <div class="ios-instructions-content">
+                <h3>📱 วิธีเปิดการแจ้งเตือนสำหรับ iPhone</h3>
+                <div class="ios-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-text">ไปที่ Settings > Safari > Advanced > Experimental Features</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-text">เปิด "Push API" toggle</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-text">กลับมาที่เว็บไซต์นี้ แล้วกดปุ่ม Share (ล่าง)</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <span class="step-text">เลือก "Add to Home Screen"</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">5</span>
+                        <span class="step-text">เปิดแอปจาก Home Screen แล้วกดปุ่ม "ทดสอบ Noti"</span>
+                    </div>
+                </div>
+                <button class="ios-close-btn" onclick="this.parentElement.parentElement.remove()">เข้าใจแล้ว</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
     testNotification() {
         console.log('Testing notification...');
+        
+        // Check if this is iOS Safari and not in standalone mode
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        const hasPushAPI = 'PushManager' in window;
+        
+        if (isIOS && isSafari && !isStandalone && !hasPushAPI) {
+            this.showIOSInstructions();
+            return;
+        }
         
         // ตรวจสอบ permission ก่อน
         if (Notification.permission === 'granted') {
