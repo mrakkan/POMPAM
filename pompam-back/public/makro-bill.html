@@ -361,7 +361,7 @@
 
     <div class="action-buttons">
       <button class="btn btn-secondary" onclick="window.print()">พิมพ์ใบเสร็จ</button>
-      <button onclick="window.history.back()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; margin-right: 10px; cursor: pointer;">← กลับ</button>
+      <button onclick="goHome()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; margin-right: 10px; cursor: pointer;">← กลับ</button>
     </div>
 
     <div class="footer-note">
@@ -374,7 +374,7 @@
     function goHome() {
       Swal.fire({
         title: 'สำเร็จ!',
-        text: 'การทำรายการเสร็จสิ้น สินค้าจะถูกจัดส่งและเพิ่มเข้า Inventory ของคุณ',
+        text: 'การทำรายการเสร็จสิ้น สินค้าจะถูกเพิ่มเข้า Inventory ของคุณ',
         icon: 'success',
         confirmButtonColor: '#28a745',
         confirmButtonText: 'ตกลง'
