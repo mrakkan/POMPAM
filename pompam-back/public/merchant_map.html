@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <style>
     * {
@@ -28,108 +29,208 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 60px;
-      background: #e60000;
+      background:
+    linear-gradient(to right, #d31c25, #c02129, #791115);
       color: #fff;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0 20px;
       font-size: 1.2rem;
-      z-index: 10;
+      z-index: 1002;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .ai-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .ai-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
     }
     .bottom-panel {
       position: fixed;
       left: 50%;
-      top: 25px;
+      top: 75px;
       width: 90vw;
-      max-width: 500px;
-      min-width: 220px;
+      max-width: 380px;
+      min-width: 300px;
       transform: translateX(-50%);
       box-sizing: border-box;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-      padding: 12px 14px 16px 14px;
-      min-height: 100px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      padding: 0;
+      height: 70px;
       z-index: 1001;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .panel-btn {
-      background: #e60000;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 8px;
-      width: 100%;
-    }
-    .panel-row {
-      display: flex;
+      flex-direction: row;
       align-items: center;
-      gap: 8px;
-    }
-    .panel-row img {
-      width: 24px; height: 24px;
-    }
-    .panel-label {
-      font-weight: bold;
-      color: #e60000;
-      font-size: 0.9rem;
-    }
-    .panel-value {
-      font-size: 0.9rem;
-      color: #333;
-      background: #f2f2f2;
-      border-radius: 6px;
-      padding: 3px 10px;
-      min-width: 120px;
-      max-width: 100%;
-      width: 100%;
-      display: inline-block;
-      box-sizing: border-box;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      border: 1px solid #e0e0e0;
     }
 
-    @media (max-width: 600px) {
+    .navigation-arrow {
+      width: 70px;
+      height: 70px;
+      background:
+    linear-gradient(to right, #d31c25, #791115);
+      border-radius: 12px 0 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .navigation-arrow::before {
+      content: "↑";
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffffff;
+      transform: rotate(0deg);
+    }
+    .navigation-info {
+      flex: 1;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .destination-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #202124;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .destination-address {
+      font-size: 14px;
+      color: #5f6368;
+      line-height: 1.3;
+      margin: 0;
+    }
+    .navigation-distance {
+      font-size: 12px;
+      color: #1a73e8;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
       .bottom-panel {
-        flex-direction: column;
-        width: 92vw;
-        max-width: 92vw;
-        min-width: 0;
-        left: 50%;
-        padding: 6px 2vw 8px 2vw;
-        border-radius: 10px;
-        min-height: 80px;
+        width: 95vw;
+        min-width: 280px;
+        max-width: 350px;
+        height: 65px;
       }
-      .panel-value {
-        font-size: 0.75rem;
-        min-width: 0;
-        width: 100%;
-        padding: 2px 2px;
+      
+      .navigation-arrow {
+        width: 60px;
+        height: 65px;
       }
-      .panel-row img {
-        width: 18px;
-        height: 18px;
+      
+      .navigation-arrow::before {
+        font-size: 28px;
       }
-      .panel-row {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 2px;
-        margin-bottom: 2px;
+      
+      .navigation-info {
+        padding: 10px 14px;
+        gap: 3px;
       }
-      .panel-label {
-        font-size: 0.7rem;
+      
+      .destination-name {
+        font-size: 14px;
+      }
+      
+      .destination-address {
+        font-size: 12px;
+      }
+      
+      .navigation-distance {
+        font-size: 11px;
       }
     }
+
+    @media (max-width: 360px) {
+      .bottom-panel {
+        width: 98vw;
+        min-width: 260px;
+        max-width: 320px;
+        height: 60px;
+      }
+      
+      .navigation-arrow {
+        width: 55px;
+        height: 60px;
+      }
+      
+      .navigation-arrow::before {
+        font-size: 24px;
+      }
+      
+      .navigation-info {
+        padding: 8px 12px;
+        gap: 2px;
+      }
+      
+      .destination-name {
+        font-size: 13px;
+        line-height: 1.1;
+      }
+      
+      .destination-address {
+        font-size: 11px;
+        line-height: 1.2;
+      }
+      
+      .navigation-distance {
+        font-size: 10px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .bottom-panel {
+        max-width: 420px;
+        height: 75px;
+      }
+      
+      .navigation-arrow {
+        width: 75px;
+        height: 75px;
+      }
+      
+      .navigation-arrow::before {
+        font-size: 36px;
+      }
+      
+      .navigation-info {
+        padding: 14px 18px;
+        gap: 5px;
+      }
+      
+      .destination-name {
+        font-size: 17px;
+      }
+      
+      .destination-address {
+        font-size: 15px;
+      }
+      
+      .navigation-distance {
+        font-size: 13px;
+      }
+    }
+
+
       .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -162,21 +263,130 @@
     margin-bottom: 2px;
   }
 
+  /* AI Panel Styles */
+  .ai-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .ai-panel.active {
+    transform: translateY(0);
+  }
+
+  .ai-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .ai-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e60000;
+  }
+
+  .close-ai-btn {
+    background: #f8f9fa;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .close-ai-btn:hover {
+    background: #e9ecef;
+    transform: scale(1.1);
+  }
+
+  .route-suggestion {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-left: 4px solid #155724;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px;
+    color: white;
+  }
+
+  .route-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .route-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  .ai-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0 20px 20px;
+  }
+
+  .ai-action-btn {
+    background: linear-gradient(135deg, #e60000, #b8151e);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .ai-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(230, 0, 0, 0.3);
+    background: linear-gradient(135deg, #ff1a1a, #cc0000);
+  }
+
+  @media (max-width: 768px) {
+    .ai-actions {
+      flex-direction: column;
+    }
+    
+    .ai-action-btn {
+      min-width: auto;
+    }
+  }
+
   </style>
 </head>
 <body>
+  <div class="top-bar">
+    <span>แผนที่สำหรับแม่ค้า/พ่อค้า</span>
+    <button class="ai-btn" onclick="toggleAIRoute()">AI Route</button>
+  </div>
   <div id="map"></div>
   <div class="bottom-panel">
-    <div class="panel-row">
-      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Next Stop">
-      <span class="panel-label">จุดจอดถัดไปของรถ</span>
-      <span class="panel-value" id="next-truck-stop">-</span>
-    </div>
-    <div class="panel-row">
-      <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg" alt="Nearest Stop">
-      <span class="panel-label">จุดจอดใกล้ฉัน</span>
-      <span class="panel-value" id="nearest-stop">-</span>
-    </div>
+    <div class="navigation-arrow"></div>
+    <div class="navigation-info">
+       <div class="destination-name">ถนนสุขุมวิท</div>
+       <div class="destination-address">มุ่งหน้าสู่ ซอยอโศก</div>
+       <div class="navigation-distance">350 ม.</div>
+     </div>
   </div>
     <nav class="bottom-nav">
       <a href="/merchant-main" class="nav-item">
@@ -201,6 +411,31 @@
       </a>
     
     </nav>
+
+  <!-- AI Route Panel -->
+  <div id="aiPanel" class="ai-panel">
+    <div class="ai-header">
+      <div class="ai-title">🤖 AI Route Optimizer</div>
+      <button class="close-ai-btn" onclick="closeAIRoute()">×</button>
+    </div>
+    
+    <div class="route-suggestion">
+      <div class="route-title">เส้นทางที่แนะนำ: รถ A → รถ B → รถ C</div>
+      <div class="route-stats">
+        <span>⏱️ 45 นาที</span>
+        <span>📍 12.5 กม.</span>
+        <span>💰 ประหยัด 25%</span>
+      </div>
+      <div>เส้นทางนี้จะช่วยให้คุณเข้าถึงลูกค้าได้มากที่สุดในเวลาที่สั้นที่สุด</div>
+    </div>
+    
+    <div class="ai-actions">
+      <button class="ai-action-btn" onclick="optimizeRoute()">🎯 เพิ่มประสิทธิภาพ</button>
+      <button class="ai-action-btn" onclick="alternativeRoute()">🔄 เส้นทางอื่น</button>
+      <button class="ai-action-btn" onclick="manageQueue()">📋 จัดคิว</button>
+      <button class="ai-action-btn" onclick="weatherRoute()">🌤️ ปรับตามสภาพอากาศ</button>
+    </div>
+  </div>
  
 </body>
  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -504,6 +739,110 @@
     var bounds = L.latLngBounds(southWest, northEast);
     map.setMaxBounds(bounds);
 
+    // AI Route Functions
+    function toggleAIRoute() {
+      const panel = document.getElementById('aiPanel');
+      panel.classList.add('active');
+    }
+
+    function closeAIRoute() {
+      const panel = document.getElementById('aiPanel');
+      panel.classList.remove('active');
+    }
+
+    function optimizeRoute() {
+      Swal.fire({
+        title: '🎯 เพิ่มประสิทธิภาพเส้นทาง',
+        html: `
+          <div style="text-align: left; margin: 20px 0;">
+            <p><strong>การวิเคราะห์เส้นทาง:</strong></p>
+            <p>• ลดระยะทางรวม 15%</p>
+            <p>• ประหยัดเวลา 20 นาที</p>
+            <p>• เพิ่มจุดขายได้ 3 จุด</p>
+            <p>• ประหยัดน้ำมัน 120 บาท/วัน</p>
+          </div>
+        `,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'ใช้เส้นทางนี้',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('สำเร็จ!', 'เส้นทางได้รับการปรับปรุงแล้ว', 'success');
+        }
+      });
+    }
+
+    function alternativeRoute() {
+      Swal.fire({
+        title: '🔄 เส้นทางทางเลือก',
+        html: `
+          <div style="text-align: left;">
+            <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px;">
+              <strong>เส้นทาง A:</strong> รถ A → รถ C → รถ B<br>
+              <small>⏱️ 50 นาที | 📍 14 กม. | 💰 ประหยัด 20%</small>
+            </div>
+            <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px;">
+              <strong>เส้นทาง B:</strong> รถ B → รถ A → รถ C<br>
+              <small>⏱️ 55 นาที | 📍 16 กม. | 💰 ประหยัด 15%</small>
+            </div>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'เลือกเส้นทาง A',
+        cancelButtonText: 'ใช้เส้นทางเดิม'
+      });
+    }
+
+    function manageQueue() {
+      Swal.fire({
+        title: '📋 จัดการคิวการขาย',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>คิวที่แนะนำ:</strong></p>
+            <div style="margin: 10px 0;">
+              <div style="background: #e8f5e8; padding: 8px; margin: 5px 0; border-radius: 5px;">
+                🟢 รถ A - พร้อมขาย (ลูกค้ารอ 15 คน)
+              </div>
+              <div style="background: #fff3cd; padding: 8px; margin: 5px 0; border-radius: 5px;">
+                🟡 รถ B - เตรียมพร้อม (ลูกค้ารอ 8 คน)
+              </div>
+              <div style="background: #f8d7da; padding: 8px; margin: 5px 0; border-radius: 5px;">
+                🔴 รถ C - ต้องเติมสต็อก (ลูกค้ารอ 3 คน)
+              </div>
+            </div>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'อัปเดตคิว',
+        cancelButtonText: 'ปิด'
+      });
+    }
+
+    function weatherRoute() {
+      Swal.fire({
+        title: '🌤️ ปรับเส้นทางตามสภาพอากาศ',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>สภาพอากาศวันนี้:</strong> ☀️ แดดจัด 35°C</p>
+            <p><strong>คำแนะนำ:</strong></p>
+            <p>• หลีกเลี่ยงพื้นที่โล่งแจ้ง 11:00-15:00</p>
+            <p>• เพิ่มจุดขายในร่มและใกล้อาคาร</p>
+            <p>• เน้นเครื่องดื่มเย็นและไอศกรีม</p>
+            <p>• ย้ายไปพื้นที่มีร่มเงา</p>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'ปรับเส้นทาง',
+        cancelButtonText: 'ไม่ปรับ'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('ปรับแล้ว!', 'เส้นทางได้รับการปรับตามสภาพอากาศแล้ว', 'success');
+        }
+      });
+    }
 
     // ...existing code...
   </script>

@@ -96,12 +96,226 @@
     align-items: center;
     margin-bottom: 0.3rem;
   }
+  .review-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+  }
+  .product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    position: relative;
+    width: 300px;
+    height: 450px;
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-details {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    text-align: start;
+    padding: 10px;
+    flex-grow: 1;
+    min-height: 0;
+  }
+  .product-image {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    flex-shrink: 0;
+  }
+  .review-btn:hover {
+    background-color: #c82333;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+  }
+  .review-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  .review-modal.active {
+    display: flex;
+  }
+  .review-content {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  .review-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .review-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e60000;
+    margin: 0;
+  }
+  .truck-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .truck-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 5px 0;
+  }
+  .truck-location {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+  .rating-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .star-rating-modal {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+  .star {
+    font-size: 30px;
+    color: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 0 0 0 #ccc;
+    -webkit-text-stroke: 1px #ccc;
+  }
+  .star.active {
+    color: #FFD700;
+    text-shadow: 0 2px 4px rgba(255,215,0,0.3);
+    -webkit-text-stroke: 1px #FFD700;
+  }
+  .star:hover {
+    color: #FFC107;
+    transform: scale(1.1);
+    -webkit-text-stroke: 1px #FFC107;
+  }
+  .rating-text {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    min-height: 20px;
+  }
+  .review-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Prompt', sans-serif;
+    resize: vertical;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+  .review-input:focus {
+    outline: none;
+    border-color: #e60000;
+  }
+  .review-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .review-btn-modal {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .submit-review {
+    background-color: #e60000;
+    color: white;
+  }
+  .submit-review:hover {
+    background-color: #cc0000;
+  }
+  .cancel-review {
+    background-color: #f8f9fa;
+    color: #666;
+    border: 1px solid #ddd;
+  }
+  .cancel-review:hover {
+    background-color: #e9ecef;
+  }
+  .close-review {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .close-review:hover {
+    color: #666;
+  }
   @media (max-width: 600px) {
     .hero {
       height: 500px;
       flex-direction: column;
       justify-content: space-evenly;
       align-items: center;
+    }
+    .review-content {
+      width: 95%;
+      padding: 20px;
     }
   }
 </style>
@@ -140,6 +354,7 @@
             </div>
             <p class="price">ทะเบียน: {{ truck.plate }}</p>
             <p class="desc">{{ truck.desc }}</p>
+            <button class="review-btn" style="color: #333;" onclick="openReviewModal('{{ truck.name }}', '{{ truck.plate }}')">⭐ รีวิวรถป๋อมแป๋ม</button>
           </div>
         </div>
         {% endfor %}
@@ -207,9 +422,39 @@
       </a>
   </nav>
   </main>
+
+  <!-- Review Modal -->
+  <div id="reviewModal" class="review-modal">
+    <div class="review-content">
+      <button class="close-review" onclick="closeReviewModal()">&times;</button>
+      <div class="review-header">
+        <h2 class="review-title">รีวิวรถป๋อมแป๋ม</h2>
+      </div>
+      <div class="truck-info">
+        <p class="truck-name" id="reviewTruckName">รถป๋อมแป๋ม</p>
+        <p class="truck-location" id="reviewTruckPlate">ทะเบียน: -</p>
+      </div>
+      <div class="rating-label">ให้คะแนนรถป๋อมแป๋ม</div>
+      <div class="star-rating-modal" id="starRating">
+        <span class="star" data-rating="1">⭐</span>
+        <span class="star" data-rating="2">⭐</span>
+        <span class="star" data-rating="3">⭐</span>
+        <span class="star" data-rating="4">⭐</span>
+        <span class="star" data-rating="5">⭐</span>
+      </div>
+      <div class="rating-text" id="ratingText">กรุณาเลือกคะแนน</div>
+      <textarea class="review-input" id="reviewText" placeholder="แบ่งปันประสบการณ์ของคุณกับรถป๋อมแป๋ม..."></textarea>
+      <div class="review-actions">
+        <button class="review-btn-modal cancel-review" onclick="closeReviewModal()">ยกเลิก</button>
+        <button class="review-btn-modal submit-review" onclick="submitReview()">ส่งรีวิว</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const filter = document.querySelectorAll('.filter-tags span');
@@ -260,6 +505,118 @@
       });
     });
   });
+
+  // Review Modal Functions
+  let currentRating = 0;
+  let currentTruckName = '';
+  let currentTruckPlate = '';
+
+  function openReviewModal(truckName, truckPlate) {
+    currentTruckName = truckName;
+    currentTruckPlate = truckPlate;
+    
+    document.getElementById('reviewTruckName').textContent = truckName;
+    document.getElementById('reviewTruckPlate').textContent = 'ทะเบียน: ' + truckPlate;
+    document.getElementById('reviewModal').classList.add('active');
+    resetReviewForm();
+  }
+
+  function closeReviewModal() {
+    document.getElementById('reviewModal').classList.remove('active');
+    resetReviewForm();
+  }
+
+  function resetReviewForm() {
+    currentRating = 0;
+    document.getElementById('reviewText').value = '';
+    updateStarDisplay();
+  }
+
+  function updateStarDisplay() {
+    const stars = document.querySelectorAll('.star');
+    const ratingTexts = [
+      'กรุณาเลือกคะแนน',
+      '😞 ไม่พอใจมาก',
+      '😐 ไม่พอใจ', 
+      '😊 พอใจ',
+      '😄 พอใจมาก',
+      '🤩 ประทับใจมาก'
+    ];
+    
+    stars.forEach((star, index) => {
+      if (index < currentRating) {
+        star.classList.add('active');
+      } else {
+        star.classList.remove('active');
+      }
+    });
+    
+    document.getElementById('ratingText').textContent = ratingTexts[currentRating];
+  }
+
+  function submitReview() {
+    const reviewText = document.getElementById('reviewText').value.trim();
+    
+    if (currentRating === 0) {
+      Swal.fire({
+        title: 'กรุณาให้คะแนน',
+        text: 'โปรดเลือกคะแนนก่อนส่งรีวิว',
+        icon: 'warning',
+        confirmButtonText: 'ตกลง',
+        confirmButtonColor: '#e60000'
+      });
+      return;
+    }
+    
+    if (reviewText === '') {
+      Swal.fire({
+        title: 'กรุณาเขียนรีวิว',
+        text: 'โปรดเขียนความคิดเห็นก่อนส่งรีวิว',
+        icon: 'warning',
+        confirmButtonText: 'ตกลง',
+        confirmButtonColor: '#e60000'
+      });
+      return;
+    }
+    
+    Swal.fire({
+      title: 'ส่งรีวิวสำเร็จ!',
+      text: `ขอบคุณสำหรับรีวิว ${currentTruckName}`,
+      icon: 'success',
+      confirmButtonText: 'ตกลง',
+      confirmButtonColor: '#e60000'
+    }).then(() => {
+      closeReviewModal();
+    });
+  }
+
+  // Add event listeners for stars
+  document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+      star.innerHTML = '★';
+      star.addEventListener('click', () => {
+        currentRating = index + 1;
+        updateStarDisplay();
+      });
+      
+      star.addEventListener('mouseenter', function() {
+        const tempRating = index + 1;
+        stars.forEach((s, i) => {
+          if (i < tempRating) {
+            s.style.color = '#FFD600';
+          } else {
+            s.style.color = i < currentRating ? '#FFD600' : '#ddd';
+          }
+        });
+      });
+    });
+    
+    document.getElementById('starRating').addEventListener('mouseleave', function() {
+      updateStarDisplay();
+    });
+  });
+
 </script>
 <script src="../static/js/notifications.js"></script>
 

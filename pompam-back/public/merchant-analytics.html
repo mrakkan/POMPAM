@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>สรุปรวมสถิติ - POMPAM</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -227,6 +228,108 @@
     color: #333;
   }
 
+  /* AI Features Styles */
+  .ai-section {
+    background: linear-gradient(135deg, #e60000, #c02129);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  }
+
+  .ai-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .ai-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ai-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .ai-action-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ai-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .ai-btn-icon {
+    font-size: 1.5rem;
+  }
+
+  .ai-btn-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .ai-btn-desc {
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+
+  .ai-insights {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .insight-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    padding: 1.2rem;
+    border-left: 4px solid #e60000;
+  }
+
+  .insight-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .insight-value {
+    font-size: 1.1rem;
+    color: #666;
+  }
+
   @media (max-width: 768px) {
     .header-content {
       flex-direction: column;
@@ -272,6 +375,14 @@
     .summary-cards {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .ai-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-section {
+      padding: 1.5rem;
+    }
   }
 </style>
 
@@ -279,10 +390,7 @@
   <div class="header">
     <div class="header-content">
       <h1>📊 สรุปรวมสถิติ</h1>
-      <a href="/merchant-main" class="back-btn">
-        <span>←</span>
-        <span>กลับหน้าหลัก</span>
-      </a>
+      <button onclick="window.history.back()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; margin-right: 10px; cursor: pointer;">← กลับ</button>
     </div>
   </div>
 
@@ -323,6 +431,72 @@
         </div>
         <div class="stat-value">฿24,200</div>
         <div class="stat-change positive">+18.7% จากเดือนที่แล้ว</div>
+      </div>
+    </div>
+
+    <!-- AI Analytics Section -->
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-title">
+          <span>AI Analytics Assistant</span>
+        </div>
+      </div>
+      <div class="ai-actions">
+        <button class="ai-action-btn" onclick="predictSales()">
+          <div class="ai-btn-icon">📈</div>
+          <div class="ai-btn-title">พยากรณ์ยอดขาย</div>
+          <div class="ai-btn-desc">วิเคราะห์แนวโน้มและทำนายยอดขายในอนาคต</div>
+        </button>
+        <button class="ai-action-btn" onclick="optimizeProfit()">
+          <div class="ai-btn-icon">💰</div>
+          <div class="ai-btn-title">เพิ่มประสิทธิภาพกำไร</div>
+          <div class="ai-btn-desc">แนะนำวิธีลดต้นทุนและเพิ่มรายได้</div>
+        </button>
+        <button class="ai-action-btn" onclick="analyzeCustomer()">
+          <div class="ai-btn-icon">👥</div>
+          <div class="ai-btn-title">วิเคราะห์ลูกค้า</div>
+          <div class="ai-btn-desc">เข้าใจพฤติกรรมและความต้องการลูกค้า</div>
+        </button>
+        <button class="ai-action-btn" onclick="marketInsights()">
+          <div class="ai-btn-icon">🎯</div>
+          <div class="ai-btn-title">ข้อมูลเชิงลึกตลาด</div>
+          <div class="ai-btn-desc">วิเคราะห์ตลาดและคู่แข่งในพื้นที่</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="ai-insights">
+      <h3 class="chart-title">🧠 AI Insights & Recommendations</h3>
+      <div class="insight-grid">
+        <div class="insight-card">
+          <div class="insight-title">
+            <span>⚡</span>
+            <span>ช่วงเวลาขายดี</span>
+          </div>
+          <div class="insight-value">11:30-13:00 และ 17:00-19:30 มียอดขายสูงสุด</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">
+            <span>🔥</span>
+            <span>สินค้าขายดี</span>
+          </div>
+          <div class="insight-value">ข้าวผัดกุ้ง และ น้ำส้มคั้นสด ขายดีที่สุดในสัปดาห์นี้</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">
+            <span>📍</span>
+            <span>จุดขายยอดนิยม</span>
+          </div>
+          <div class="insight-value">หน้าออฟฟิศ และ ใกล้โรงเรียน มีลูกค้าหนาแน่น</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">
+            <span>💡</span>
+            <span>คำแนะนำ</span>
+          </div>
+          <div class="insight-value">เพิ่มเมนูเครื่องดื่มเย็นในช่วงบ่าย จะเพิ่มยอดขาย 15%</div>
+        </div>
       </div>
     </div>
 
@@ -492,6 +666,119 @@
     document.addEventListener('DOMContentLoaded', function() {
       createChart();
     });
+
+    // AI Functions
+    function predictSales() {
+      Swal.fire({
+        title: '📈 พยากรณ์ยอดขาย',
+        html: `
+          <div style="text-align: left; margin: 20px 0;">
+            <h4>การพยากรณ์ 7 วันข้างหน้า:</h4>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+              <p><strong>วันจันทร์:</strong> ฿3,200 (↑ 8%)</p>
+              <p><strong>วันอังคาร:</strong> ฿3,500 (↑ 12%)</p>
+              <p><strong>วันพุธ:</strong> ฿2,900 (↓ 3%)</p>
+              <p><strong>วันพฤหัส:</strong> ฿3,800 (↑ 15%)</p>
+              <p><strong>วันศุกร์:</strong> ฿4,500 (↑ 20%)</p>
+              <p><strong>วันเสาร์:</strong> ฿5,200 (↑ 25%)</p>
+              <p><strong>วันอาทิตย์:</strong> ฿4,100 (↑ 18%)</p>
+            </div>
+            <p><strong>รายได้คาดการณ์:</strong> ฿27,200 (+16% จากสัปดาห์ที่แล้ว)</p>
+          </div>
+        `,
+        icon: 'success',
+        confirmButtonText: 'เข้าใจแล้ว',
+        confirmButtonColor: '#e60000'
+      });
+    }
+
+    function optimizeProfit() {
+      Swal.fire({
+        title: '💰 เพิ่มประสิทธิภาพกำไร',
+        html: `
+          <div style="text-align: left;">
+            <h4>คำแนะนำการเพิ่มกำไร:</h4>
+            <div style="margin: 15px 0;">
+              <div style="background: #e8f5e8; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #28a745;">
+                <strong>ลดต้นทุน:</strong> เปลี่ยนซัพพลายเออร์ผัก จะประหยัด 12%
+              </div>
+              <div style="background: #e3f2fd; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #2196f3;">
+                <strong>เพิ่มรายได้:</strong> เพิ่มเมนูเครื่องดื่มพิเศษ +฿180/วัน
+              </div>
+              <div style="background: #fff3e0; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                <strong>ปรับราคา:</strong> เพิ่มราคาเมนูยอดนิยม 5-10 บาท
+              </div>
+            </div>
+            <p><strong>กำไรเพิ่มขึ้นคาดการณ์:</strong> +฿8,500/เดือน</p>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'ใช้คำแนะนำ',
+        cancelButtonText: 'ดูเพิ่มเติม',
+        confirmButtonColor: '#28a745'
+      });
+    }
+
+    function analyzeCustomer() {
+      Swal.fire({
+        title: '👥 วิเคราะห์ลูกค้า',
+        html: `
+          <div style="text-align: left;">
+            <h4>ข้อมูลลูกค้า:</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+                <strong>อายุเฉลี่ย</strong><br>28-35 ปี
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+                <strong>เพศ</strong><br>หญิง 65% | ชาย 35%
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+                <strong>ความถี่การซื้อ</strong><br>3-4 ครั้ง/สัปดาห์
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+                <strong>ยอดซื้อเฉลี่ย</strong><br>฿285/ครั้ง
+              </div>
+            </div>
+            <h4>พฤติกรรม:</h4>
+            <p>• ชอบเมนูเผ็ดน้อย และมีผัก</p>
+            <p>• มักซื้อเครื่องดื่มร่วมด้วย</p>
+            <p>• ใช้เงินสดมากกว่าโอนเงิน</p>
+          </div>
+        `,
+        confirmButtonText: 'เข้าใจแล้ว',
+        confirmButtonColor: '#e60000'
+      });
+    }
+
+    function marketInsights() {
+      Swal.fire({
+        title: '🎯 ข้อมูลเชิงลึกตลาด',
+        html: `
+          <div style="text-align: left;">
+            <h4>สถานการณ์ตลาด:</h4>
+            <div style="margin: 15px 0;">
+              <div style="background: #e8f5e8; padding: 10px; margin: 8px 0; border-radius: 5px;">
+                <strong>🟢 โอกาส:</strong> ช่วงเทศกาลใกล้เข้า ความต้องการเพิ่ม 25%
+              </div>
+              <div style="background: #fff3cd; padding: 10px; margin: 8px 0; border-radius: 5px;">
+                <strong>🟡 คู่แข่ง:</strong> มีรถขายของใหม่ 2 คัน ในรัศมี 500 เมตร
+              </div>
+              <div style="background: #f8d7da; padding: 10px; margin: 8px 0; border-radius: 5px;">
+                <strong>🔴 ความเสี่ยง:</strong> ราคาวัตถุดิบเพิ่มขึ้น 8% ในเดือนหน้า
+              </div>
+            </div>
+            <h4>คำแนะนำ:</h4>
+            <p>• เพิ่มเมนูพิเศษสำหรับเทศกาล</p>
+            <p>• ปรับกลยุทธ์การตั้งราคาให้แข่งขันได้</p>
+            <p>• หาซัพพลายเออร์ใหม่เพื่อลดต้นทุน</p>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'วางแผนกลยุทธ์',
+        cancelButtonText: 'ดูรายละเอียด',
+        confirmButtonColor: '#e60000'
+      });
+    }
   </script>
 </body>
 

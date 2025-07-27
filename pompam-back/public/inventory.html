@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .inventory-section {
             padding: 1.5rem 1rem;
@@ -65,6 +66,136 @@
             justify-content: end;
             gap: 16px;
         }
+
+        /* AI Features Styles */
+        .ai-inventory-section {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .ai-inventory-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .ai-inventory-title {
+            color: #e60000;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .ai-inventory-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ai-inventory-btn {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(230, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-inventory-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 0, 0, 0.15);
+            background: rgba(230, 0, 0, 0.05);
+        }
+
+        .ai-inventory-btn:active {
+            transform: translateY(0);
+        }
+
+        .ai-btn-icon {
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .ai-btn-content {
+            flex: 1;
+        }
+
+        .ai-btn-title {
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+        }
+
+        .ai-btn-desc {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .ai-insights {
+            margin-top: 20px;
+        }
+
+        .ai-insights h3 {
+            color: #e60000;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .insight-card {
+            background: #fff;
+            border-left: 4px solid #e60000;
+            border-radius: 8px;
+            padding: 12px 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .insight-value {
+            color: #e60000;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .ai-inventory-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .insight-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .ai-inventory-section {
+                margin: 15px 0;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -92,6 +223,71 @@
             {% include 'inventory-category.html' %}
         </div>
     </div>
+    
+    <!-- AI Inventory Assistant -->
+    <div class="ai-inventory-section">
+        <div class="ai-inventory-header">
+            <span style="font-size: 1.5rem;">🤖</span>
+            <h2 class="ai-inventory-title">AI Inventory Assistant</h2>
+        </div>
+        
+        <div class="ai-inventory-actions">
+            <div class="ai-inventory-btn" onclick="stockPrediction()">
+                <div class="ai-btn-icon">📊</div>
+                <div class="ai-btn-content">
+                    <h3 class="ai-btn-title">พยากรณ์สต็อก</h3>
+                    <p class="ai-btn-desc">คาดการณ์ความต้องการสินค้าในอนาคต</p>
+                </div>
+            </div>
+            
+            <div class="ai-inventory-btn" onclick="optimizeStock()">
+                <div class="ai-btn-icon">⚡</div>
+                <div class="ai-btn-content">
+                    <h3 class="ai-btn-title">เพิ่มประสิทธิภาพสต็อก</h3>
+                    <p class="ai-btn-desc">แนะนำการจัดการสต็อกให้เหมาะสม</p>
+                </div>
+            </div>
+            
+            <div class="ai-inventory-btn" onclick="expiredAlert()">
+                <div class="ai-btn-icon">⚠️</div>
+                <div class="ai-btn-content">
+                    <h3 class="ai-btn-title">เตือนสินค้าหมดอายุ</h3>
+                    <p class="ai-btn-desc">ตรวจสอบสินค้าที่ใกล้หมดอายุ</p>
+                </div>
+            </div>
+            
+            <div class="ai-inventory-btn" onclick="supplierRecommend()">
+                <div class="ai-btn-icon">🏪</div>
+                <div class="ai-btn-content">
+                    <h3 class="ai-btn-title">แนะนำซัพพลายเออร์</h3>
+                    <p class="ai-btn-desc">หาซัพพลายเออร์ที่ดีที่สุด</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-insights">
+            <h3>📈 ข้อมูลเชิงลึกสต็อก</h3>
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <div class="insight-title">สินค้าขายดีที่สุด</div>
+                    <div class="insight-value">ผัดไทยกุ้ง</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">สต็อกต่ำสุด</div>
+                    <div class="insight-value">น้ำปลา (3 ขวด)</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">ใกล้หมดอายุ</div>
+                    <div class="insight-value">ผักกาด (2 วัน)</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">แนะนำเติมสต็อก</div>
+                    <div class="insight-value">กุ้งสด, ไข่ไก่</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="section" style="padding-bottom: 65px;">
         <div class="section-header">
             <h2>สินค้าแนะนำ</h2>
@@ -190,6 +386,135 @@
                 });
             });
         });
+        
+        // AI Inventory Functions
+        function stockPrediction() {
+            Swal.fire({
+                title: '📊 พยากรณ์สต็อก',
+                html: `
+                    <div style="text-align: left; margin: 20px 0;">
+                        <h4>การพยากรณ์สต็อก 7 วันข้างหน้า:</h4>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                            <p><strong>ผัดไทยกุ้ง:</strong> ต้องการ 45 จาน (↑ 15%)</p>
+                            <p><strong>ส้มตำ:</strong> ต้องการ 38 จาน (↑ 8%)</p>
+                            <p><strong>ข้าวผัด:</strong> ต้องการ 32 จาน (↓ 5%)</p>
+                            <p><strong>ลาบหมู:</strong> ต้องการ 28 จาน (↑ 12%)</p>
+                            <p><strong>แกงเขียวหวาน:</strong> ต้องการ 25 จาน (↑ 20%)</p>
+                        </div>
+                        <h4>วัตถุดิบที่ต้องเติม:</h4>
+                        <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin: 8px 0;">
+                            <p>🦐 <strong>กุ้งสด:</strong> 2 กิโลกรัม</p>
+                            <p>🥬 <strong>ผักกาด:</strong> 1.5 กิโลกรัม</p>
+                            <p>🥚 <strong>ไข่ไก่:</strong> 3 ฟอง</p>
+                            <p>🌶️ <strong>พริกแกง:</strong> 500 กรัม</p>
+                        </div>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'วางแผนการสั่งซื้อ',
+                showCancelButton: true,
+                cancelButtonText: 'ปิด',
+                confirmButtonColor: '#e60000'
+            });
+        }
+        
+        function optimizeStock() {
+            Swal.fire({
+                title: '⚡ เพิ่มประสิทธิภาพสต็อก',
+                html: `
+                    <div style="text-align: left;">
+                        <h4>คำแนะนำการจัดการสต็อก:</h4>
+                        <div style="margin: 15px 0;">
+                            <div style="background: #e8f5e8; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #28a745;">
+                                <strong>ลดการสูญเสีย:</strong> ใช้ผักกาดที่ใกล้หมดอายุทำเมนูพิเศษ
+                            </div>
+                            <div style="background: #e3f2fd; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #2196f3;">
+                                <strong>เพิ่มประสิทธิภาพ:</strong> จัดเก็บกุ้งแช่แข็งแยกตามขนาด
+                            </div>
+                            <div style="background: #fff3e0; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                                <strong>ประหยัดต้นทุน:</strong> สั่งซื้อน้ำปลาขนาดใหญ่ ประหยัด 15%
+                            </div>
+                            <div style="background: #f8d7da; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                <strong>เร่งด่วน:</strong> สต็อกไข่ไก่เหลือน้อย ควรสั่งเพิ่มวันนี้
+                            </div>
+                        </div>
+                        <p><strong>ประหยัดต้นทุนคาดการณ์:</strong> ฿1,200/สัปดาห์</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'ใช้คำแนะนำ',
+                cancelButtonText: 'ดูเพิ่มเติม',
+                confirmButtonColor: '#28a745'
+            });
+        }
+        
+        function expiredAlert() {
+            Swal.fire({
+                title: '⚠️ เตือนสินค้าหมดอายุ',
+                html: `
+                    <div style="text-align: left;">
+                        <h4>สินค้าที่ใกล้หมดอายุ:</h4>
+                        <div style="margin: 15px 0;">
+                            <div style="background: #f8d7da; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                <strong>🥬 ผักกาด:</strong> หมดอายุใน 2 วัน<br>
+                                <small>แนะนำ: ทำเมนูส้มตำผักกาดพิเศษ</small>
+                            </div>
+                            <div style="background: #fff3cd; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #ffc107;">
+                                <strong>🥛 นมสด:</strong> หมดอายุใน 4 วัน<br>
+                                <small>แนะนำ: ใช้ทำเครื่องดื่มพิเศษ</small>
+                            </div>
+                            <div style="background: #d1ecf1; padding: 10px; margin: 8px 0; border-radius: 5px; border-left: 4px solid #17a2b8;">
+                                <strong>🍋 มะนาว:</strong> หมดอายุใน 6 วัน<br>
+                                <small>สถานะ: ปกติ</small>
+                            </div>
+                        </div>
+                        <h4>การดำเนินการแนะนำ:</h4>
+                        <p>• ลดราคาสินค้าใกล้หมดอายุ 20%</p>
+                        <p>• สร้างเมนูพิเศษจากวัตถุดิบที่เหลือ</p>
+                        <p>• แจ้งเตือนลูกค้าเกี่ยวกับโปรโมชั่น</p>
+                    </div>
+                `,
+                confirmButtonText: 'ตั้งการแจ้งเตือน',
+                showCancelButton: true,
+                cancelButtonText: 'ปิด',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+        
+        function supplierRecommend() {
+            Swal.fire({
+                title: '🏪 แนะนำซัพพลายเออร์',
+                html: `
+                    <div style="text-align: left;">
+                        <h4>ซัพพลายเออร์แนะนำ:</h4>
+                        <div style="margin: 15px 0;">
+                            <div style="background: #e8f5e8; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #28a745;">
+                                <h5 style="color: #28a745; margin: 0 0 8px 0;">🥬 ตลาดสดบางแค</h5>
+                                <p style="margin: 4px 0;"><strong>ผักสด:</strong> ราคาดี คุณภาพสูง</p>
+                                <p style="margin: 4px 0;"><strong>ระยะทาง:</strong> 2.5 กม. | <strong>เรทติ้ง:</strong> ⭐⭐⭐⭐⭐</p>
+                                <p style="margin: 4px 0; color: #28a745;"><strong>ประหยัด:</strong> 18% เทียบกับปัจจุบัน</p>
+                            </div>
+                            <div style="background: #e3f2fd; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #2196f3;">
+                                <h5 style="color: #2196f3; margin: 0 0 8px 0;">🦐 ตลาดปลาสดคลองเตย</h5>
+                                <p style="margin: 4px 0;"><strong>อาหารทะเล:</strong> สดใหม่ทุกวัน</p>
+                                <p style="margin: 4px 0;"><strong>ระยะทาง:</strong> 4.2 กม. | <strong>เรทติ้ง:</strong> ⭐⭐⭐⭐⭐</p>
+                                <p style="margin: 4px 0; color: #2196f3;"><strong>คุณภาพ:</strong> เกรด A+ รับประกันความสด</p>
+                            </div>
+                            <div style="background: #fff3e0; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ff9800;">
+                                <h5 style="color: #ff9800; margin: 0 0 8px 0;">🌶️ ร้านเครื่องเทศป้าสมใจ</h5>
+                                <p style="margin: 4px 0;"><strong>เครื่องเทศ:</strong> ครบครัน ราคาส่ง</p>
+                                <p style="margin: 4px 0;"><strong>ระยะทาง:</strong> 1.8 กม. | <strong>เรทติ้ง:</strong> ⭐⭐⭐⭐</p>
+                                <p style="margin: 4px 0; color: #ff9800;"><strong>โปรโมชั่น:</strong> ซื้อ 10 ได้ 12</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'ติดต่อซัพพลายเออร์',
+                cancelButtonText: 'ดูเพิ่มเติม',
+                confirmButtonColor: '#e60000'
+            });
+        }
     </script>
     
 </body>

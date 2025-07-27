@@ -161,12 +161,16 @@
 
     .barcode-value {
       font-family: 'Courier New', monospace;
-      font-size: 5vw;
+      font-size: clamp(14px, 3.5vw, 20px);
       font-weight: bold;
       background: white;
       padding: 10px;
       border-radius: 5px;
       letter-spacing: 1px;
+      word-break: break-all;
+      overflow-wrap: break-word;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .action-buttons {
@@ -357,7 +361,7 @@
 
     <div class="action-buttons">
       <button class="btn btn-secondary" onclick="window.print()">พิมพ์ใบเสร็จ</button>
-      <button class="btn btn-primary" onclick="goHome()">กลับหน้าหลัก</button>
+      <button onclick="window.history.back()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; margin-right: 10px; cursor: pointer;">← กลับ</button>
     </div>
 
     <div class="footer-note">

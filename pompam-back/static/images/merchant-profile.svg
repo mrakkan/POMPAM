@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <pattern id="vegetables" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#2d5016"/>
+      <circle cx="10" cy="10" r="3" fill="#ff6b35"/>
+      <circle cx="30" cy="20" r="2" fill="#4CAF50"/>
+      <circle cx="20" cy="30" r="2.5" fill="#FFC107"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="#f5f5f5"/>
+  
+  <!-- Vegetable stand background -->
+  <rect x="50" y="200" width="300" height="150" fill="url(#vegetables)" opacity="0.3"/>
+  
+  <!-- Merchant figure -->
+  <g transform="translate(200, 200)">
+    <!-- Head -->
+    <circle cx="0" cy="-50" r="35" fill="#fdbcb4"/>
+    
+    <!-- Hair -->
+    <path d="M -30 -75 Q 0 -85 30 -75 Q 35 -60 30 -45 Q 20 -40 10 -42 Q 0 -45 -10 -42 Q -20 -40 -30 -45 Q -35 -60 -30 -75" fill="#d3d3d3"/>
+    
+    <!-- Eyes -->
+    <circle cx="-12" cy="-55" r="3" fill="#333"/>
+    <circle cx="12" cy="-55" r="3" fill="#333"/>
+    <circle cx="-12" cy="-55" r="1" fill="white"/>
+    <circle cx="12" cy="-55" r="1" fill="white"/>
+    
+    <!-- Smile lines -->
+    <path d="M -20 -45 Q -15 -40 -10 -45" stroke="#d4a574" stroke-width="1" fill="none"/>
+    <path d="M 10 -45 Q 15 -40 20 -45" stroke="#d4a574" stroke-width="1" fill="none"/>
+    
+    <!-- Nose -->
+    <ellipse cx="0" cy="-50" rx="2" ry="3" fill="#f0a898"/>
+    
+    <!-- Mouth -->
+    <path d="M -15 -40 Q 0 -30 15 -40" stroke="#333" stroke-width="2" fill="none"/>
+    
+    <!-- Body (shirt) -->
+    <rect x="-25" y="-15" width="50" height="60" fill="#f5e6d3" rx="5"/>
+    
+    <!-- Apron -->
+    <rect x="-30" y="-10" width="60" height="70" fill="#2c3e50" rx="3"/>
+    
+    <!-- Apron straps -->
+    <rect x="-15" y="-15" width="4" height="20" fill="#2c3e50"/>
+    <rect x="11" y="-15" width="4" height="20" fill="#2c3e50"/>
+    
+    <!-- Arms -->
+    <ellipse cx="-35" cy="10" rx="8" ry="25" fill="#fdbcb4"/>
+    <ellipse cx="35" cy="10" rx="8" ry="25" fill="#fdbcb4"/>
+    
+    <!-- Hands -->
+    <circle cx="-35" cy="35" r="6" fill="#fdbcb4"/>
+    <circle cx="35" cy="35" r="6" fill="#fdbcb4"/>
+  </g>
+  
+  <!-- Vegetables around -->
+  <g>
+    <!-- Tomatoes -->
+    <circle cx="80" cy="120" r="8" fill="#ff6b35"/>
+    <circle cx="95" cy="115" r="6" fill="#ff6b35"/>
+    <circle cx="85" cy="105" r="7" fill="#ff6b35"/>
+    
+    <!-- Lettuce -->
+    <ellipse cx="320" cy="130" rx="12" ry="8" fill="#4CAF50"/>
+    <ellipse cx="310" cy="125" rx="10" ry="6" fill="#66BB6A"/>
+    <ellipse cx="330" cy="120" rx="8" ry="5" fill="#4CAF50"/>
+    
+    <!-- Corn -->
+    <ellipse cx="120" cy="320" rx="6" ry="15" fill="#FFC107"/>
+    <ellipse cx="135" cy="315" rx="6" ry="15" fill="#FFD54F"/>
+    
+    <!-- Peppers -->
+    <ellipse cx="280" cy="310" rx="5" ry="12" fill="#4CAF50"/>
+    <ellipse cx="295" cy="305" rx="5" ry="12" fill="#66BB6A"/>
+  </g>
+  
+  <!-- Stand structure -->
+  <rect x="60" y="180" width="280" height="8" fill="#8D6E63"/>
+  <rect x="70" y="350" width="8" height="30" fill="#5D4037"/>
+  <rect x="320" y="350" width="8" height="30" fill="#5D4037"/>
+  
+  <!-- Awning -->
+  <path d="M 40 180 Q 200 160 360 180 L 360 200 Q 200 180 40 200 Z" fill="#FF5722" opacity="0.8"/>
+</svg>
