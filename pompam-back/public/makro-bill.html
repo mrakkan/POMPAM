@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>บิลการชำระเงิน - Makro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      margin-bottom: 100px;
+    }
+
+    .bill-container {
+      max-width: 500px;
+      margin: 60px auto 20px;
+      margin-bottom: 80px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      border: 2px solid #28a745;
+    }
+
+    .bill-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #28a745;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 2rem;
+    }
+
+    .bill-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+
+    .bill-subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .store-info {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .store-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #dc3545;
+      margin-bottom: 5px;
+    }
+
+    .store-details {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .transaction-info {
+      margin-bottom: 2rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .info-label {
+      color: #666;
+      font-weight: 500;
+    }
+
+    .info-value {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .amount-paid {
+      background: #e8f5e8;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .amount-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .amount-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+      background: #fff3cd;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .payment-icon {
+      font-size: 1.5rem;
+    }
+
+    .payment-text {
+      font-weight: bold;
+      color: #856404;
+    }
+
+    .barcode-section {
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border: 1px dashed #ccc;
+    }
+
+    .barcode-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .barcode-value {
+      font-family: 'Courier New', monospace;
+      font-size: 5vw;
+      font-weight: bold;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      letter-spacing: 1px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #28a745, #20a039);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, #20a039, #1e7e34);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #666;
+      font-size: 0.8rem;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        margin-bottom: 100px;
+      }
+      .bill-container {
+        margin: 40px 1rem 60px;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bill-container">
+    <div class="bill-header">
+      <div class="success-icon">✅</div>
+      <div class="bill-title">ชำระเงินสำเร็จ</div>
+      <div class="bill-subtitle">การทำรายการเสร็จสิ้น</div>
+    </div>
+
+    <div class="store-info">
+      <div class="store-name">MAKRO สาขาลาดพร้าว</div>
+      <div class="store-details">
+        เลขที่ 1234 ถนนลาดพร้าว แขวงจตุจักร เขตจตุจักร กรุงเทพฯ 10900<br>
+        โทร: 02-123-4567
+      </div>
+    </div>
+
+    <div class="transaction-info">
+      <div class="info-row">
+        <span class="info-label">เลขที่ใบเสร็จ:</span>
+        <span class="info-value" id="receiptNumber">MK2024001234</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">วันที่/เวลา:</span>
+        <span class="info-value" id="transactionDate"></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">แคชเชียร:</span>
+        <span class="info-value">สมชาย ใจดี (ID: 001)</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ลูกค้า:</span>
+        <span class="info-value">POMPAM Merchant</span>
+      </div>
+    </div>
+
+    <div class="amount-paid">
+      <div class="amount-label">ยอดที่ชำระ</div>
+      <div class="amount-value" id="paidAmount">฿1,250</div>
+    </div>
+
+    <div class="payment-method">
+      <span class="payment-icon">💳</span>
+      <span class="payment-text">ชำระด้วยเครดิต POMPAM</span>
+    </div>
+
+    <div class="barcode-section">
+      <div class="barcode-label">รหัสอ้างอิง</div>
+      <div class="barcode-value" id="referenceCode">POMPAM2024001234</div>
+    </div>
+
+    <div class="transaction-info">
+      <div class="info-row">
+        <span class="info-label">เครดิตก่อนหน้า:</span>
+        <span class="info-value">฿2,500</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">เครดิตคงเหลือ:</span>
+        <span class="info-value" style="color: #28a745;">฿1,250</span>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary" onclick="window.print()">พิมพ์ใบเสร็จ</button>
+      <button class="btn btn-primary" onclick="goHome()">กลับหน้าหลัก</button>
+    </div>
+
+    <div class="footer-note">
+      ขอบคุณที่ใช้บริการ POMPAM<br>
+      สอบถามข้อมูลเพิ่มเติม: 02-XXX-XXXX
+    </div>
+  </div>
+
+  <script>
+    function goHome() {
+      Swal.fire({
+        title: 'สำเร็จ!',
+        text: 'การทำรายการเสร็จสิ้น สินค้าจะถูกจัดส่งและเพิ่มเข้า Inventory ของคุณ',
+        icon: 'success',
+        confirmButtonColor: '#28a745',
+        confirmButtonText: 'ตกลง'
+      }).then(() => {
+        window.location.href = '/merchant-main';
+      });
+    }
+
+    // Initialize page data
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set current date and time
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('th-TH', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      document.getElementById('transactionDate').textContent = dateStr;
+
+      // Generate random receipt number
+      const receiptNum = 'MK' + now.getFullYear() + String(Math.floor(Math.random() * 999999)).padStart(6, '0');
+      document.getElementById('receiptNumber').textContent = receiptNum;
+      document.getElementById('referenceCode').textContent = 'POMPAM' + receiptNum;
+
+      // Simulate payment amount (could be passed from previous page)
+      const urlParams = new URLSearchParams(window.location.search);
+      const amount = urlParams.get('amount') || '1,250';
+      document.getElementById('paidAmount').textContent = '฿' + amount;
+    });
+  </script>
+</body>
+</html>

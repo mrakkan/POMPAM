@@ -137,30 +137,11 @@
             <h2>ระบบจัดการการเงิน</h2>
         </div>
         <div class="item-list">
-            <table>
+            <table id="cart-items">
                 <colgroup>
                     <col style="width: 180px;">
                 </colgroup>
-                {% for item in selected %}
-                    <tr>
-                        <td>
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <img src="{{ item.img }}">
-                            </div>
-                        </td>
-                        <td>
-                            <p>{{ item.name }}</p>
-                            <p>ราคา {{ item.price }} บาท</p>
-                        </td>
-                        <td class="quantity-col">
-                            <div class="quantity-selector">
-                                <button class="quantity-btn">-</button>
-                                <div class="quantity-display">1</div>
-                                <button class="quantity-btn">+</button>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
+                <!-- Cart items will be loaded here by JavaScript -->
             </table>
         </div>
     </div>
@@ -173,9 +154,158 @@
         <img src="/static/images/qr.png">
     </div>
     <div class="total-section" style="padding-bottom: 90px;">
-        <p>ราคารวม 55 บาท</p>
-        <a class="confirm-btn" href="/pos/order">ชำระเงินสำเร็จ</a>
+        <p id="subtotal">ยอดรวม: ฿0.00</p>
+        <p id="tax">ภาษี (7%): ฿0.00</p>
+        <p id="total">ยอดรวมทั้งหมด: ฿0.00</p>
+        <button class="confirm-btn" id="confirm-btn">ชำระเงินสำเร็จ</button>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        class POSPayment {
+            constructor() {
+                this.cart = this.loadCart();
+                this.selectedPaymentMethod = 'PromptPay';
+                this.init();
+            }
+            
+            init() {
+                this.displayCartItems();
+                this.updateTotals();
+                this.setupPaymentMethods();
+                this.setupConfirmButton();
+            }
+            
+            loadCart() {
+                const cartData = localStorage.getItem('posCart');
+                return cartData ? JSON.parse(cartData) : [];
+            }
+            
+            saveCart() {
+                localStorage.setItem('posCart', JSON.stringify(this.cart));
+            }
+            
+            displayCartItems() {
+                const cartItemsTable = document.getElementById('cart-items');
+                
+                if (this.cart.length === 0) {
+                    cartItemsTable.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">ไม่มีสินค้าในตะกร้า</td></tr>';
+                    return;
+                }
+                
+                cartItemsTable.innerHTML = this.cart.map(item => `
+                    <tr>
+                        <td>
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="${item.image}" alt="${item.name}">
+                            </div>
+                        </td>
+                        <td>
+                            <p>${item.name}</p>
+                            <p>ราคา ${item.price} บาท</p>
+                        </td>
+                        <td class="quantity-col">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="posPayment.updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                <div class="quantity-display">${item.quantity}</div>
+                                <button class="quantity-btn" onclick="posPayment.updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            updateQuantity(productId, newQuantity) {
+                if (newQuantity <= 0) {
+                    this.cart = this.cart.filter(item => item.id !== productId);
+                } else {
+                    const item = this.cart.find(item => item.id === productId);
+                    if (item) {
+                        item.quantity = newQuantity;
+                    }
+                }
+                
+                this.saveCart();
+                this.displayCartItems();
+                this.updateTotals();
+            }
+            
+            updateTotals() {
+                const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const tax = subtotal * 0.07;
+                const total = subtotal + tax;
+                
+                document.getElementById('subtotal').textContent = `ยอดรวม: ฿${subtotal.toFixed(2)}`;
+                document.getElementById('tax').textContent = `ภาษี (7%): ฿${tax.toFixed(2)}`;
+                document.getElementById('total').textContent = `ยอดรวมทั้งหมด: ฿${total.toFixed(2)}`;
+            }
+            
+            setupPaymentMethods() {
+                const paymentMethods = document.querySelectorAll('.select-payment a');
+                paymentMethods.forEach(method => {
+                    method.addEventListener('click', (e) => {
+                        paymentMethods.forEach(m => m.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.selectedPaymentMethod = e.target.textContent;
+                    });
+                });
+            }
+            
+            setupConfirmButton() {
+                document.getElementById('confirm-btn').addEventListener('click', () => {
+                    this.processPayment();
+                });
+            }
+            
+            processPayment() {
+                if (this.cart.length === 0) {
+                    alert('ไม่มีสินค้าในตะกร้า');
+                    return;
+                }
+                
+                const total = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 1.07;
+                
+                // Create order
+                const order = {
+                    id: Date.now(),
+                    timestamp: new Date().toLocaleString('th-TH'),
+                    items: [...this.cart],
+                    paymentMethod: this.selectedPaymentMethod,
+                    total: total,
+                    status: 'completed'
+                };
+                
+                // Save order to localStorage
+                const orders = JSON.parse(localStorage.getItem('posOrders') || '[]');
+                orders.push(order);
+                localStorage.setItem('posOrders', JSON.stringify(orders));
+                
+                // Clear cart
+                localStorage.removeItem('posCart');
+                
+                // Show success message with SweetAlert
+                Swal.fire({
+                    title: 'ชำระเงินสำเร็จ!',
+                    text: `ยอดชำระ ฿${total.toFixed(2)}`,
+                    icon: 'success',
+                    confirmButtonText: 'ดูประวัติการสั่งซื้อ',
+                    confirmButtonColor: '#28a745',
+                    showCancelButton: true,
+                    cancelButtonText: 'สั่งซื้อต่อ',
+                    cancelButtonColor: '#6c757d'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/pos/order';
+                    } else {
+                        window.location.href = '/pos';
+                    }
+                });
+            }
+        }
+        
+        // Initialize POS Payment system
+        const posPayment = new POSPayment();
+    </script>
     <nav class="bottom-nav">
         <a href="/merchant-main" class="nav-item">
             <img src="/static/images/Vector.png" alt="Home">
@@ -197,10 +327,7 @@
             <img src="/static/images/pos.png" alt="Inventory">
             <span>POS</span>
         </a>
-        <a href="/merchant-profile" class="nav-item">
-            <img src="/static/images/profile.png" alt="Home">
-            <span>Profile</span>
-        </a>
+
     </nav>
 </body>
 </html>

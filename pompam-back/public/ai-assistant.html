@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POMPAM AI Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #d31c25, #c02129, #500608);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #5a6268;
+      transform: scale(1.05);
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .ai-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(45deg, #d31c25, #c02129);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .chat-messages {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .message.ai .message-content {
+      background: linear-gradient(45deg, #d31c25, #c02129);
+      color: white;
+    }
+
+    .message.user .message-content {
+      background: #e9ecef;
+      color: #333;
+    }
+
+    .message-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .message.ai .message-avatar {
+      background: linear-gradient(45deg, #d31c25, #c02129);
+      color: white;
+    }
+
+    .message.user .message-avatar {
+      background: #28a745;
+      color: white;
+    }
+
+    .chat-input-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 15px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 12px 16px;
+      border-radius: 25px;
+      background: #f8f9fa;
+      font-size: 0.9rem;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .send-btn {
+      background: linear-gradient(45deg, #d31c25, #c02129);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background: #d31c25;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 768px) {
+      .chat-container {
+        padding: 15px;
+      }
+      
+      .feature-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .message-content {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="header-title">POMPAM AI Assistant</div>
+    <div class="ai-icon">🤖</div>
+  </div>
+
+  <div class="chat-container">
+    <div class="feature-cards">
+      <div class="feature-card" onclick="startFeature('sales-prediction')">
+        <span class="feature-icon">📊</span>
+        <div class="feature-title">การพยากรณ์ยอดขาย</div>
+        <div class="feature-desc">วิเคราะห์ข้อมูลการขายและทำนายยอดขายในอนาคต</div>
+      </div>
+      
+      <div class="feature-card" onclick="startFeature('inventory-optimization')">
+        <span class="feature-icon">📦</span>
+        <div class="feature-title">การจัดการสต็อก</div>
+        <div class="feature-desc">แนะนำการจัดการสินค้าคงคลังอย่างมีประสิทธิภาพ</div>
+      </div>
+      
+      <div class="feature-card" onclick="startFeature('customer-insights')">
+        <span class="feature-icon">👥</span>
+        <div class="feature-title">วิเคราะห์ลูกค้า</div>
+        <div class="feature-desc">เข้าใจพฤติกรรมและความต้องการของลูกค้า</div>
+      </div>
+      
+      <div class="feature-card" onclick="startFeature('price-optimization')">
+        <span class="feature-icon">💰</span>
+        <div class="feature-title">การตั้งราคา</div>
+        <div class="feature-desc">แนะนำราคาที่เหมาะสมเพื่อเพิ่มกำไร</div>
+      </div>
+      
+      <div class="feature-card" onclick="startFeature('menu-recommendation')">
+        <span class="feature-icon">🍽️</span>
+        <div class="feature-title">แนะนำเมนู</div>
+        <div class="feature-desc">เสนอเมนูใหม่ตามความนิยมและฤดูกาล</div>
+      </div>
+      
+      <div class="feature-card" onclick="startFeature('general-help')">
+        <span class="feature-icon">💬</span>
+        <div class="feature-title">ช่วยเหลือทั่วไป</div>
+        <div class="feature-desc">ถามคำถามเกี่ยวกับการใช้งานแอป</div>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message ai">
+        <div class="message-avatar">🤖</div>
+        <div class="message-content">
+          สวัสดีครับ! ผมคือ POMPAM AI Assistant พร้อมช่วยเหลือคุณในการบริหารธุรกิจ ป๋อมแป๋ม ของคุณ<br><br>
+          คุณสามารถเลือกฟีเจอร์ด้านบนหรือพิมพ์คำถามโดยตรงได้เลยครับ
+        </div>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator">
+      <span>AI กำลังพิมพ์</span>
+      <div class="typing-dots">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="พิมพ์คำถามของคุณ..." onkeypress="handleKeyPress(event)">
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    // Mock AI responses database
+    const aiResponses = {
+      'sales-prediction': {
+        title: '📊 การพยากรณ์ยอดขาย',
+        content: `ตามข้อมูลการขายของคุณในช่วง 30 วันที่ผ่านมา:<br><br>
+        🔹 ยอดขายเฉลี่ย: ฿2,450 ต่อวัน<br>
+        🔹 สินค้าขายดี: ข้าวผัด, ส้มตำ, ไก่ย่าง<br>
+        🔹 ช่วงเวลาขายดี: 11:30-13:00, 18:00-20:00<br><br>
+        <strong>คาดการณ์สัปดาห์หน้า:</strong><br>
+        📈 ยอดขายจะเพิ่มขึ้น 15% เนื่องจากเทศกาลใกล้เข้ามา<br>
+        💡 แนะนำเพิ่มสต็อกข้าวผัดและไก่ย่าง 20%`
+      },
+      'inventory-optimization': {
+        title: '📦 การจัดการสต็อก',
+        content: `วิเคราะห์สินค้าคงคลังของคุณ:<br><br>
+        ⚠️ <strong>สินค้าใกล้หมด:</strong><br>
+        • ข้าว (เหลือ 2 วัน)<br>
+        • น้ำปลา (เหลือ 1 วัน)<br>
+        • ไข่ (เหลือ 3 วัน)<br><br>
+        📊 <strong>สินค้าเก็บมากเกินไป:</strong><br>
+        • มะเขือเทศ (เหลือ 8 วัน)<br>
+        • หอมใหญ่ (เหลือ 6 วัน)<br><br>
+        💡 <strong>คำแนะนำ:</strong><br>
+        1. สั่งข้าวและน้ำปลาด่วน<br>
+        2. ทำโปรโมชั่นสลัดมะเขือเทศ<br>
+        3. ใช้หอมใหญ่ทำเมนูพิเศษ`
+      },
+      'customer-insights': {
+        title: '👥 วิเคราะห์ลูกค้า',
+        content: `ข้อมูลลูกค้าของคุณ:<br><br>
+        👨‍👩‍👧‍👦 <strong>กลุ่มลูกค้าหลัก:</strong><br>
+        • วัยทำงาน (25-40 ปี) - 45%<br>
+        • นักเรียน/นักศึกษา - 30%<br>
+        • ครอบครัว - 25%<br><br>
+        ⏰ <strong>เวลาสั่งซื้อ:</strong><br>
+        • มากที่สุด: 12:00-13:00 (35%)<br>
+        • รองลงมา: 19:00-20:00 (28%)<br><br>
+        💰 <strong>ยอดสั่งซื้อเฉลี่ย:</strong><br>
+        • วันธรรมดา: ฿85<br>
+        • วันหยุด: ฿120<br><br>
+        🎯 <strong>แนะนำ:</strong> ทำโปรโมชั่นพิเศษช่วงเที่ยงและเย็น`
+      },
+      'price-optimization': {
+        title: '💰 การตั้งราคา',
+        content: `การวิเคราะห์ราคาของคุณ:<br><br>
+        📊 <strong>เปรียบเทียบกับคู่แข่ง:</strong><br>
+        • ข้าวผัด: คุณ ฿45 | ตลาด ฿40-50<br>
+        • ส้มตำ: คุณ ฿35 | ตลาด ฿30-40<br>
+        • ไก่ย่าง: คุณ ฿55 | ตลาด ฿50-60<br><br>
+        💡 <strong>คำแนะนำ:</strong><br>
+        ✅ ราคาของคุณอยู่ในระดับที่เหมาะสม<br>
+        📈 สามารถเพิ่มราคาส้มตำเป็น ฿38 ได้<br>
+        🎁 ทำ combo set เพื่อเพิ่มมูลค่าการสั่งซื้อ<br><br>
+        <strong>Combo แนะนำ:</strong><br>
+        • ข้าวผัด + ไก่ย่าง = ฿85 (ลด ฿15)<br>
+        • ส้มตำ + ข้าวเหนียว = ฿50 (ลด ฿8)`
+      },
+      'menu-recommendation': {
+        title: '🍽️ แนะนำเมนู',
+        content: `เมนูแนะนำสำหรับคุณ:<br><br>
+        🔥 <strong>เมนูฮิตตอนนี้:</strong><br>
+        • ข้าวคลุกกะปิ (เทรนด์เพิ่มขึ้น 40%)<br>
+        • ลาบหมู (ได้รับความนิยมสูง)<br>
+        • น้ำตกเนื้อ (เหมาะกับอากาศเย็น)<br><br>
+        🌟 <strong>เมนูใหม่แนะนำ:</strong><br>
+        • ข้าวผัดสับปะรด (เหมาะกับฤดูร้อน)<br>
+        • ยำวุ้นเส้น (เมนูเพื่อสุขภาพ)<br>
+        • กะเพราทะเล (เพิ่มความหลากหลาย)<br><br>
+        📅 <strong>เมนูตามฤดูกาล:</strong><br>
+        • เดือนนี้: เมนูอุ่น ๆ เช่น ต้มยำ, แกงส้ม<br>
+        • เดือนหน้า: เตรียมเมนูเย็น ๆ เช่น ยำ, สลัด`
+      },
+      'general-help': {
+        title: '💬 ช่วยเหลือทั่วไป',
+        content: `ฉันสามารถช่วยคุณในเรื่องต่าง ๆ เหล่านี้:<br><br>
+        📱 <strong>การใช้งานแอป:</strong><br>
+        • วิธีเพิ่มสินค้าใหม่<br>
+        • การตั้งค่าโปรโมชั่น<br>
+        • การดูรายงานยอดขาย<br><br>
+        💼 <strong>การบริหารธุรกิจ:</strong><br>
+        • การวางแผนการตลาด<br>
+        • การจัดการต้นทุน<br>
+        • การเพิ่มยอดขาย<br><br>
+        🎯 <strong>การแก้ปัญหา:</strong><br>
+        • ยอดขายลดลง<br>
+        • สินค้าเสียหาย<br>
+        • ลูกค้าร้องเรียน<br><br>
+        พิมพ์คำถามของคุณได้เลยครับ!`
+      }
+    };
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function startFeature(feature) {
+      const response = aiResponses[feature];
+      if (response) {
+        addMessage('ai', response.content);
+      }
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      addMessage('user', message);
+      chatInput.value = '';
+      
+      showTypingIndicator();
+      
+      setTimeout(() => {
+        hideTypingIndicator();
+        generateAIResponse(message);
+      }, 1500);
+    }
+
+    function addMessage(sender, content) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = sender === 'ai' ? '🤖' : '👤';
+      
+      const messageContent = document.createElement('div');
+      messageContent.className = 'message-content';
+      messageContent.innerHTML = content;
+      
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(messageContent);
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      typingIndicator.style.display = 'flex';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      typingIndicator.style.display = 'none';
+    }
+
+    function generateAIResponse(userMessage) {
+      const lowerMessage = userMessage.toLowerCase();
+      let response = '';
+
+      // Simple keyword matching for demo
+      if (lowerMessage.includes('ขาย') || lowerMessage.includes('ยอด')) {
+        response = `📊 เกี่ยวกับยอดขายของคุณ:<br><br>
+        ยอดขายวันนี้: ฿1,850<br>
+        เป้าหมายวันนี้: ฿2,000<br>
+        ความคืบหน้า: 92.5%<br><br>
+        💡 แนะนำ: เพิ่มโปรโมชั่นช่วงเย็นเพื่อให้ถึงเป้าหมาย!`;
+      } else if (lowerMessage.includes('สต็อก') || lowerMessage.includes('สินค้า')) {
+        response = `📦 สถานะสินค้าคงคลัง:<br><br>
+        🟢 สินค้าปกติ: 15 รายการ<br>
+        🟡 ใกล้หมด: 3 รายการ<br>
+        🔴 หมดแล้ว: 1 รายการ<br><br>
+        ต้องการดูรายละเอียดเพิ่มเติมไหมครับ?`;
+      } else if (lowerMessage.includes('ลูกค้า')) {
+        response = `👥 ข้อมูลลูกค้าวันนี้:<br><br>
+        ลูกค้าใหม่: 8 คน<br>
+        ลูกค้าเก่า: 23 คน<br>
+        ความพึงพอใจ: 4.7/5.0<br><br>
+        🎯 ลูกค้าส่วนใหญ่ชอบเมนูข้าวผัดและส้มตำครับ`;
+      } else if (lowerMessage.includes('ราคา')) {
+        response = `💰 การวิเคราะห์ราคา:<br><br>
+        ราคาของคุณแข่งขันได้ดี<br>
+        แนะนำปรับราคาบางเมนู:<br>
+        • เพิ่มราคาส้มตำ +3 บาท<br>
+        • ลดราคาข้าวผัด -2 บาท<br><br>
+        คาดว่าจะเพิ่มกำไร 8-12%`;
+      } else if (lowerMessage.includes('เมนู')) {
+        response = `🍽️ เมนูแนะนำ:<br><br>
+        เมนูฮิต: ข้าวผัด, ส้มตำ, ไก่ย่าง<br>
+        เมนูใหม่น่าลอง: ลาบหมู, ยำวุ้นเส้น<br>
+        เมนูตามฤดูกาล: ต้มยำ, แกงส้ม<br><br>
+        ต้องการสูตรหรือวิธีทำไหมครับ?`;
+      } else {
+        response = `ขอบคุณสำหรับคำถามครับ! 😊<br><br>
+        ฉันสามารถช่วยคุณในเรื่อง:<br>
+        📊 การวิเคราะห์ยอดขาย<br>
+        📦 การจัดการสต็อก<br>
+        👥 ข้อมูลลูกค้า<br>
+        💰 การตั้งราคา<br>
+        🍽️ การแนะนำเมนู<br><br>
+        ลองเลือกหัวข้อด้านบนหรือถามคำถามเฉพาะเจาะจงมากขึ้นครับ`;
+      }
+
+      addMessage('ai', response);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      chatInput.focus();
+    });
+  </script>
+</body>
+</html>

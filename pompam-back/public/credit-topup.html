@@ -306,8 +306,7 @@
     </div>
 
     <button class="topup-button" onclick="processTopup()">ยืนยันการเติมเงิน</button>
-  </div>
-
+    
   <nav class="bottom-nav">
     <a href="/merchant-main" class="nav-item">
       <img src="/static/images/Vector.png" alt="Home">
@@ -325,10 +324,7 @@
       <img src="/static/images/pre-order.png" alt="Pre-order">
       <span>Pre-order</span>
     </a>
-    <a href="/merchant-profile" class="nav-item">
-      <img src="/static/images/profile.png" alt="Profile">
-      <span>Profile</span>
-    </a>
+
   </nav>
 
   <script>
@@ -399,7 +395,7 @@
           confirmButtonText: 'ตกลง',
           confirmButtonColor: '#d31c25'
         }).then(() => {
-          window.location.href = '/merchant-profile';
+          window.location.href = '/merchant-main';
         });
       });
     }
@@ -415,6 +411,10 @@
         default:
           return method;
       }
+    }
+
+    function goToMakroShopping() {
+      window.location.href = '/merchant-main';
     }
   </script>
   

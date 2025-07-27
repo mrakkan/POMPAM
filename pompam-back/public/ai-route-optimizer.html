@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Route Optimizer - POMPAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #d31c25, #c02129, #500608);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .header-title {
+      flex: 1;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .optimize-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .optimize-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #d31c25;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .route-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .route-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid #d31c25;
+      transition: all 0.2s ease;
+    }
+
+    .route-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .route-item.optimal {
+      border-left-color: #28a745;
+      background: linear-gradient(135deg, #e6f7e6, #f0fff0);
+    }
+
+    .route-item.warning {
+      border-left-color: #ffc107;
+      background: linear-gradient(135deg, #fff9e6, #fffef0);
+    }
+
+    .route-item.urgent {
+      border-left-color: #dc3545;
+      background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+    }
+
+    .route-number {
+      background: #d31c25;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .route-info {
+      flex: 1;
+    }
+
+    .route-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .route-details {
+      font-size: 0.85rem;
+      color: #666;
+      display: flex;
+      gap: 15px;
+    }
+
+    .route-metrics {
+      text-align: right;
+    }
+
+    .route-time {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .route-distance {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: linear-gradient(135deg, #6c757d, #495057);
+    }
+
+    .action-btn.success {
+      background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .delivery-queue {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .queue-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+    }
+
+    .queue-item.priority {
+      border-left-color: #dc3545;
+      background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+    }
+
+    .queue-item.normal {
+      border-left-color: #28a745;
+    }
+
+    .order-info {
+      flex: 1;
+    }
+
+    .order-id {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .order-address {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .order-status {
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .status-badge.ready {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.preparing {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-badge.urgent {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .eta {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .map-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .map-placeholder {
+      font-size: 4rem;
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+
+    .map-text {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .route-details {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="header-title">🗺️ AI Route Optimizer</div>
+    <button class="optimize-btn" onclick="optimizeRoutes()">🎯 ปรับเส้นทาง</button>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🚚</div>
+        <div class="stat-value">12</div>
+        <div class="stat-label">ออเดอร์รอจัดส่ง</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value">18</div>
+        <div class="stat-label">นาที (เฉลี่ย)</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-value">2.4</div>
+        <div class="stat-label">กม. (เฉลี่ย)</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">85%</div>
+        <div class="stat-label">ประสิทธิภาพ</div>
+      </div>
+    </div>
+
+    <div class="route-section">
+      <div class="section-title">
+        <span>🎯</span>
+        <span>เส้นทางที่แนะนำ</span>
+      </div>
+      
+      <div class="route-item optimal">
+        <div class="route-number">1</div>
+        <div class="route-info">
+          <div class="route-title">เส้นทางหลัก (แนะนำ)</div>
+          <div class="route-details">
+            <span>📍 5 จุดหมาย</span>
+            <span>🛣️ ถนนใหญ่</span>
+            <span>🚦 ไฟแดง 3 จุด</span>
+          </div>
+        </div>
+        <div class="route-metrics">
+          <div class="route-time">22 นาที</div>
+          <div class="route-distance">8.5 กม.</div>
+        </div>
+      </div>
+
+      <div class="route-item">
+        <div class="route-number">2</div>
+        <div class="route-info">
+          <div class="route-title">เส้นทางสำรอง</div>
+          <div class="route-details">
+            <span>📍 5 จุดหมาย</span>
+            <span>🛣️ ถนนเล็ก</span>
+            <span>🚦 ไฟแดง 1 จุด</span>
+          </div>
+        </div>
+        <div class="route-metrics">
+          <div class="route-time">28 นาที</div>
+          <div class="route-distance">7.2 กม.</div>
+        </div>
+      </div>
+
+      <div class="route-item warning">
+        <div class="route-number">3</div>
+        <div class="route-info">
+          <div class="route-title">เส้นทางหลีกเลี่ยงรถติด</div>
+          <div class="route-details">
+            <span>📍 5 จุดหมาย</span>
+            <span>🛣️ ถนนรอบนอก</span>
+            <span>⚠️ ก่อสร้าง</span>
+          </div>
+        </div>
+        <div class="route-metrics">
+          <div class="route-time">35 นาที</div>
+          <div class="route-distance">12.1 กม.</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn success" onclick="selectRoute(1)">✅ ใช้เส้นทางแนะนำ</button>
+        <button class="action-btn secondary" onclick="customRoute()">⚙️ ปรับเส้นทางเอง</button>
+      </div>
+    </div>
+
+    <div class="delivery-queue">
+      <div class="section-title">
+        <span>📋</span>
+        <span>คิวการจัดส่ง</span>
+      </div>
+      
+      <div class="queue-item priority">
+        <div class="order-info">
+          <div class="order-id">#ORD-001</div>
+          <div class="order-address">123 ถ.สุขุมวิท แขวงคลองเตย</div>
+        </div>
+        <div class="order-status">
+          <div class="status-badge urgent">ด่วน</div>
+          <div class="eta">ETA: 15 นาที</div>
+        </div>
+      </div>
+
+      <div class="queue-item normal">
+        <div class="order-info">
+          <div class="order-id">#ORD-002</div>
+          <div class="order-address">456 ถ.พระราม 4 แขวงสีลม</div>
+        </div>
+        <div class="order-status">
+          <div class="status-badge ready">พร้อม</div>
+          <div class="eta">ETA: 25 นาที</div>
+        </div>
+      </div>
+
+      <div class="queue-item normal">
+        <div class="order-info">
+          <div class="order-id">#ORD-003</div>
+          <div class="order-address">789 ถ.สาทร แขวงยานนาวา</div>
+        </div>
+        <div class="order-status">
+          <div class="status-badge preparing">เตรียม</div>
+          <div class="eta">ETA: 30 นาที</div>
+        </div>
+      </div>
+
+      <div class="queue-item normal">
+        <div class="order-info">
+          <div class="order-id">#ORD-004</div>
+          <div class="order-address">321 ถ.รัชดาภิเษก แขวงห้วยขวาง</div>
+        </div>
+        <div class="order-status">
+          <div class="status-badge ready">พร้อม</div>
+          <div class="eta">ETA: 35 นาที</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn" onclick="reorderQueue()">🔄 จัดลำดับใหม่</button>
+        <button class="action-btn secondary" onclick="assignDriver()">👤 มอบหมายไรเดอร์</button>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div class="map-placeholder">🗺️</div>
+      <div class="map-text">แผนที่เส้นทางการจัดส่ง</div>
+      <p style="color: #999; font-size: 0.9rem; margin-top: 10px;">คลิก "ดูแผนที่" เพื่อดูเส้นทางแบบละเอียด</p>
+      <button class="action-btn" onclick="showMap()" style="margin-top: 15px; max-width: 200px;">🗺️ ดูแผนที่</button>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function optimizeRoutes() {
+      Swal.fire({
+        title: 'กำลังปรับเส้นทาง...',
+        html: `
+          <div style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🎯</div>
+            <p>AI กำลังวิเคราะห์เส้นทางที่เหมาะสม...</p>
+            <ul style="text-align: left; margin-top: 15px; color: #666;">
+              <li>สภาพการจราจร</li>
+              <li>ระยะทางและเวลา</li>
+              <li>ลำดับความสำคัญ</li>
+              <li>ต้นทุนน้ำมัน</li>
+              <li>ความพึงพอใจลูกค้า</li>
+            </ul>
+          </div>
+        `,
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        Swal.fire({
+          title: 'ปรับเส้นทางเสร็จสิ้น! 🎯',
+          html: `
+            <div style="text-align: left;">
+              <h4>เส้นทางใหม่ที่แนะนำ:</h4>
+              <ul>
+                <li><strong>เวลารวม:</strong> 20 นาที (-2 นาที)</li>
+                <li><strong>ระยะทาง:</strong> 7.8 กม. (-0.7 กม.)</li>
+                <li><strong>ประหยัดน้ำมัน:</strong> 8%</li>
+                <li><strong>ลูกค้าพึงพอใจ:</strong> +15%</li>
+              </ul>
+              <p style="margin-top: 15px; color: #666;">เส้นทางได้รับการอัปเดตแล้ว</p>
+            </div>
+          `,
+          icon: 'success',
+          confirmButtonText: 'เยี่ยม!',
+          confirmButtonColor: '#667eea'
+        });
+      });
+    }
+
+    function selectRoute(routeNumber) {
+      Swal.fire({
+        title: `เลือกเส้นทาง ${routeNumber}`,
+        html: `
+          <div style="text-align: left;">
+            <h4>รายละเอียดเส้นทาง:</h4>
+            <ul>
+              <li><strong>เวลา:</strong> 22 นาที</li>
+              <li><strong>ระยะทาง:</strong> 8.5 กม.</li>
+              <li><strong>จุดหมาย:</strong> 5 จุด</li>
+              <li><strong>ค่าน้ำมัน:</strong> ฿45</li>
+            </ul>
+            <h4 style="margin-top: 15px;">ข้อดี:</h4>
+            <ul>
+              <li>เส้นทางเร็วที่สุด</li>
+              <li>หลีกเลี่ยงรถติด</li>
+              <li>ประหยัดน้ำมัน</li>
+            </ul>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช้เส้นทางนี้',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'เริ่มการจัดส่ง! 🚚',
+            text: 'เส้นทางได้ถูกส่งให้ไรเดอร์แล้ว',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    function customRoute() {
+      Swal.fire({
+        title: '⚙️ ปรับเส้นทางเอง',
+        html: `
+          <div style="text-align: left;">
+            <h4>ตัวเลือกการปรับแต่ง:</h4>
+            <div style="margin: 15px 0;">
+              <label><input type="checkbox" checked> หลีกเลี่ยงรถติด</label><br>
+              <label><input type="checkbox" checked> เส้นทางเร็วที่สุด</label><br>
+              <label><input type="checkbox"> เส้นทางประหยัดน้ำมัน</label><br>
+              <label><input type="checkbox"> หลีกเลี่ยงทางด่วน</label><br>
+            </div>
+            <h4>ลำดับความสำคัญ:</h4>
+            <select style="width: 100%; padding: 8px; margin-top: 5px;">
+              <option>ความเร็ว</option>
+              <option>ประหยัดน้ำมัน</option>
+              <option>ความปลอดภัย</option>
+            </select>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'คำนวณเส้นทาง',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#667eea'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'คำนวณเสร็จสิ้น! ✅',
+            html: `
+              <div style="text-align: left;">
+                <h4>เส้นทางที่ปรับแต่ง:</h4>
+                <ul>
+                  <li><strong>เวลา:</strong> 24 นาที</li>
+                  <li><strong>ระยะทาง:</strong> 9.2 กม.</li>
+                  <li><strong>ค่าน้ำมัน:</strong> ฿42 (-฿3)</li>
+                  <li><strong>ความปลอดภัย:</strong> สูง</li>
+                </ul>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'ใช้เส้นทางนี้',
+            confirmButtonColor: '#28a745'
+          });
+        }
+      });
+    }
+
+    function reorderQueue() {
+      Swal.fire({
+        title: '🔄 จัดลำดับใหม่',
+        html: `
+          <div style="text-align: left;">
+            <h4>AI แนะนำลำดับใหม่:</h4>
+            <ol>
+              <li><strong>#ORD-001</strong> - ด่วน (15 นาที)</li>
+              <li><strong>#ORD-002</strong> - ใกล้ที่สุด (20 นาที)</li>
+              <li><strong>#ORD-004</strong> - ทางเดียวกัน (25 นาที)</li>
+              <li><strong>#ORD-003</strong> - ปลายทาง (35 นาที)</li>
+            </ol>
+            <p style="margin-top: 15px; color: #666;">ประหยัดเวลา 12 นาที</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช้ลำดับใหม่',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#667eea'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'จัดลำดับเสร็จสิ้น! 📋',
+            text: 'คิวการจัดส่งได้ถูกปรับใหม่แล้ว',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    function assignDriver() {
+      Swal.fire({
+        title: '👤 มอบหมายไรเดอร์',
+        html: `
+          <div style="text-align: left;">
+            <h4>ไรเดอร์ที่แนะนำ:</h4>
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+              <strong>🏆 สมชาย ใจดี</strong><br>
+              <small>⭐ 4.9 • 📍 ใกล้ที่สุด (0.5 กม.) • 🚚 ว่าง</small>
+            </div>
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+              <strong>สมหญิง รวดเร็ว</strong><br>
+              <small>⭐ 4.7 • 📍 1.2 กม. • 🚚 ว่าง</small>
+            </div>
+            <div style="border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin: 10px 0;">
+              <strong>สมศักดิ์ ปลอดภัย</strong><br>
+              <small>⭐ 4.8 • 📍 2.1 กม. • 🚚 กำลังจัดส่ง</small>
+            </div>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'มอบหมายให้สมชาย',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'มอบหมายเสร็จสิ้น! 👤',
+            text: 'สมชายได้รับงานแล้ว กำลังเดินทางไปรับอาหาร',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    function showMap() {
+      Swal.fire({
+        title: '🗺️ แผนที่เส้นทาง',
+        html: `
+          <div style="text-align: center;">
+            <div style="background: #f0f0f0; height: 300px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+              <div>
+                <div style="font-size: 4rem; color: #667eea;">🗺️</div>
+                <p style="color: #666;">แผนที่แบบโต้ตอบ</p>
+                <p style="color: #999; font-size: 0.9rem;">แสดงเส้นทาง, จุดหมาย, และสภาพจราจร</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+              <button onclick="Swal.close()" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📱 เปิดใน GPS</button>
+              <button onclick="Swal.close()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📤 แชร์เส้นทาง</button>
+            </div>
+          </div>
+        `,
+        showConfirmButton: false,
+        showCloseButton: true,
+        width: '500px'
+      });
+    }
+  </script>
+</body>
+</html>

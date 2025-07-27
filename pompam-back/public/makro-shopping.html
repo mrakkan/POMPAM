@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ซื้อสินค้าจาก Makro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #fff6f6, #fdfdfd);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+      margin-bottom: 100px;
+    }
+
+    .shopping-container {
+      max-width: 500px;
+      margin: 60px auto 20px;
+      margin-bottom: 80px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    }
+
+    .shopping-header {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #28a745;
+      padding-left: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #28a745;
+    }
+
+    .credit-display {
+      background: linear-gradient(to right, #28a745, #20a039);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .credit-amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .scanner-section {
+      margin-bottom: 30px;
+    }
+
+    .scanner-button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 15px;
+    }
+
+    .scanner-button:hover {
+      background: linear-gradient(to right, #0056b3, #004085);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #reader {
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .manual-input {
+      margin-bottom: 20px;
+    }
+
+    .manual-input input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .manual-input input:focus {
+      outline: none;
+      border-color: #28a745;
+    }
+
+    .add-button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #28a745, #20a039);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cart-section {
+      margin-top: 30px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .item-price {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 5px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .qty-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .total-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .total-final {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #28a745;
+      border-top: 2px solid #28a745;
+      padding-top: 10px;
+    }
+
+    .checkout-button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #28a745, #20a039);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .checkout-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: linear-gradient(to right, #d31c25, #c02129, #791115);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-item img {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      font-weight: bold;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 700px) {
+      body {
+        margin-bottom: 100px;
+      }
+      .shopping-container {
+        margin: 40px 1rem 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shopping-container">
+    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+      <button onclick="window.history.back()" style="background: #6c757d; color: white; border: none; padding: 8px 12px; border-radius: 5px; margin-right: 10px; cursor: pointer;">← กลับ</button>
+      <div class="shopping-header" style="margin-bottom: 0;">ซื้อสินค้าจาก Makro</div>
+    </div>
+    
+    <div class="credit-display">
+      <div>เครดิตคงเหลือ</div>
+      <div class="credit-amount" id="creditAmount">฿2,500</div>
+    </div>
+
+    <!-- <div class="scanner-section">
+      <div class="shopping-header" style="border-color: #007bff; color: #007bff;">สแกนบาร์โค้ด</div>
+      <button class="scanner-button" onclick="toggleScanner()">เปิด/ปิดกล้องสแกน</button>
+      <div id="reader"></div>
+    </div>
+
+    <div class="manual-input">
+      <div class="shopping-header" style="border-color: #6c757d; color: #6c757d;">หรือใส่รหัสสินค้าด้วยตนเอง</div>
+      <input type="text" id="manualBarcode" placeholder="ใส่รหัสบาร์โค้ด">
+      <button class="add-button" onclick="addProductManually()">เพิ่มสินค้า</button>
+    </div> -->
+
+    <div class="payment-barcode-section" style="margin-bottom: 30px;">
+      <div class="shopping-header" style="border-color: #dc3545; color: #dc3545;">บาร์โค้ดสำหรับแคชเชียร Makro</div>
+      <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px; border: 2px dashed #dc3545;">
+        <div style="font-size: 1.1rem; margin-bottom: 15px; color: #dc3545; font-weight: bold;">ให้แคชเชียร Makro สแกนบาร์โค้ดนี้เพื่อจ่ายด้วยเครดิต</div>
+        <div id="paymentBarcode" style="font-family: 'Courier New', monospace; font-size: 5vw; font-weight: bold; background: white; padding: 15px; border-radius: 5px; margin: 10px 0; letter-spacing: 2px;">*POMPAM2024*</div>
+        <button onclick="simulateScan()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">จำลองการสแกน (ทดสอบ)</button>
+      </div>
+    </div>
+
+    <div class="cart-section">
+      <div class="shopping-header">รายการสินค้า</div>
+      <div id="cartItems"></div>
+      
+      <div class="total-section" id="totalSection" style="display: none;">
+        <div class="total-row">
+          <span>รวมสินค้า:</span>
+          <span id="subtotal">฿0</span>
+        </div>
+        <div class="total-row">
+          <span>ค่าจัดส่ง:</span>
+          <span>฿50</span>
+        </div>
+        <div class="total-row total-final">
+          <span>รวมทั้งหมด:</span>
+          <span id="grandTotal">฿0</span>
+        </div>
+        <button class="checkout-button" onclick="processCheckout()">ชำระเงินด้วยเครดิต</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="/merchant-main" class="nav-item">
+      <img src="/static/images/Vector.png" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="/merchant-map" class="nav-item">
+      <img src="/static/images/Group.png" alt="Map">
+      <span>Map</span>
+    </a>
+    <a href="/merchant-inventory" class="nav-item">
+      <img src="/static/images/cart.png" alt="Inventory">
+      <span>Inventory</span>
+    </a>
+    <a href="/merchant-preorder" class="nav-item">
+      <img src="/static/images/pre-order.png" alt="Pre-order">
+      <span>Pre-order</span>
+    </a>
+    <a href="/pos" class="nav-item">
+      <img src="/static/images/pos.png" alt="POS">
+      <span>POS</span>
+    </a>
+  </nav>
+
+  <script>
+    let cart = [];
+    let currentCredit = 2500;
+    let html5QrcodeScanner = null;
+    let isScanning = false;
+
+    // Mock product database
+    const productDatabase = {
+      '8851019001234': { name: 'น้ำดื่ม 1.5L', price: 12, category: 'เครื่องดื่ม' },
+      '8851019005678': { name: 'ข้าวหอมมะลิ 5กก.', price: 180, category: 'อาหารแห้ง' },
+      '8851019009012': { name: 'น้ำมันพืช 1L', price: 45, category: 'เครื่องปรุง' },
+      '8851019003456': { name: 'นมสด 1L', price: 28, category: 'นม' },
+      '8851019007890': { name: 'ไข่ไก่ 10ฟอง', price: 55, category: 'โปรตีน' },
+      '8851019002345': { name: 'ผงซักฟอก 3กก.', price: 120, category: 'ของใช้' },
+      '8851019006789': { name: 'ขนมปังแผ่น', price: 35, category: 'เบเกอรี่' },
+      '8851019004567': { name: 'กาแฟสำเร็จรูป', price: 85, category: 'เครื่องดื่ม' }
+    };
+
+    function toggleScanner() {
+      const readerDiv = document.getElementById('reader');
+      
+      if (!isScanning) {
+        readerDiv.style.display = 'block';
+        startScanner();
+      } else {
+        readerDiv.style.display = 'none';
+        stopScanner();
+      }
+    }
+
+    function startScanner() {
+      html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        false
+      );
+      
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      isScanning = true;
+    }
+
+    function stopScanner() {
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear();
+        html5QrcodeScanner = null;
+      }
+      isScanning = false;
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      addProduct(decodedText);
+      stopScanner();
+      document.getElementById('reader').style.display = 'none';
+    }
+
+    function onScanFailure(error) {
+      // Handle scan failure silently
+    }
+
+    function addProductManually() {
+      const barcode = document.getElementById('manualBarcode').value.trim();
+      if (barcode) {
+        addProduct(barcode);
+        document.getElementById('manualBarcode').value = '';
+      }
+    }
+
+    function addProduct(barcode) {
+      const product = productDatabase[barcode];
+      
+      if (!product) {
+        Swal.fire({
+          title: 'ไม่พบสินค้า',
+          text: 'ไม่พบสินค้าที่มีรหัส: ' + barcode,
+          icon: 'error',
+          confirmButtonColor: '#28a745'
+        });
+        return;
+      }
+
+      // Check if product already in cart
+      const existingItem = cart.find(item => item.barcode === barcode);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          barcode: barcode,
+          name: product.name,
+          price: product.price,
+          category: product.category,
+          quantity: 1
+        });
+      }
+
+      updateCartDisplay();
+      
+      Swal.fire({
+        title: 'เพิ่มสินค้าแล้ว',
+        text: product.name,
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    }
+
+    function updateCartDisplay() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      const totalSection = document.getElementById('totalSection');
+      
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<p style="text-align: center; color: #666;">ยังไม่มีสินค้าในตะกร้า</p>';
+        totalSection.style.display = 'none';
+        return;
+      }
+
+      cartItemsDiv.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">฿${item.price} x ${item.quantity} = ฿${item.price * item.quantity}</div>
+          </div>
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+            <span class="qty-display">${item.quantity}</span>
+            <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+            <button class="remove-btn" onclick="removeItem(${index})">ลบ</button>
+          </div>
+        </div>
+      `).join('');
+
+      updateTotals();
+      totalSection.style.display = 'block';
+    }
+
+    function updateQuantity(index, change) {
+      cart[index].quantity += change;
+      
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      
+      updateCartDisplay();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      updateCartDisplay();
+    }
+
+    function updateTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const shipping = 50;
+      const grandTotal = subtotal + shipping;
+      
+      document.getElementById('subtotal').textContent = `฿${subtotal}`;
+      document.getElementById('grandTotal').textContent = `฿${grandTotal}`;
+      
+      // Check if user has enough credit
+      const checkoutBtn = document.querySelector('.checkout-button');
+      if (grandTotal > currentCredit) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = 'เครดิตไม่เพียงพอ';
+      } else {
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = 'ชำระเงินด้วยเครดิต';
+      }
+    }
+
+    function processCheckout() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const grandTotal = subtotal + 50;
+      
+      if (grandTotal > currentCredit) {
+        Swal.fire({
+          title: 'เครดิตไม่เพียงพอ',
+          text: 'กรุณาเติมเครดิตก่อนทำการสั่งซื้อ',
+          icon: 'error',
+          confirmButtonColor: '#28a745'
+        });
+        return;
+      }
+
+      Swal.fire({
+        title: 'ยืนยันการสั่งซื้อ',
+        text: `ยอดรวม ฿${grandTotal} จะถูกหักจากเครดิต`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Process payment
+          currentCredit -= grandTotal;
+          document.getElementById('creditAmount').textContent = `฿${currentCredit.toLocaleString()}`;
+          
+          // Add items to inventory
+          const inventoryItems = cart.map(item => ({
+            name: item.name,
+            category: item.category,
+            quantity: item.quantity,
+            cost: item.price,
+            source: 'Makro'
+          }));
+          
+          // Save to localStorage for inventory
+          const existingInventory = JSON.parse(localStorage.getItem('inventory') || '[]');
+          existingInventory.push(...inventoryItems);
+          localStorage.setItem('inventory', JSON.stringify(existingInventory));
+          
+          Swal.fire({
+            title: 'สั่งซื้อสำเร็จ!',
+            text: 'สินค้าจะถูกจัดส่งและเพิ่มเข้า Inventory ภายใน 1-2 วันทำการ',
+            icon: 'success',
+            confirmButtonColor: '#28a745'
+          }).then(() => {
+            cart = [];
+            updateCartDisplay();
+          });
+        }
+      });
+    }
+
+    function simulateScan() {
+      Swal.fire({
+        title: 'กำลังประมวลผล...',
+        text: 'แคชเชียร Makro กำลังสแกนบาร์โค้ด',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        // Redirect to bill page
+        window.location.href = '/makro-bill';
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartDisplay();
+    });
+  </script>
+</body>
+</html>

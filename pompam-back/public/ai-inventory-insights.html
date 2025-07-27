@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Inventory Insights - POMPAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #d31c25, #c02129, #500608);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #5a6268;
+      transform: scale(1.05);
+    }
+
+    .header-title {
+      flex: 1;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .refresh-btn {
+      background: #d31c25;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .refresh-btn:hover {
+      background: #c02129;
+      transform: scale(1.05);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .insight-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #d31c25;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .insight-icon {
+      font-size: 1.5rem;
+    }
+
+    .insight-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .insight-content {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .metric:last-child {
+      border-bottom: none;
+    }
+
+    .metric-label {
+      color: #666;
+    }
+
+    .metric-value {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .metric-value.positive {
+      color: #28a745;
+    }
+
+    .metric-value.negative {
+      color: #dc3545;
+    }
+
+    .metric-value.warning {
+      color: #ffc107;
+    }
+
+    .chart-container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .chart-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .recommendations {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .recommendation-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border-left: 4px solid #28a745;
+    }
+
+    .recommendation-item.warning {
+      border-left-color: #ffc107;
+      background: #fff9e6;
+    }
+
+    .recommendation-item.urgent {
+      border-left-color: #dc3545;
+      background: #ffe6e6;
+    }
+
+    .recommendation-icon {
+      font-size: 1.2rem;
+      margin-top: 2px;
+    }
+
+    .recommendation-content {
+      flex: 1;
+    }
+
+    .recommendation-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .recommendation-desc {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .action-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: #5a6fd8;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .status-badge.good {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.warning {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-badge.danger {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="header-title">🤖 AI Inventory Insights</div>
+    <button class="refresh-btn" onclick="refreshData()">🔄 อัปเดต</button>
+  </div>
+
+  <div class="container">
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-header">
+          <span class="insight-icon">📊</span>
+          <span class="insight-title">สถานะสต็อกรวม</span>
+        </div>
+        <div class="insight-content">
+          <div class="metric">
+            <span class="metric-label">สินค้าทั้งหมด</span>
+            <span class="metric-value">45 รายการ</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">สต็อกปกติ</span>
+            <span class="metric-value positive">32 รายการ</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">ใกล้หมด</span>
+            <span class="metric-value warning">8 รายการ</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">หมดแล้ว</span>
+            <span class="metric-value negative">5 รายการ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <span class="insight-icon">📈</span>
+          <span class="insight-title">การหมุนเวียนสต็อก</span>
+        </div>
+        <div class="insight-content">
+          <div class="metric">
+            <span class="metric-label">หมุนเวียนเร็ว</span>
+            <span class="metric-value positive">ข้าวผัด, ส้มตำ</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">หมุนเวียนช้า</span>
+            <span class="metric-value warning">แกงเขียวหวาน</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">ค่าเฉลี่ย</span>
+            <span class="metric-value">3.2 วัน</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <span class="insight-icon">💰</span>
+          <span class="insight-title">มูลค่าสต็อก</span>
+        </div>
+        <div class="insight-content">
+          <div class="metric">
+            <span class="metric-label">มูลค่ารวม</span>
+            <span class="metric-value">฿28,450</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">เพิ่มขึ้น</span>
+            <span class="metric-value positive">+12%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">สินค้าเสี่ยง</span>
+            <span class="metric-value negative">฿2,100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-header">
+          <span class="insight-icon">🎯</span>
+          <span class="insight-title">ประสิทธิภาพ</span>
+        </div>
+        <div class="insight-content">
+          <div class="metric">
+            <span class="metric-label">ความแม่นยำ</span>
+            <span class="metric-value positive">94%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">การสูญเสีย</span>
+            <span class="metric-value">2.1%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">คะแนนรวม</span>
+            <span class="metric-value positive">A-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">📊 แนวโน้มการใช้สต็อก (7 วันที่ผ่านมา)</div>
+      <canvas id="stockChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="recommendations">
+      <h3 style="margin-bottom: 20px; color: #333;">🤖 คำแนะนำจาก AI</h3>
+      
+      <div class="recommendation-item urgent">
+        <span class="recommendation-icon">🚨</span>
+        <div class="recommendation-content">
+          <div class="recommendation-title">ต้องสั่งซื้อด่วน</div>
+          <div class="recommendation-desc">
+            ข้าว, น้ำปลา, และไข่ใกล้หมดแล้ว คาดว่าจะหมดภายใน 1-2 วัน
+            <br><button class="action-btn" onclick="createOrder(['ข้าว', 'น้ำปลา', 'ไข่'])">สั่งซื้อทันที</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation-item warning">
+        <span class="recommendation-icon">⚠️</span>
+        <div class="recommendation-content">
+          <div class="recommendation-title">สินค้าหมุนเวียนช้า</div>
+          <div class="recommendation-desc">
+            แกงเขียวหวานไม่ค่อยขาย แนะนำทำโปรโมชั่นหรือปรับเมนู
+            <br><button class="action-btn" onclick="createPromotion('แกงเขียวหวาน')">สร้างโปรโมชั่น</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation-item">
+        <span class="recommendation-icon">💡</span>
+        <div class="recommendation-content">
+          <div class="recommendation-title">เพิ่มสต็อกสินค้าฮิต</div>
+          <div class="recommendation-desc">
+            ข้าวผัดและส้มตำขายดีมาก แนะนำเพิ่มสต็อก 30% สำหรับสัปดาห์หน้า
+            <br><button class="action-btn" onclick="adjustStock('increase')">ปรับเพิ่มสต็อก</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation-item">
+        <span class="recommendation-icon">📅</span>
+        <div class="recommendation-content">
+          <div class="recommendation-title">วางแผนสำหรับเทศกาล</div>
+          <div class="recommendation-desc">
+            เทศกาลใกล้เข้ามา แนะนำเตรียมสต็อกเมนูพิเศษและของหวาน
+            <br><button class="action-btn" onclick="planFestival()">ดูแผนเทศกาล</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendation-item">
+        <span class="recommendation-icon">🌡️</span>
+        <div class="recommendation-content">
+          <div class="recommendation-title">ปรับตามสภาพอากาศ</div>
+          <div class="recommendation-desc">
+            อากาศร้อนขึ้น แนะนำเพิ่มเมนูเย็น ๆ เช่น ยำ, สลัด, น้ำปั่น
+            <br><button class="action-btn" onclick="weatherAdjust()">ปรับตามอากาศ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function refreshData() {
+      Swal.fire({
+        title: 'กำลังอัปเดตข้อมูล...',
+        text: 'AI กำลังวิเคราะห์ข้อมูลล่าสุด',
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        Swal.fire({
+          title: 'อัปเดตเสร็จสิ้น!',
+          text: 'ข้อมูลและคำแนะนำได้รับการอัปเดตแล้ว',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      });
+    }
+
+    function createOrder(items) {
+      Swal.fire({
+        title: 'สร้างใบสั่งซื้อ',
+        html: `
+          <div style="text-align: left;">
+            <h4>รายการที่แนะนำ:</h4>
+            <ul>
+              ${items.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+            <br>
+            <p>ต้องการให้ AI คำนวณปริมาณที่เหมาะสมไหม?</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช่, คำนวณให้',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#667eea'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'คำนวณเสร็จสิ้น!',
+            html: `
+              <div style="text-align: left;">
+                <h4>ปริมาณที่แนะนำ:</h4>
+                <ul>
+                  <li>ข้าว: 50 กก.</li>
+                  <li>น้ำปลา: 10 ขวด</li>
+                  <li>ไข่: 5 แผง</li>
+                </ul>
+                <p><strong>ราคารวม:</strong> ฿1,250</p>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'สั่งซื้อเลย',
+            confirmButtonColor: '#28a745'
+          });
+        }
+      });
+    }
+
+    function createPromotion(item) {
+      Swal.fire({
+        title: `สร้างโปรโมชั่น: ${item}`,
+        html: `
+          <div style="text-align: left;">
+            <h4>AI แนะนำโปรโมชั่น:</h4>
+            <ul>
+              <li>ลดราคา 20% (จาก ฿45 เป็น ฿36)</li>
+              <li>ซื้อ 2 ได้ 3</li>
+              <li>คู่กับข้าวผัด ลด ฿10</li>
+            </ul>
+            <p>คาดว่าจะช่วยเพิ่มยอดขาย 40%</p>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'สร้างโปรโมชั่น',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#ffc107'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('สร้างเสร็จแล้ว!', 'โปรโมชั่นได้ถูกเพิ่มในระบบแล้ว', 'success');
+        }
+      });
+    }
+
+    function adjustStock(type) {
+      const message = type === 'increase' ? 'เพิ่มสต็อก' : 'ลดสต็อก';
+      Swal.fire({
+        title: `${message}สินค้าฮิต`,
+        html: `
+          <div style="text-align: left;">
+            <h4>AI แนะนำปรับสต็อก:</h4>
+            <ul>
+              <li>ข้าวผัด: +30% (จาก 20 เป็น 26 จาน)</li>
+              <li>ส้มตำ: +25% (จาก 15 เป็น 19 จาน)</li>
+              <li>ไก่ย่าง: +20% (จาก 10 เป็น 12 ตัว)</li>
+            </ul>
+            <p>คาดว่าจะลดการขาดสต็อก 85%</p>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'ปรับสต็อก',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('ปรับเสร็จแล้ว!', 'สต็อกได้ถูกปรับตามคำแนะนำแล้ว', 'success');
+        }
+      });
+    }
+
+    function planFestival() {
+      Swal.fire({
+        title: '🎉 แผนเทศกาล',
+        html: `
+          <div style="text-align: left;">
+            <h4>เมนูพิเศษแนะนำ:</h4>
+            <ul>
+              <li>ข้าวต้มมัด</li>
+              <li>ขนมไทย (ทองยิบ, ทองหยอด)</li>
+              <li>น้ำหวานใส</li>
+              <li>ผลไม้รวม</li>
+            </ul>
+            <h4>การเตรียมการ:</h4>
+            <ul>
+              <li>เริ่มเตรียม 3 วันก่อน</li>
+              <li>สั่งวัตถุดิบพิเศษ</li>
+              <li>ประชาสัมพันธ์ล่วงหน้า</li>
+            </ul>
+          </div>
+        `,
+        icon: 'info',
+        confirmButtonText: 'เริ่มเตรียม',
+        confirmButtonColor: '#667eea'
+      });
+    }
+
+    function weatherAdjust() {
+      Swal.fire({
+        title: '🌡️ ปรับตามอากาศ',
+        html: `
+          <div style="text-align: left;">
+            <h4>เมนูเย็น ๆ แนะนำ:</h4>
+            <ul>
+              <li>ยำวุ้นเส้น</li>
+              <li>สลัดผักรวม</li>
+              <li>น้ำปั่นผลไม้</li>
+              <li>ชาเย็น/กาแฟเย็น</li>
+            </ul>
+            <h4>การปรับสต็อก:</h4>
+            <ul>
+              <li>ลดเมนูร้อน 20%</li>
+              <li>เพิ่มเมนูเย็น 40%</li>
+              <li>เพิ่มน้ำแข็ง</li>
+            </ul>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'ปรับเมนู',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#17a2b8'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('ปรับเสร็จแล้ว!', 'เมนูได้ถูกปรับตามสภาพอากาศแล้ว', 'success');
+        }
+      });
+    }
+
+    // Initialize Chart
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('stockChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์', 'อาทิตย์'],
+          datasets: [{
+            label: 'การใช้สต็อก (%)',
+            data: [65, 72, 68, 85, 92, 78, 70],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'การเติมสต็อก (%)',
+            data: [30, 45, 35, 60, 40, 55, 50],
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

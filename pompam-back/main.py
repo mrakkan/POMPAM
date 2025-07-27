@@ -190,6 +190,17 @@ def mapp(request: Request):
     })
 
 @app.get("/pos/pay", response_class=HTMLResponse)
+def pos_pay(request: Request):
+    return temp.TemplateResponse("pos-pay.html", {
+        "request": request,
+        "selected": selected
+    })
+
+@app.get("/pos/order", response_class=HTMLResponse)
+def pos_order(request: Request):
+    return temp.TemplateResponse("pos-order.html", {"request": request,})
+
+@app.get("/pos/pay", response_class=HTMLResponse)
 def mapp(request: Request):
     return temp.TemplateResponse("pos-pay.html", {
         "request": request,
@@ -199,6 +210,30 @@ def mapp(request: Request):
 @app.get("/pos/order", response_class=HTMLResponse)
 def mapp(request: Request):
     return temp.TemplateResponse("pos-order.html", {"request": request,})
+
+@app.get("/makro-shopping", response_class=HTMLResponse)
+def makro_shopping(request: Request):
+    return temp.TemplateResponse("makro-shopping.html", {"request": request})
+
+@app.get("/makro-bill", response_class=HTMLResponse)
+def makro_bill(request: Request):
+    return temp.TemplateResponse("makro-bill.html", {"request": request})
+
+@app.get("/ai-assistant", response_class=HTMLResponse)
+def ai_assistant(request: Request):
+    return temp.TemplateResponse("ai-assistant.html", {"request": request})
+
+@app.get("/ai-inventory-insights", response_class=HTMLResponse)
+def ai_inventory_insights(request: Request):
+    return temp.TemplateResponse("ai-inventory-insights.html", {"request": request})
+
+@app.get("/ai-sales-predictor", response_class=HTMLResponse)
+def ai_sales_predictor(request: Request):
+    return temp.TemplateResponse("ai-sales-predictor.html", {"request": request})
+
+@app.get("/ai-route-optimizer", response_class=HTMLResponse)
+def ai_route_optimizer(request: Request):
+    return temp.TemplateResponse("ai-route-optimizer.html", {"request": request})
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

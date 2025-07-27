@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Sales Predictor - POMPAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #d31c25, #c02129, #500608);
+      color: #333;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .header-title {
+      flex: 1;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .predict-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .predict-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .prediction-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .prediction-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      background: linear-gradient(135deg, #d31c25, #c02129);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .prediction-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #d31c25;
+      margin-bottom: 10px;
+    }
+
+    .prediction-subtitle {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .trend-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .trend-up {
+      color: #28a745;
+    }
+
+    .trend-down {
+      color: #dc3545;
+    }
+
+    .trend-stable {
+      color: #ffc107;
+    }
+
+    .chart-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .chart-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-recommendations {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid #d31c25;
+      transition: all 0.2s ease;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .menu-item.hot {
+      border-left-color: #dc3545;
+      background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+    }
+
+    .menu-item.trending {
+      border-left-color: #28a745;
+      background: linear-gradient(135deg, #e6f7e6, #f0fff0);
+    }
+
+    .menu-item.new {
+      border-left-color: #ffc107;
+      background: linear-gradient(135deg, #fff9e6, #fffef0);
+    }
+
+    .menu-info {
+      flex: 1;
+    }
+
+    .menu-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .menu-stats {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .menu-prediction {
+      text-align: right;
+    }
+
+    .predicted-sales {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .confidence {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: linear-gradient(135deg, #6c757d, #495057);
+    }
+
+    .pricing-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .pricing-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .pricing-item:last-child {
+      border-bottom: none;
+    }
+
+    .current-price {
+      color: #666;
+      text-decoration: line-through;
+    }
+
+    .suggested-price {
+      font-weight: bold;
+      color: #28a745;
+      font-size: 1.1rem;
+    }
+
+    .price-change {
+      font-size: 0.8rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    .price-increase {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .price-decrease {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .prediction-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <div class="header-title">🔮 AI Sales Predictor</div>
+    <button class="predict-btn" onclick="runPrediction()">🎯 พยากรณ์ใหม่</button>
+  </div>
+
+  <div class="container">
+    <div class="prediction-grid">
+      <div class="prediction-card">
+        <div class="card-header">
+          <span class="card-icon">💰</span>
+          <span class="card-title">ยอดขายวันนี้</span>
+        </div>
+        <div class="prediction-value">฿8,450</div>
+        <div class="prediction-subtitle">คาดการณ์จาก AI</div>
+        <div class="trend-indicator trend-up">
+          <span>📈</span>
+          <span>+15% จากเมื่อวาน</span>
+        </div>
+      </div>
+
+      <div class="prediction-card">
+        <div class="card-header">
+          <span class="card-icon">📊</span>
+          <span class="card-title">ออเดอร์วันนี้</span>
+        </div>
+        <div class="prediction-value">127</div>
+        <div class="prediction-subtitle">ออเดอร์ที่คาดว่าจะได้รับ</div>
+        <div class="trend-indicator trend-up">
+          <span>📈</span>
+          <span>+8 ออเดอร์</span>
+        </div>
+      </div>
+
+      <div class="prediction-card">
+        <div class="card-header">
+          <span class="card-icon">⭐</span>
+          <span class="card-title">ความแม่นยำ</span>
+        </div>
+        <div class="prediction-value">94.2%</div>
+        <div class="prediction-subtitle">ความแม่นยำการพยากรณ์</div>
+        <div class="trend-indicator trend-stable">
+          <span>📊</span>
+          <span>เสถียร</span>
+        </div>
+      </div>
+
+      <div class="prediction-card">
+        <div class="card-header">
+          <span class="card-icon">🎯</span>
+          <span class="card-title">เป้าหมายสัปดาห์</span>
+        </div>
+        <div class="prediction-value">85%</div>
+        <div class="prediction-subtitle">ความคืบหน้าเป้าหมาย</div>
+        <div class="trend-indicator trend-up">
+          <span>🚀</span>
+          <span>ใกล้ถึงเป้าหมาย</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">
+        <span>📈</span>
+        <span>แนวโน้มยอดขาย 7 วันข้างหน้า</span>
+      </div>
+      <canvas id="salesChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="menu-recommendations">
+      <h3 style="margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+        <span>🍽️</span>
+        <span>เมนูแนะนำวันนี้</span>
+      </h3>
+      
+      <div class="menu-item hot">
+        <div class="menu-info">
+          <div class="menu-name">🔥 ข้าวผัดกุ้ง</div>
+          <div class="menu-stats">ขายดีที่สุด • เมื่อวาน: 45 จาน</div>
+        </div>
+        <div class="menu-prediction">
+          <div class="predicted-sales">52 จาน</div>
+          <div class="confidence">แม่นยำ 96%</div>
+        </div>
+      </div>
+
+      <div class="menu-item trending">
+        <div class="menu-info">
+          <div class="menu-name">📈 ส้มตำไทย</div>
+          <div class="menu-stats">กำลังฮิต • เมื่อวาน: 38 จาน</div>
+        </div>
+        <div class="menu-prediction">
+          <div class="predicted-sales">44 จาน</div>
+          <div class="confidence">แม่นยำ 91%</div>
+        </div>
+      </div>
+
+      <div class="menu-item new">
+        <div class="menu-info">
+          <div class="menu-name">⭐ แกงเขียวหวานไก่</div>
+          <div class="menu-stats">โอกาสดี • เมื่อวาน: 12 จาน</div>
+        </div>
+        <div class="menu-prediction">
+          <div class="predicted-sales">18 จาน</div>
+          <div class="confidence">แม่นยำ 78%</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <div class="menu-info">
+          <div class="menu-name">🍗 ไก่ย่าง</div>
+          <div class="menu-stats">เสถียร • เมื่อวาน: 28 จาน</div>
+        </div>
+        <div class="menu-prediction">
+          <div class="predicted-sales">31 จาน</div>
+          <div class="confidence">แม่นยำ 89%</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn" onclick="optimizeMenu()">🎯 ปรับเมนูตาม AI</button>
+        <button class="action-btn secondary" onclick="viewDetailedAnalysis()">📊 วิเคราะห์เพิ่มเติม</button>
+      </div>
+    </div>
+
+    <div class="pricing-section">
+      <h3 style="margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+        <span>💲</span>
+        <span>AI แนะนำราคา</span>
+      </h3>
+      
+      <div class="pricing-item">
+        <div>
+          <strong>ข้าวผัดกุ้ง</strong>
+          <div style="font-size: 0.9rem; color: #666;">อุปสงค์สูง • แนะนำเพิ่มราคา</div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span class="current-price">฿45</span>
+          <span class="suggested-price">฿50</span>
+          <span class="price-change price-increase">+฿5</span>
+        </div>
+      </div>
+
+      <div class="pricing-item">
+        <div>
+          <strong>แกงเขียวหวานไก่</strong>
+          <div style="font-size: 0.9rem; color: #666;">ขายช้า • แนะนำลดราคา</div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span class="current-price">฿55</span>
+          <span class="suggested-price">฿45</span>
+          <span class="price-change price-decrease">-฿10</span>
+        </div>
+      </div>
+
+      <div class="pricing-item">
+        <div>
+          <strong>ส้มตำไทย</strong>
+          <div style="font-size: 0.9rem; color: #666;">ราคาเหมาะสม • คงเดิม</div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span class="suggested-price">฿35</span>
+          <span style="font-size: 0.8rem; color: #28a745; margin-left: 8px;">✓ เหมาะสม</span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn" onclick="applyPricing()">💰 ใช้ราคาที่แนะนำ</button>
+        <button class="action-btn secondary" onclick="customPricing()">⚙️ ปรับราคาเอง</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+
+    function runPrediction() {
+      Swal.fire({
+        title: 'กำลังพยากรณ์...',
+        html: `
+          <div style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🔮</div>
+            <p>AI กำลังวิเคราะห์ข้อมูล...</p>
+            <ul style="text-align: left; margin-top: 15px; color: #666;">
+              <li>ข้อมูลยอดขายในอดีต</li>
+              <li>แนวโน้มตลาด</li>
+              <li>สภาพอากาศ</li>
+              <li>เทศกาลและกิจกรรม</li>
+              <li>พฤติกรรมลูกค้า</li>
+            </ul>
+          </div>
+        `,
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        Swal.fire({
+          title: 'พยากรณ์เสร็จสิ้น! 🎯',
+          html: `
+            <div style="text-align: left;">
+              <h4>ผลการพยากรณ์ใหม่:</h4>
+              <ul>
+                <li><strong>ยอดขายวันนี้:</strong> ฿8,650 (+฿200)</li>
+                <li><strong>ออเดอร์:</strong> 132 ออเดอร์ (+5)</li>
+                <li><strong>เมนูฮิต:</strong> ข้าวผัดกุ้ง, ส้มตำ</li>
+                <li><strong>ความแม่นยำ:</strong> 94.5%</li>
+              </ul>
+              <p style="margin-top: 15px; color: #666;">ข้อมูลได้รับการอัปเดตแล้ว</p>
+            </div>
+          `,
+          icon: 'success',
+          confirmButtonText: 'เยี่ยม!',
+          confirmButtonColor: '#667eea'
+        });
+      });
+    }
+
+    function optimizeMenu() {
+      Swal.fire({
+        title: '🎯 ปรับเมนูตาม AI',
+        html: `
+          <div style="text-align: left;">
+            <h4>AI แนะนำการปรับเมนู:</h4>
+            <ul>
+              <li><strong>เพิ่มสต็อก:</strong> ข้าวผัดกุ้ง (+20%)</li>
+              <li><strong>โปรโมชั่น:</strong> แกงเขียวหวาน (ลด 20%)</li>
+              <li><strong>เมนูพิเศษ:</strong> ส้มตำผลไม้</li>
+              <li><strong>ลดสต็อก:</strong> เมนูที่ขายช้า</li>
+            </ul>
+            <p style="margin-top: 15px; color: #666;">คาดว่าจะเพิ่มยอดขาย 18%</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ปรับเมนูเลย',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#667eea'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'ปรับเมนูเสร็จสิ้น! ✅',
+            text: 'เมนูได้ถูกปรับตามคำแนะนำของ AI แล้ว',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    function viewDetailedAnalysis() {
+      Swal.fire({
+        title: '📊 วิเคราะห์เพิ่มเติม',
+        html: `
+          <div style="text-align: left;">
+            <h4>การวิเคราะห์เชิงลึก:</h4>
+            <ul>
+              <li><strong>ช่วงเวลาขายดี:</strong> 11:30-13:00, 18:00-20:00</li>
+              <li><strong>วันขายดี:</strong> ศุกร์-อาทิตย์</li>
+              <li><strong>ลูกค้าประจำ:</strong> 65% ของยอดขาย</li>
+              <li><strong>ลูกค้าใหม่:</strong> เพิ่มขึ้น 12%</li>
+              <li><strong>ค่าเฉลี่ยต่อออเดอร์:</strong> ฿67</li>
+            </ul>
+            <h4 style="margin-top: 15px;">แนวโน้มตลาด:</h4>
+            <ul>
+              <li>อาหารเจเริ่มได้รับความนิยม</li>
+              <li>เมนูเพื่อสุขภาพกำลังมาแรง</li>
+              <li>การสั่งออนไลน์เพิ่มขึ้น 25%</li>
+            </ul>
+          </div>
+        `,
+        icon: 'info',
+        confirmButtonText: 'เข้าใจแล้ว',
+        confirmButtonColor: '#667eea',
+        width: '600px'
+      });
+    }
+
+    function applyPricing() {
+      Swal.fire({
+        title: '💰 ใช้ราคาที่แนะนำ',
+        html: `
+          <div style="text-align: left;">
+            <h4>การเปลี่ยนแปลงราคา:</h4>
+            <ul>
+              <li>ข้าวผัดกุ้ง: ฿45 → ฿50 (+11%)</li>
+              <li>แกงเขียวหวาน: ฿55 → ฿45 (-18%)</li>
+              <li>ส้มตำไทย: ฿35 (คงเดิม)</li>
+            </ul>
+            <p style="margin-top: 15px; color: #666;">คาดว่าจะเพิ่มกำไรรวม 8%</p>
+          </div>
+        `,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช้ราคาใหม่',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'อัปเดตราคาเสร็จสิ้น! 💰',
+            text: 'ราคาเมนูได้ถูกปรับตามคำแนะนำแล้ว',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    function customPricing() {
+      Swal.fire({
+        title: '⚙️ ปรับราคาเอง',
+        html: `
+          <div style="text-align: left;">
+            <div style="margin-bottom: 15px;">
+              <label><strong>ข้าวผัดกุ้ง:</strong></label>
+              <input type="number" id="price1" value="45" style="width: 80px; margin-left: 10px;"> บาท
+            </div>
+            <div style="margin-bottom: 15px;">
+              <label><strong>แกงเขียวหวาน:</strong></label>
+              <input type="number" id="price2" value="55" style="width: 80px; margin-left: 10px;"> บาท
+            </div>
+            <div style="margin-bottom: 15px;">
+              <label><strong>ส้มตำไทย:</strong></label>
+              <input type="number" id="price3" value="35" style="width: 80px; margin-left: 10px;"> บาท
+            </div>
+            <p style="color: #666; font-size: 0.9rem;">AI จะวิเคราะห์ผลกระทบของราคาใหม่</p>
+          </div>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'บันทึกราคา',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#667eea',
+        preConfirm: () => {
+          const price1 = document.getElementById('price1').value;
+          const price2 = document.getElementById('price2').value;
+          const price3 = document.getElementById('price3').value;
+          return { price1, price2, price3 };
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'บันทึกราคาเสร็จสิ้น! ✅',
+            html: `
+              <div style="text-align: left;">
+                <h4>ราคาใหม่:</h4>
+                <ul>
+                  <li>ข้าวผัดกุ้ง: ฿${result.value.price1}</li>
+                  <li>แกงเขียวหวาน: ฿${result.value.price2}</li>
+                  <li>ส้มตำไทย: ฿${result.value.price3}</li>
+                </ul>
+                <p style="margin-top: 10px; color: #666;">AI กำลังวิเคราะห์ผลกระทบ...</p>
+              </div>
+            `,
+            icon: 'success',
+            timer: 2500,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    // Initialize Chart
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['วันนี้', 'พรุ่งนี้', 'มะรืนนี้', 'วันพุธ', 'วันพฤหัส', 'วันศุกร์', 'วันเสาร์'],
+          datasets: [{
+            label: 'ยอดขายที่คาดการณ์ (฿)',
+            data: [8450, 7200, 7800, 8100, 8900, 12500, 14200],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#667eea',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+          }, {
+            label: 'ยอดขายจริงในอดีต (฿)',
+            data: [8200, 6800, 7500, 7900, 8600, 12100, 13800],
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            tension: 0.4,
+            fill: false,
+            borderDash: [5, 5],
+            pointBackgroundColor: '#28a745',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '฿' + value.toLocaleString();
+                }
+              }
+            }
+          },
+          interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

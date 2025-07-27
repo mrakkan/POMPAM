@@ -785,8 +785,15 @@
     background: #f5f5f5;
     transform: translateY(-1px);
   }
+  .right-butt{
+    display: flex;
+    gap: 16px;
+  }
 
   @media (max-width: 600px) {
+    .right-butt{
+      flex-direction: column;
+    }
     .hero {
       height: auto;
       min-height: 400px;
@@ -1024,6 +1031,211 @@
     font-size: 0.9rem;
     color: #333;
   }
+
+  /* AI Hub Styles */
+  .ai-hub-container {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .ai-hub-button {
+    width: 65px;
+    height: 65px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+  }
+
+  .ai-hub-button:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.7);
+    background: linear-gradient(135deg, #45a049, #4CAF50);
+  }
+
+  .ai-hub-icon {
+    font-size: 1.6rem;
+    margin-bottom: 2px;
+  }
+
+  .ai-hub-text {
+    font-size: 0.65rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .ai-hub-menu {
+    position: absolute;
+    bottom: 75px;
+    right: 0;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+  }
+
+  .ai-hub-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .ai-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    margin-bottom: 6px;
+    border: 1px solid #f0f0f0;
+  }
+
+  .ai-menu-item:hover {
+    background: linear-gradient(135deg, #e8f5e8, #d4edda);
+    transform: translateX(8px);
+    border-color: #4CAF50;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.2);
+  }
+
+  .ai-menu-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-menu-icon {
+    font-size: 1.3rem;
+    margin-right: 12px;
+    width: 22px;
+    text-align: center;
+  }
+
+  .ai-menu-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  /* Animation for menu items */
+  .ai-hub-menu.active .ai-menu-item {
+    animation: slideInUp 0.3s ease forwards;
+  }
+
+  .ai-hub-menu.active .ai-menu-item:nth-child(1) { animation-delay: 0.1s; }
+  .ai-hub-menu.active .ai-menu-item:nth-child(2) { animation-delay: 0.15s; }
+  .ai-hub-menu.active .ai-menu-item:nth-child(3) { animation-delay: 0.2s; }
+  .ai-hub-menu.active .ai-menu-item:nth-child(4) { animation-delay: 0.25s; }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .ai-hub-container {
+      bottom: 70px;
+      right: 10px;
+    }
+
+    .ai-hub-button {
+      width: 55px;
+      height: 55px;
+    }
+
+    .ai-hub-icon {
+      font-size: 1.4rem;
+    }
+
+    .ai-hub-text {
+      font-size: 0.6rem;
+    }
+
+    .ai-hub-menu {
+      min-width: 200px;
+      right: -5px;
+      bottom: 65px;
+    }
+
+    .ai-menu-item {
+      padding: 14px 16px;
+    }
+
+    .ai-menu-text {
+      font-size: 0.85rem;
+    }
+
+    .ai-menu-icon {
+      font-size: 1.2rem;
+      margin-right: 10px;
+    }
+  }
+
+  /* Extra small screens (iPhone SE, etc.) */
+  @media (max-width: 375px) {
+    .ai-hub-container {
+      bottom: 65px;
+      right: 8px;
+    }
+
+    .ai-hub-button {
+      width: 50px;
+      height: 50px;
+    }
+
+    .ai-hub-icon {
+      font-size: 1.2rem;
+    }
+
+    .ai-hub-text {
+      font-size: 0.55rem;
+    }
+
+    .ai-hub-menu {
+      min-width: 180px;
+      right: 0;
+      bottom: 60px;
+      padding: 10px;
+    }
+
+    .ai-menu-item {
+      padding: 12px 14px;
+      margin-bottom: 4px;
+    }
+
+    .ai-menu-text {
+      font-size: 0.8rem;
+    }
+
+    .ai-menu-icon {
+      font-size: 1.1rem;
+      margin-right: 8px;
+      width: 18px;
+    }
+  }
+  
 </style>
 
 <body>
@@ -1128,10 +1340,19 @@
             <span class="credit-label">เครดิตคงเหลือ</span>
             <span class="credit-amount">฿1,250</span>
           </div>
+          <div class="right-butt">
           <a href="/merchant-credit" class="credit-topup-btn">
             <span class="btn-icon">💳</span>
             <span>เติมเครดิต</span>
           </a>
+          <a href="/makro-shopping" class="credit-topup-btn" style="background: linear-gradient(to right, #222423, #050505);">
+            <span class="btn-icon">🛒</span>
+            <span class="btn-text">ซื้อด้วยเครดิต</span>
+          </a>
+        </div>
+      </div>
+
+
         </div>
       </div>
     </section>
@@ -1177,12 +1398,36 @@
           <img src="/static/images/pos.png" alt="Inventory">
           <span>POS</span>
       </a>
-      <a href="/merchant-profile" class="nav-item">
-        <img src="/static/images/profile.png" alt="Home">
-        <span>Profile</span>
-      </a>
+    
     </nav>
   </main>
+
+  <!-- AI Hub Floating Button -->
+  <div class="ai-hub-container">
+    <div class="ai-hub-menu" id="aiHubMenu">
+      <a href="/ai-assistant" class="ai-menu-item">
+        <span class="ai-menu-icon">🤖</span>
+        <span class="ai-menu-text">ผู้ช่วย AI</span>
+      </a>
+      <a href="/ai-inventory-insights" class="ai-menu-item">
+        <span class="ai-menu-icon">📊</span>
+        <span class="ai-menu-text">วิเคราะห์สินค้า</span>
+      </a>
+      <a href="/ai-sales-predictor" class="ai-menu-item">
+        <span class="ai-menu-icon">🔮</span>
+        <span class="ai-menu-text">ทำนายยอดขาย</span>
+      </a>
+      <a href="/ai-route-optimizer" class="ai-menu-item">
+        <span class="ai-menu-icon">🗺️</span>
+        <span class="ai-menu-text">เส้นทางส่งของ</span>
+      </a>
+    </div>
+    <button class="ai-hub-button" id="aiHubButton" onclick="toggleAIHub()">
+      <span class="ai-hub-icon">🤖</span>
+      <span class="ai-hub-text">ผู้ช่วย AI</span>
+    </button>
+  </div>
+
   <!-- Membership Modal -->
   <div id="membershipModal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -1238,6 +1483,32 @@
   </div>
 
 </body>
+
+<script>
+  function toggleAIHub() {
+    const menu = document.getElementById('aiHubMenu');
+    const button = document.getElementById('aiHubButton');
+    
+    if (menu.classList.contains('active')) {
+      menu.classList.remove('active');
+      button.style.transform = 'rotate(0deg)';
+    } else {
+      menu.classList.add('active');
+      button.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    const container = document.querySelector('.ai-hub-container');
+    if (!container.contains(event.target)) {
+      const menu = document.getElementById('aiHubMenu');
+      const button = document.getElementById('aiHubButton');
+      menu.classList.remove('active');
+      button.style.transform = 'rotate(0deg)';
+    }
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 <script>
