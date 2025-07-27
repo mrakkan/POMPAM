@@ -628,7 +628,12 @@
     flex-direction: column;
   }
 
-  .credit-label {
+  .points-balance {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .credit-label, .points-label {
     font-size: 0.9rem;
     opacity: 0.9;
     margin-bottom: 0.25rem;
@@ -637,6 +642,13 @@
   .credit-amount {
     font-size: 1.5rem;
     font-weight: bold;
+  }
+
+  .points-amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
   .credit-topup-btn {
@@ -793,6 +805,13 @@
   @media (max-width: 600px) {
     .right-butt{
       flex-direction: column;
+    }
+    .credit-info {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .credit-balance, .points-balance {
+      text-align: center;
     }
     .hero {
       height: auto;
@@ -1340,6 +1359,10 @@
             <span class="credit-label">เครดิตคงเหลือ</span>
             <span class="credit-amount">฿1,250</span>
           </div>
+          <div class="points-balance">
+            <span class="points-label">แต้มสะสม</span>
+            <span class="points-amount">1,850 แต้ม</span>
+          </div>
           <div class="right-butt">
           <a href="/merchant-credit" class="credit-topup-btn">
             <span class="btn-icon">💳</span>
@@ -1348,6 +1371,10 @@
           <a href="/makro-shopping" class="credit-topup-btn" style="background: linear-gradient(to right, #222423, #050505);">
             <span class="btn-icon">🛒</span>
             <span class="btn-text">ซื้อด้วยเครดิต</span>
+          </a>
+          <a href="/points-rewards" class="credit-topup-btn" style="background: linear-gradient(to right, #FFD700, #FFA500);">
+            <span class="btn-icon">🎁</span>
+            <span class="btn-text">แลกของรางวัล</span>
           </a>
         </div>
       </div>

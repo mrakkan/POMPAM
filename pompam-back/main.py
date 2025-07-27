@@ -235,5 +235,9 @@ def ai_sales_predictor(request: Request):
 def ai_route_optimizer(request: Request):
     return temp.TemplateResponse("ai-route-optimizer.html", {"request": request})
 
+@app.get("/points-rewards", response_class=HTMLResponse)
+def points_rewards(request: Request):
+    return temp.TemplateResponse("points-rewards.html", {"request": request})
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
