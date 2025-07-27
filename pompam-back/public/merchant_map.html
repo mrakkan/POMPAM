@@ -459,6 +459,14 @@
       popupAnchor: [0, -36]
     });
 
+    // Makro store icon
+    var makroIcon = L.icon({
+      iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/shop.svg',
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40]
+    });
+
 
     // Track which truck is selected for distance display
     var selectedTruck = 0;
@@ -478,6 +486,9 @@
           attribution: '© OpenStreetMap contributors'
         }).addTo(map);
         userMarker = L.marker([centerLat, centerLng], {icon: personIcon}).addTo(map);
+        
+        // Add Makro store locations
+        addMakroStores();
         // Set truck start/end points near current location
         // Increase the offset for a wider route range
         var offset = 0.03; // wider range
@@ -523,12 +534,65 @@
             for (let i = 0; i < nStops; i++) {
               var pos = Math.floor((coords.length-1) * (i/(nStops-1)));
               var coord = coords[pos];
+              var truckStopData = {
+                name: 'จุดจอดรถ #' + (idx+1) + '-' + (i+1),
+                truckName: 'รถป๋อมแป๋ม #' + (idx+1),
+                stopNumber: i+1,
+                totalStops: nStops,
+                estimatedTime: '10-15 นาที',
+                services: ['ข้าวผัด', 'ส้มตำ', 'เครื่องดื่ม', 'ขนม'],
+                status: i === 0 ? 'กำลังขาย' : (i === 1 ? 'ถัดไป' : 'รอคิว')
+              };
+              
+              var popupContent = `
+                <div style="min-width: 280px;">
+                  <h3 style="color: #d31c25; margin: 0 0 10px 0; font-size: 16px;">
+                    🚚 ${truckStopData.name}
+                  </h3>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>🚛 รถ:</strong> ${truckStopData.truckName}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>📍 จุดที่:</strong> ${truckStopData.stopNumber}/${truckStopData.totalStops}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>⏰ เวลาจอด:</strong> ${truckStopData.estimatedTime}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>🍽️ เมนูแนะนำ:</strong><br>
+                    ${truckStopData.services.join(', ')}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>📊 สถานะ:</strong> 
+                    <span style="color: ${truckStopData.status === 'กำลังขาย' ? '#28a745' : (truckStopData.status === 'ถัดไป' ? '#ffc107' : '#6c757d')}; font-weight: bold;">
+                      ${truckStopData.status === 'กำลังขาย' ? '🟢' : (truckStopData.status === 'ถัดไป' ? '🟡' : '⚪')} ${truckStopData.status}
+                    </span>
+                  </p>
+                  <div style="margin-top: 15px; display: flex; gap: 5px;">
+                    <button onclick="preOrderAtStop(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
+                            style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      📱 สั่งล่วงหน้า
+                    </button>
+                    <button onclick="setReminder(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
+                            style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      🔔 แจ้งเตือน
+                    </button>
+                  </div>
+                  <div style="margin-top: 5px;">
+                    <button onclick="navigateToStop(${coord[0]}, ${coord[1]})" 
+                            style="background: #d31c25; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%;">
+                      🧭 นำทางไปจุดจอด
+                    </button>
+                  </div>
+                </div>
+              `;
+              
               var marker = L.marker(coord, {icon: L.icon({
                 iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg',
                 iconSize: [32, 32],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
-              })}).addTo(map).bindPopup('จุดจอดรถ #' + (idx+1) + ' (' + (i+1) + '/' + nStops + ')');
+              })}).addTo(map).bindPopup(popupContent, {maxWidth: 320});
               stopMarkers.push(marker);
               // Store extra info: {coord, truckIdx, stopIdx}
               stopCoords.push({coord: coord, truckIdx: idx, stopIdx: i});
@@ -695,7 +759,8 @@
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
       userMarker = L.marker([centerLat, centerLng], {icon: personIcon}).addTo(map);
-      updateDistance();
+      // Add Makro stores in fallback setup too
+      addMakroStores();
     }
 
 
@@ -709,6 +774,90 @@
               Math.sin(dLng/2) * Math.sin(dLng/2);
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
       return R * c;
+    }
+
+    // Function to add Makro store markers
+    function addMakroStores() {
+      var makroStores = [
+        {
+          name: 'MAKRO ลาดพร้าว',
+          lat: 13.8167,
+          lng: 100.5692,
+          address: '1234 ถนนลาดพร้าว แขวงจตุจักร เขตจตุจักร กรุงเทพฯ 10900',
+          phone: '02-123-4567',
+          hours: 'เปิด 24 ชั่วโมง'
+        },
+        {
+          name: 'MAKRO รามคำแหง',
+          lat: 13.7633,
+          lng: 100.6089,
+          address: '2468 ถนนรามคำแหง แขวงหัวหมาก เขตบางกะปิ กรุงเทพฯ 10240',
+          phone: '02-234-5678',
+          hours: 'เปิด 06:00-22:00'
+        },
+        {
+          name: 'MAKRO บางนา',
+          lat: 13.6678,
+          lng: 100.6089,
+          address: '3579 ถนนบางนา-ตราด แขวงบางนา เขตบางนา กรุงเทพฯ 10260',
+          phone: '02-345-6789',
+          hours: 'เปิด 06:00-22:00'
+        },
+        {
+          name: 'MAKRO สาทร',
+          lat: 13.7200,
+          lng: 100.5300,
+          address: '4680 ถนนสาทร แขวงสีลม เขตบางรัก กรุงเทพฯ 10500',
+          phone: '02-456-7890',
+          hours: 'เปิด 06:00-22:00'
+        },
+        {
+          name: 'MAKRO พระราม 4',
+          lat: 13.7300,
+          lng: 100.5500,
+          address: '5791 ถนนพระราม 4 แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110',
+          phone: '02-567-8901',
+          hours: 'เปิด 06:00-22:00'
+        },
+        {
+          name: 'MAKRO รัชดาภิเษก',
+          lat: 13.7800,
+          lng: 100.5400,
+          address: '6802 ถนนรัชดาภิเษก แขวงดินแดง เขตดินแดง กรุงเทพฯ 10400',
+          phone: '02-678-9012',
+          hours: 'เปิด 06:00-22:00'
+        }
+      ];
+
+      makroStores.forEach(function(store) {
+        var popupContent = `
+          <div style="min-width: 250px;">
+            <h3 style="color: #d31c25; margin: 0 0 10px 0; font-size: 16px;">
+              🏪 ${store.name}
+            </h3>
+            <p style="margin: 5px 0; font-size: 14px;">
+              <strong>📍 ที่อยู่:</strong><br>
+              ${store.address}
+            </p>
+            <p style="margin: 5px 0; font-size: 14px;">
+              <strong>📞 โทร:</strong> ${store.phone}
+            </p>
+            <p style="margin: 5px 0; font-size: 14px;">
+              <strong>🕐 เวลาเปิด-ปิด:</strong> ${store.hours}
+            </p>
+            <div style="margin-top: 10px; text-align: center;">
+              <button onclick="navigateToMakro(${store.lat}, ${store.lng})" 
+                      style="background: #d31c25; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                🧭 นำทางไป MAKRO
+              </button>
+            </div>
+          </div>
+        `;
+        
+        L.marker([store.lat, store.lng], {icon: makroIcon})
+          .addTo(map)
+          .bindPopup(popupContent, {maxWidth: 300});
+      });
     }
 
 
@@ -732,12 +881,229 @@
 
 
     // ...removed legacy moveTruckOnRoute logic...
-    var latOffset = 0.5;
-    var lngOffset = 0.5 / (111 * Math.cos(centerLat * Math.PI / 180));
-    var southWest = [centerLat - latOffset, centerLng - lngOffset];
-    var northEast = [centerLat + latOffset, centerLng + lngOffset];
-    var bounds = L.latLngBounds(southWest, northEast);
-    map.setMaxBounds(bounds);
+    if (map) {
+      var latOffset = 0.5;
+      var lngOffset = 0.5 / (111 * Math.cos(centerLat * Math.PI / 180));
+      var southWest = [centerLat - latOffset, centerLng - lngOffset];
+      var northEast = [centerLat + latOffset, centerLng + lngOffset];
+      var bounds = L.latLngBounds(southWest, northEast);
+      map.setMaxBounds(bounds);
+    }
+
+    // Navigation to Makro function
+    function navigateToMakro(lat, lng) {
+      Swal.fire({
+        title: '🧭 นำทางไป MAKRO',
+        html: `
+          <div style="text-align: left; margin: 20px 0;">
+            <p><strong>เลือกแอปนำทาง:</strong></p>
+            <div style="margin: 15px 0;">
+              <button onclick="openGoogleMaps(${lat}, ${lng})" 
+                      style="background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer; width: 100%;">
+                📱 Google Maps
+              </button>
+              <button onclick="openAppleMaps(${lat}, ${lng})" 
+                      style="background: #007aff; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer; width: 100%;">
+                🍎 Apple Maps
+              </button>
+              <button onclick="showDirections(${lat}, ${lng})" 
+                      style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer; width: 100%;">
+                🗺️ แสดงเส้นทางในแผนที่
+              </button>
+            </div>
+          </div>
+        `,
+        showCloseButton: true,
+        showConfirmButton: false
+      });
+    }
+
+    function openGoogleMaps(lat, lng) {
+      var url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      window.open(url, '_blank');
+      Swal.close();
+    }
+
+    function openAppleMaps(lat, lng) {
+      var url = `http://maps.apple.com/?daddr=${lat},${lng}`;
+      window.open(url, '_blank');
+      Swal.close();
+    }
+
+    function showDirections(lat, lng) {
+      // Center map on the selected Makro store
+      map.setView([lat, lng], 15);
+      
+      // Show route from current location to Makro
+      if (userMarker) {
+        var userPos = userMarker.getLatLng();
+        var routeUrl = `https://router.project-osrm.org/route/v1/driving/${userPos.lng},${userPos.lat};${lng},${lat}?overview=full&geometries=geojson`;
+        
+        fetch(routeUrl)
+          .then(res => res.json())
+          .then(data => {
+            if (data.routes && data.routes[0]) {
+              var coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+              var routeLine = L.polyline(coords, {color: '#d31c25', weight: 4, opacity: 0.8}).addTo(map);
+              
+              // Show distance and duration
+              var distance = (data.routes[0].distance / 1000).toFixed(1);
+              var duration = Math.round(data.routes[0].duration / 60);
+              
+              Swal.fire({
+                title: '🗺️ เส้นทางไป MAKRO',
+                html: `
+                  <div style="text-align: center; margin: 20px 0;">
+                    <p><strong>ระยะทาง:</strong> ${distance} กม.</p>
+                    <p><strong>เวลาโดยประมาณ:</strong> ${duration} นาที</p>
+                    <p style="color: #28a745; margin-top: 15px;">✅ เส้นทางแสดงในแผนที่แล้ว</p>
+                  </div>
+                `,
+                icon: 'success',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#d31c25'
+              });
+            }
+          })
+          .catch(err => {
+            Swal.fire('ข้อผิดพลาด', 'ไม่สามารถหาเส้นทางได้', 'error');
+          });
+      }
+      
+      Swal.close();
+    }
+
+    // Functions for truck stop popup buttons
+    function preOrderAtStop(lat, lng, stopName) {
+      Swal.fire({
+        title: '📱 สั่งอาหารล่วงหน้า',
+        html: `
+          <p>สั่งอาหารล่วงหน้าที่ <strong>${stopName}</strong></p>
+          <div style="text-align: left; margin: 15px 0;">
+            <h4>🍽️ เมนูยอดนิยม:</h4>
+            <label><input type="checkbox" value="ข้าวผัด"> ข้าวผัด (40 บาท)</label><br>
+            <label><input type="checkbox" value="ส้มตำ"> ส้มตำ (35 บาท)</label><br>
+            <label><input type="checkbox" value="เครื่องดื่ม"> เครื่องดื่ม (15 บาท)</label><br>
+            <label><input type="checkbox" value="ขนม"> ขนม (20 บาท)</label>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '🛒 สั่งเลย',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '✅ สั่งอาหารสำเร็จ!',
+            text: 'คำสั่งซื้อของคุณได้รับการยืนยันแล้ว รอรับอาหารที่จุดจอดได้เลย',
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#28a745'
+          });
+        }
+      });
+    }
+    
+    function setReminder(lat, lng, stopName) {
+      Swal.fire({
+        title: '🔔 ตั้งแจ้งเตือน',
+        html: `
+          <p>ตั้งแจ้งเตือนสำหรับ <strong>${stopName}</strong></p>
+          <div style="margin: 15px 0;">
+            <label>แจ้งเตือนก่อนถึง:</label><br>
+            <select id="reminderTime" style="width: 100%; padding: 8px; margin-top: 5px;">
+              <option value="5">5 นาที</option>
+              <option value="10" selected>10 นาที</option>
+              <option value="15">15 นาที</option>
+              <option value="30">30 นาที</option>
+            </select>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '⏰ ตั้งแจ้งเตือน',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#17a2b8',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var reminderTime = document.getElementById('reminderTime').value;
+          Swal.fire({
+            title: '✅ ตั้งแจ้งเตือนสำเร็จ!',
+            text: `จะแจ้งเตือนคุณก่อนรถถึง ${reminderTime} นาที`,
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#17a2b8'
+          });
+        }
+      });
+    }
+    
+    function navigateToStop(lat, lng) {
+      Swal.fire({
+        title: '🧭 เลือกวิธีนำทาง',
+        text: 'คุณต้องการนำทางไปจุดจอดรถด้วยวิธีใด?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: '📱 Google Maps',
+        denyButtonText: '🍎 Apple Maps',
+        cancelButtonText: '🗺️ แสดงบนแผนที่',
+        confirmButtonColor: '#4285f4',
+        denyButtonColor: '#000000',
+        cancelButtonColor: '#d31c25'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          openGoogleMaps(lat, lng);
+        } else if (result.isDenied) {
+          openAppleMaps(lat, lng);
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          showDirectionsToStop(lat, lng);
+        }
+      });
+    }
+    
+    function showDirectionsToStop(lat, lng) {
+      // Show route to truck stop on map using OSRM
+      var userLat = userMarker.getLatLng().lat;
+      var userLng = userMarker.getLatLng().lng;
+      
+      var url = `https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${lng},${lat}?overview=full&geometries=geojson`;
+      
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.routes && data.routes.length > 0) {
+            var route = data.routes[0];
+            var distance = (route.distance / 1000).toFixed(1);
+            var duration = Math.round(route.duration / 60);
+            
+            // Add route to map
+            var routeCoords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            L.polyline(routeCoords, {color: '#d31c25', weight: 4}).addTo(map);
+            
+            Swal.fire({
+              title: '🧭 เส้นทางไปจุดจอดรถ',
+              html: `
+                <p><strong>ระยะทาง:</strong> ${distance} กม.</p>
+                <p><strong>เวลาโดยประมาณ:</strong> ${duration} นาที</p>
+                <p>เส้นทางแสดงบนแผนที่แล้ว (สีแดง)</p>
+              `,
+              icon: 'info',
+              confirmButtonText: 'ตกลง',
+              confirmButtonColor: '#d31c25'
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching route:', error);
+          Swal.fire({
+            title: 'ข้อผิดพลาด',
+            text: 'ไม่สามารถแสดงเส้นทางได้',
+            icon: 'error',
+            confirmButtonText: 'ตกลง'
+          });
+        });
+    }
 
     // AI Route Functions
     function toggleAIRoute() {
