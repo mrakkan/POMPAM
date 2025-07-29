@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <style>
     * {
@@ -327,12 +328,65 @@
             for (let i = 0; i < nStops; i++) {
               var pos = Math.floor((coords.length-1) * (i/(nStops-1)));
               var coord = coords[pos];
+              var truckStopData = {
+                name: 'จุดจอดรถ #' + (idx+1) + '-' + (i+1),
+                truckName: 'รถป๋อมแป๋ม #' + (idx+1),
+                stopNumber: i+1,
+                totalStops: nStops,
+                estimatedTime: '10-15 นาที',
+                services: ['ข้าวผัด', 'ส้มตำ', 'เครื่องดื่ม', 'ขนม'],
+                status: i === 0 ? 'กำลังขาย' : (i === 1 ? 'ถัดไป' : 'รอคิว')
+              };
+              
+              var popupContent = `
+                <div style="min-width: 280px;">
+                  <h3 style="color: #d31c25; margin: 0 0 10px 0; font-size: 16px;">
+                    🚚 ${truckStopData.name}
+                  </h3>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>🚛 รถ:</strong> ${truckStopData.truckName}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>📍 จุดที่:</strong> ${truckStopData.stopNumber}/${truckStopData.totalStops}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>⏰ เวลาจอด:</strong> ${truckStopData.estimatedTime}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>🍽️ เมนูแนะนำ:</strong><br>
+                    ${truckStopData.services.join(', ')}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>📊 สถานะ:</strong> 
+                    <span style="color: ${truckStopData.status === 'กำลังขาย' ? '#28a745' : (truckStopData.status === 'ถัดไป' ? '#ffc107' : '#6c757d')}; font-weight: bold;">
+                      ${truckStopData.status === 'กำลังขาย' ? '🟢' : (truckStopData.status === 'ถัดไป' ? '🟡' : '⚪')} ${truckStopData.status}
+                    </span>
+                  </p>
+                  <div style="margin-top: 15px; display: flex; gap: 5px;">
+                    <button onclick="preOrderAtStop(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
+                            style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      📱 สั่งล่วงหน้า
+                    </button>
+                    <button onclick="setReminder(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
+                            style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      🔔 แจ้งเตือน
+                    </button>
+                  </div>
+                  <div style="margin-top: 5px;">
+                    <button onclick="navigateToStop(${coord[0]}, ${coord[1]})" 
+                            style="background: #d31c25; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%;">
+                      🧭 นำทางไปจุดจอด
+                    </button>
+                  </div>
+                </div>
+              `;
+              
               var marker = L.marker(coord, {icon: L.icon({
                 iconUrl: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/geo-alt-fill.svg',
                 iconSize: [32, 32],
                 iconAnchor: [16, 32],
                 popupAnchor: [0, -32]
-              })}).addTo(map).bindPopup('จุดจอดรถ #' + (idx+1) + ' (' + (i+1) + '/' + nStops + ')');
+              })}).addTo(map).bindPopup(popupContent, {maxWidth: 320});
               stopMarkers.push(marker);
               // Store extra info: {coord, truckIdx, stopIdx}
               stopCoords.push({coord: coord, truckIdx: idx, stopIdx: i});
@@ -358,7 +412,39 @@
                 if (truckRouteLines[idx]) map.removeLayer(truckRouteLines[idx]);
                 truckRouteLines[idx] = L.polyline(coords, {color: truck.color, weight: 5, opacity: 0.7}).addTo(map);
                 if (truckMarkers[idx]) map.removeLayer(truckMarkers[idx]);
-                truckMarkers[idx] = L.marker(coords[0], {icon: truckIcon}).addTo(map).bindTooltip(truck.name, {permanent: false, direction: 'top'});
+
+                var truckData = {
+                  truckName: 'รถป๋อมแป๋ม #' + (idx+1),
+                  totalStops: Math.floor(Math.random() * 5) + 1,
+                  estimatedTime: '10-15 นาที',
+                  services: ['ข้าวผัด', 'ส้มตำ', 'เครื่องดื่ม', 'ขนม'],
+                }
+                var popupContent = `
+                <div style="min-width: 280px;">
+                  <h3 style="color: #d31c25; margin: 0 0 10px 0; font-size: 16px;">
+                    🚚 ${truckData.truckName}
+                  </h3>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>📍 จุดจอดทั้งหมด:</strong> ${truckData.totalStops}
+                  </p>
+                  <p style="margin: 5px 0; font-size: 14px;">
+                    <strong>🍽️ เมนูแนะนำ:</strong><br>
+                    ${truckData.services.join(', ')}
+                  </p>
+                  <div style="margin-top: 15px; display: flex; gap: 5px;">
+                    <button onclick="preOrderAtTruck('${truck.name}')" 
+                            style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      📱 สั่งล่วงหน้า
+                    </button>
+                    <button onclick="setReminder('${truck.name}')" 
+                            style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                      🔔 แจ้งเตือน
+                    </button>
+                  </div>
+                </div>
+              `;
+
+                truckMarkers[idx] = L.marker(coords[0], {icon: truckIcon}).addTo(map).bindPopup(popupContent, {maxWidth: 320});
                 // Store current truck position for distance calculation
                 trucks[idx].lat = coords[0][0];
                 trucks[idx].lng = coords[0][1];
@@ -517,6 +603,125 @@
       return R * c;
     }
 
+    // Functions for truck stop popup buttons
+    function preOrderAtTruck(truckName) {
+      Swal.fire({
+        title: '📱 สั่งอาหารล่วงหน้า',
+        html: `
+          <p>สั่งอาหารล่วงหน้าที่ <strong>${truckName}</strong></p>
+          <div style="text-align: left; margin: 15px 0;">
+            <h4>🍽️ เมนูยอดนิยม:</h4>
+            <label><input type="checkbox" value="ข้าวผัด"> ข้าวผัด (40 บาท)</label><br>
+            <label><input type="checkbox" value="ส้มตำ"> ส้มตำ (35 บาท)</label><br>
+            <label><input type="checkbox" value="เครื่องดื่ม"> เครื่องดื่ม (15 บาท)</label><br>
+            <label><input type="checkbox" value="ขนม"> ขนม (20 บาท)</label>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '🛒 สั่งเลย',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '✅ สั่งอาหารสำเร็จ!',
+            text: 'คำสั่งซื้อของคุณได้รับการยืนยันแล้ว รอรับอาหารที่รถได้เลย',
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#28a745'
+          });
+        }
+      });
+    }
+
+    function preOrderAtStop(stopName) {
+      Swal.fire({
+        title: '📱 สั่งอาหารล่วงหน้า',
+        html: `
+          <p>สั่งอาหารล่วงหน้าที่ <strong>${stopName}</strong></p>
+          <div style="text-align: left; margin: 15px 0;">
+            <h4>🍽️ เมนูยอดนิยม:</h4>
+            <label><input type="checkbox" value="ข้าวผัด"> ข้าวผัด (40 บาท)</label><br>
+            <label><input type="checkbox" value="ส้มตำ"> ส้มตำ (35 บาท)</label><br>
+            <label><input type="checkbox" value="เครื่องดื่ม"> เครื่องดื่ม (15 บาท)</label><br>
+            <label><input type="checkbox" value="ขนม"> ขนม (20 บาท)</label>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '🛒 สั่งเลย',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: '✅ สั่งอาหารสำเร็จ!',
+            text: 'คำสั่งซื้อของคุณได้รับการยืนยันแล้ว รอรับอาหารที่รถได้เลย',
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#28a745'
+          });
+        }
+      });
+    }
+    
+    function setReminder(truckName) {
+      Swal.fire({
+        title: '🔔 ตั้งแจ้งเตือน',
+        html: `
+          <p>ตั้งแจ้งเตือนสำหรับ <strong>${truckName}</strong></p>
+          <div style="margin: 15px 0;">
+            <label>แจ้งเตือนก่อนถึง:</label><br>
+            <select id="reminderTime" style="width: 100%; padding: 8px; margin-top: 5px;">
+              <option value="5">5 นาที</option>
+              <option value="10" selected>10 นาที</option>
+              <option value="15">15 นาที</option>
+              <option value="30">30 นาที</option>
+            </select>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '⏰ ตั้งแจ้งเตือน',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#17a2b8',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var reminderTime = document.getElementById('reminderTime').value;
+          Swal.fire({
+            title: '✅ ตั้งแจ้งเตือนสำเร็จ!',
+            text: `จะแจ้งเตือนคุณก่อนรถถึง ${reminderTime} นาที`,
+            icon: 'success',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#17a2b8'
+          });
+        }
+      });
+    }
+
+    function navigateToStop(lat, lng) {
+      Swal.fire({
+        title: '🧭 เลือกวิธีนำทาง',
+        text: 'คุณต้องการนำทางไปจุดจอดรถด้วยวิธีใด?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: '📱 Google Maps',
+        denyButtonText: '🍎 Apple Maps',
+        cancelButtonText: '🗺️ แสดงบนแผนที่',
+        confirmButtonColor: '#4285f4',
+        denyButtonColor: '#000000',
+        cancelButtonColor: '#d31c25'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          openGoogleMaps(lat, lng);
+        } else if (result.isDenied) {
+          openAppleMaps(lat, lng);
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          showDirectionsToStop(lat, lng);
+        }
+      });
+    }
 
     // function updateDistance() {
     //   // Only update if selectedTruck is valid and truck has a position
