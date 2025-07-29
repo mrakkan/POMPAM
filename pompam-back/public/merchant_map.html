@@ -481,7 +481,7 @@
       navigator.geolocation.getCurrentPosition(function(pos) {
         centerLat = pos.coords.latitude;
         centerLng = pos.coords.longitude;
-        map = L.map('map', { zoomControl: false }).setView([centerLat, centerLng], 20);
+        map = L.map('map', { zoomControl: false }).setView([centerLat, centerLng], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap contributors'
@@ -746,7 +746,7 @@
     }
 
     function fallbackMapSetup() {
-      map = L.map('map', { zoomControl: false }).setView([centerLat, centerLng], 20);
+      map = L.map('map', { zoomControl: false }).setView([centerLat, centerLng], 15);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
