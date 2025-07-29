@@ -354,7 +354,7 @@
             </div>
             <p class="price">ทะเบียน: {{ truck.plate }}</p>
             <p class="desc">{{ truck.desc }}</p>
-            <button class="review-btn" style="color: #333;" onclick="openReviewModal('{{ truck.name }}', '{{ truck.plate }}')">⭐ รีวิวรถป๋อมแป๋ม</button>
+            <button class="review-btn" onclick="openReviewModal('{{ truck.name }}', '{{ truck.plate }}')">⭐ รีวิวรถป๋อมแป๋ม</button>
           </div>
         </div>
         {% endfor %}
