@@ -560,22 +560,14 @@
                     <strong>⏰ เวลาจอด:</strong> ${truckStopData.estimatedTime}
                   </p>
                   <p style="margin: 5px 0; font-size: 14px;">
-                    <strong>🍽️ เมนูแนะนำ:</strong><br>
-                    ${truckStopData.services.join(', ')}
-                  </p>
-                  <p style="margin: 5px 0; font-size: 14px;">
                     <strong>📊 สถานะ:</strong> 
                     <span style="color: ${truckStopData.status === 'กำลังขาย' ? '#28a745' : (truckStopData.status === 'ถัดไป' ? '#ffc107' : '#6c757d')}; font-weight: bold;">
                       ${truckStopData.status === 'กำลังขาย' ? '🟢' : (truckStopData.status === 'ถัดไป' ? '🟡' : '⚪')} ${truckStopData.status}
                     </span>
                   </p>
-                  <div style="margin-top: 15px; display: flex; gap: 5px;">
-                    <button onclick="preOrderAtStop(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
-                            style="background: #28a745; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
-                      📱 สั่งล่วงหน้า
-                    </button>
-                    <button onclick="setReminder(${coord[0]}, ${coord[1]}, '${truckStopData.name}')" 
-                            style="background: #17a2b8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;">
+                  <div style="margin-top: 5px;">
+                    <button onclick="setReminder(${coord[0]}, ${coord[1]}, '${truckStopData.name}')"
+                            style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%;">
                       🔔 แจ้งเตือน
                     </button>
                   </div>
@@ -974,38 +966,6 @@
       Swal.close();
     }
 
-    // Functions for truck stop popup buttons
-    function preOrderAtStop(lat, lng, stopName) {
-      Swal.fire({
-        title: '📱 สั่งอาหารล่วงหน้า',
-        html: `
-          <p>สั่งอาหารล่วงหน้าที่ <strong>${stopName}</strong></p>
-          <div style="text-align: left; margin: 15px 0;">
-            <h4>🍽️ เมนูยอดนิยม:</h4>
-            <label><input type="checkbox" value="ข้าวผัด"> ข้าวผัด (40 บาท)</label><br>
-            <label><input type="checkbox" value="ส้มตำ"> ส้มตำ (35 บาท)</label><br>
-            <label><input type="checkbox" value="เครื่องดื่ม"> เครื่องดื่ม (15 บาท)</label><br>
-            <label><input type="checkbox" value="ขนม"> ขนม (20 บาท)</label>
-          </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: '🛒 สั่งเลย',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#6c757d'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: '✅ สั่งอาหารสำเร็จ!',
-            text: 'คำสั่งซื้อของคุณได้รับการยืนยันแล้ว รอรับอาหารที่จุดจอดได้เลย',
-            icon: 'success',
-            confirmButtonText: 'ตกลง',
-            confirmButtonColor: '#28a745'
-          });
-        }
-      });
-    }
-    
     function setReminder(lat, lng, stopName) {
       Swal.fire({
         title: '🔔 ตั้งแจ้งเตือน',
